@@ -88,7 +88,7 @@ lights_all_off:
       entity_id: group.room_living,light.kitchen_cabinet_lights,light.kitchen_island_lights,light.upstairs_hall_scone
   
 
-twillo_test:
+twillio_test:
   alias: twillio_test
   sequence:
   - event: LOGBOOK_ENTRY
