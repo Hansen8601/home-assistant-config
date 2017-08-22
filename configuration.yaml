@@ -1,0 +1,522 @@
+# Home assistant configuration file
+
+
+# Used to switch between development & production system
+homeassistant: !include homeassistant.yaml
+
+
+# Recorder
+recorder:
+#  db_url: !secret mysqlserver
+  purge_days: 14
+  exclude:
+    entities:
+      - input_boolean.set_mode_sleeping
+      - input_boolean.set_mode_home
+      - input_boolean.set_mode_away
+      - input_slider.denon_deck_volume 
+      - input_slider.denon_volume
+      - input_select.living_room_remote
+      - sensor.dark_sky_wind_bearing
+      - sensor.dark_sky_wind_speed
+      - sensor.dark_sky_temperature
+      - sensor.device_tracker_phil_since_update
+      - sensor.device_tracker_nikki_since_update
+      - sensor.device_tracker_dylan_since_update
+      - automation.denon_set_volume
+      - automation.denon__set_slider_to_volume
+      - automation.activity_with_remote__set_automation_to_sleeping
+      - automation.activity_with_remote__set_mode_to_home
+      - script.denon_deck_volume_down
+      - script.denon_deck_volume_up
+      - script.denon_deck_volume_set
+    domains:
+      - sun
+      - script
+      - media_player
+      - remote
+      - group
+
+
+# View all events in a logbook
+logbook:
+  exclude:
+    entities:
+      - automation.denon_slider_volume_set
+      - automation.denon_volume_set
+      - automation.denon_deck_volume_set
+      - input_boolean.set_mode_home
+      - input_boolean.set_mode_sleeping
+      - input_boolean.set_mode_away
+
+
+# Enables support for tracking state changes over time.
+history:
+  exclude:
+    domains:
+      - automation
+      - weblink
+      - updater
+
+# Logger settings
+logger:
+  default: warn
+
+
+# Enables the frontend
+frontend:
+
+
+# Track the sun
+sun:
+  elevation: 278
+
+
+# Allows you to issue voice commands from the frontend
+#conversation:
+
+
+# Checks for available updates
+updater:
+
+
+# Discover some devices automatically
+#discovery:
+
+
+# Show configuration panel
+config:
+
+
+device_tracker:
+  platform: mqtt
+  devices:
+    Phil: smartthings/Phil's iPhone/presence
+    Nikki: smartthings/Nikki's iPhone/presence
+    Dylan: smartthings/Dylan's iPhone/presence
+
+
+#mqtt broker for smartthings
+mqtt:
+  broker: !secret mqtt_broker
+  port: 1883
+  keepalive: 60
+
+twilio:
+  account_sid: !secret twillo_sid 
+  auth_token: !secret twillo_token
+
+notify:
+  - name: twilio_sms
+    platform: twilio_sms
+    from_number: !secret twillo_number
+
+media_player:
+  - platform: denonavr
+#  - platform: denon
+    host: !secret dennon_ip
+    name: Denon AVRX3000
+
+# Experiment with custom component for z2
+#  - platform: denon2
+#    host: !secret dennon_ip
+#    name: Denon AVR 2
+
+ecobee:
+  api_key: qoVtCswARL1uOnJ7zxOtRi5hs4KVSYXH
+
+remote:
+  - platform: harmony
+    name: living_room
+    host: !secret harmony_ip
+
+rest_command:
+  denon_deck_volume_set:
+    url: !secret denon_url
+    method: post
+    payload: 'cmd0=PutMasterVolumeSet%2F{{((states.input_slider.denon_deck_volume.state  | float)) - 80 }}&ZoneName=ZONE2'
+  denon_deck_volume_up:
+    url: !secret denon_url
+    method: post
+    payload: 'cmd0=PutMasterVolumeBtn%2F%3C&ZoneName=ZONE2'
+  denon_deck_volume_down:
+    url: !secret denon_url
+    method: post
+    payload: 'cmd0=PutMasterVolumeBtn%2F%3E&ZoneName=ZONE2'
+  denon_deck_volume_50:
+    url: !secret denon_url
+    method: post
+    payload: 'cmd0=PutMasterVolumeSet%2F-30&ZoneName=ZONE2'
+  denon_deck_volume_55:
+    url: !secret denon_url
+    method: post
+    payload: 'cmd0=PutMasterVolumeSet%2F-25&ZoneName=ZONE2'
+  denon_deck_volume_60:
+    url: !secret denon_url
+    method: post
+    payload: 'cmd0=PutMasterVolumeSet%2F-20&ZoneName=ZONE2'
+
+
+
+###################
+#                 #
+# Sensor          #
+#                 #
+###################
+
+sensor:
+- platform: darksky
+  api_key: !secret dark_sky_api
+  scan_interval: 240
+  monitored_conditions:
+    - temperature
+    - cloud_cover
+    - wind_speed
+    - wind_bearing
+
+- platform: template
+  sensors:
+    living_room_remote_activity:
+      value_template: '{{ states.remote.living_room.attributes.current_activity }}'
+      friendly_name: 'Living Room Remote Activity'
+
+- platform: template
+  sensors:
+    device_tracker_phil_since_update:
+      value_template: '{{ relative_time(states.device_tracker.phil.last_updated) }}'
+      friendly_name: 'Phil - time since tracker update'
+
+- platform: template
+  sensors:
+    device_tracker_nikki_since_update:
+      value_template: '{{ relative_time(states.device_tracker.nikki.last_updated) }}'
+      friendly_name: 'Nikki - time since tracker update'
+
+- platform: template
+  sensors:
+    device_tracker_dylan_since_update:
+      value_template: '{{ relative_time(states.device_tracker.dylan.last_updated) }}'
+      friendly_name: 'Dylan - time since tracker update'
+
+- platform: template
+  sensors:
+     garage_service_door:
+       value_template: >-
+        {% if states.binary_sensor.garage_service_door_rpi.state == 'on' %}
+          Closed
+        {% elif states.binary_sensor.garage_service_door_rpi.state == 'off' %}
+          Open
+        {% else %}
+          n/a
+        {% endif %}
+
+- platform: mqtt
+  state_topic: "smartthings/Aeon Multisensor 6/illuminance"
+  name: "guest_bedroom_lux"
+  #Using deg. here because No. doesn't show a graph.
+  #unit_of_measurement: "°"
+  unit_of_measurement: "Lux"
+  value_template: '{{ value_json | float }}'
+
+- platform: mqtt
+  state_topic: "smartthings/Aeon Multisensor 6/temperature"
+  name: "guest_bedroom_temperature"
+  unit_of_measurement: "°"
+  value_template: '{{ value_json | float }}'
+
+- platform: mqtt
+  state_topic: "smartthings/Aeon Multisensor 6/humidity"
+  name: "guest_bedroom_humidity"
+  unit_of_measurement: "%"
+  value_template: '{{ value_json | float }}'
+
+#- platform: mqtt
+#  state_topic: "smartthings/Aeon Multisensor 6/battery"
+#  name: "guest_bedroom_battery"
+#  unit_of_measure: '%'
+
+
+###################
+#                 #
+# Binary Sensor   #
+#                 #
+###################
+
+binary_sensor:
+  - platform: rpi_gpio
+    ports:
+      20: Garage Service Door RPI
+#
+#  - platform: template
+#    sensors:
+#      lights_needed:
+#        value_template: '{{(now().hour < 9 and states.sun.sun.attributes.elevation < 7.5) or (now().hour > 15 and  states.sun.sun.attributes.elevation < 9.0) }}'
+#        friendly_name: 'Lights Needed Night'
+#
+#  - platform: template
+#    sensors:
+#      lights_lux_off:
+#        value_template: '{% if states.sensor.guest_bedroom_lux %} {{ (states.sensor.guest_bedroom_lux.state | float) > 900 and (states.sensor.dark_sky_cloud_coverage.state | float) < 90 }} {% endif %}'
+#        friendly_name: 'Lux sensor for turning lights off'
+#
+#  - platform: template
+#    sensors:
+#      lights_lux_on:
+#        value_template: '{% if states.sensor.guest_bedroom_lux %} {{(states.sensor.guest_bedroom_lux.state | float) < 800 and (states.sensor.dark_sky_cloud_coverage.state | float) > 25 }} {% endif %}'
+#        friendly_name: 'Lux sensor for turning lights on'
+#
+  - platform: threshold
+    name: "Low LUX"
+    threshold: 850
+    type: lower
+    entity_id: sensor.guest_bedroom_lux
+
+  - platform: threshold
+    name: "High LUX"
+    threshold: 1000
+    type: upper
+    entity_id: sensor.guest_bedroom_lux
+
+#  - platform: template
+#    sensor:
+#      lux_level_guest_bedroom:
+#        value_template: '{% states.sensor.guest_bedroom_lux %}
+#        friendly_name: 'Lux level in guest bedroom'
+#
+#  - platform: template
+#    sensor:
+#       dark_sky_cloud_coverage.state
+
+
+###################
+#                 #
+# Cover           #
+#                 #
+###################
+
+cover:
+- platform: rpi_gpio
+  covers:
+    - relay_pin: 23
+      state_pin: 12
+      name: 'garage left'
+
+- platform: rpi_gpio
+  covers:
+    - relay_pin: 24
+      state_pin: 13
+      name: 'garage right'
+
+- platform: mqtt
+  state_topic: "hass/switch1"
+  command_topic: "hass/switch1/set"
+  name: "mqtt cover test"
+  qos: 0
+  retain: false
+  payload_open: "open"
+  payload_close: "close"
+  state_open: "open"
+  state_closed: "closed"
+  #optimistic: false
+
+###################
+#                 #
+# Light           #
+#                 #
+###################
+
+light:
+- platform: mqtt
+  name: "ge_living_room_1"
+  state_topic: "smartthings/GE Living Room 1/switch"
+  command_topic: "smartthings/GE Living Room 1/switch"
+  brightness_state_topic: "smartthings/GE Living Room 1/level"
+  brightness_command_topic: "smartthings/GE Living Room 1/level"
+  brightness_scale: 99
+  brightness_value_template: '{{ value }}'
+  #qos: 0
+  payload_on: "on"
+  payload_off: "off"
+  optimistic: false
+  retain: true
+- platform: mqtt
+  name: "ge_living_room_2"
+  state_topic: "smartthings/GE Living Room 2/switch"
+  command_topic: "smartthings/GE Living Room 2/switch"
+  brightness_state_topic: "smartthings/GE Living Room 2/level"
+  brightness_command_topic: "smartthings/GE Living Room 2/level"
+  brightness_scale: 99
+  brightness_value_template: '{{ value }}'
+  qos: 0
+  payload_on: "on"
+  payload_off: "off"
+  optimistic: false
+  retain: true
+- platform: mqtt
+  name: "ge_living_room_3"
+  state_topic: "smartthings/GE Living Room 3/switch"
+  command_topic: "smartthings/GE Living Room 3/switch"
+  brightness_state_topic: "smartthings/GE Living Room 3/level"
+  brightness_command_topic: "smartthings/GE Living Room 3/level"
+  brightness_scale: 99
+  brightness_value_template: '{{ value }}'
+  qos: 0
+  payload_on: "on"
+  payload_off: "off"
+  optimistic: false
+  retain: true
+- platform: mqtt
+  name: "Entry_Walkway_Dimmer_Switch"
+  state_topic: "smartthings/Entry Walkway Dimmer Switch/switch"
+  command_topic: "smartthings/Entry Walkway Dimmer Switch/switch"
+  brightness_state_topic: "smartthings/Entry Walkway Dimmer Switch/level"
+  brightness_command_topic: "smartthings/Entry Walkway Dimmer Switch/level"
+  brightness_scale: 99
+  brightness_value_template: '{{ value }}'
+  qos: 0
+  payload_on: "on"
+  payload_off: "off"
+  optimistic: false
+  retain: true
+- platform: mqtt
+  name: "Garage_Outside_Lights"
+  state_topic: "smartthings/Garage Outside Lights/switch"
+  command_topic: "smartthings/Garage Outside Lights/switch"
+  brightness_state_topic: "smartthings/Garage Outside Lights/level"
+  brightness_command_topic: "smartthings/Garage Outside Lights/level"
+  brightness_scale: 99
+  brightness_value_template: '{{ value }}'
+  qos: 0
+  payload_on: "on"
+  payload_off: "off"
+  optimistic: false
+  retain: true
+- platform: mqtt
+  name: "Upstairs_Hall_Scone"
+  state_topic: "smartthings/Upstairs Hall Scone/switch"
+  command_topic: "smartthings/Upstairs Hall Scone/switch"
+  brightness_state_topic: "smartthings/Upstairs Hall Scone/level"
+  brightness_command_topic: "smartthings/Upstairs Hall Scone/level"
+  brightness_scale: 99
+  brightness_value_template: '{{ value }}'
+  qos: 0
+  payload_on: "on"
+  payload_off: "off"
+  optimistic: false
+  retain: true
+- platform: mqtt
+  name: "Kitchen_Cabinet_Lights"
+  state_topic: "smartthings/Kitchen Cabinet Lights/switch"
+  command_topic: "smartthings/Kitchen Cabinet Lights/switch"
+  payload_on: "on"
+  payload_off: "off"
+  optimistic: false
+  retain: true
+- platform: mqtt
+  name: "Kitchen_island_Lights"
+  state_topic: "smartthings/Kitchen Island Lights/switch"
+  command_topic: "smartthings/Kitchen Island Lights/switch"
+  brightness_state_topic: "smartthings/Kitchen Island Lights/level"
+  brightness_command_topic: "smartthings/Kitchen Island Lights/level"
+  brightness_scale: 99
+  brightness_value_template: '{{ value }}'
+  qos: 0
+  payload_on: "on"
+  payload_off: "off"
+  optimistic: false
+  retain: true
+
+###################
+#                 #
+# Switch          #
+#                 #
+###################
+
+#switch:
+#- platform: mqtt
+#  name: "Test Switch"
+#  state_topic: "hass/switch1"
+#  command_topic: "hass/switch1/set"
+#  payload_on: "on"
+#  payload_off: "off"
+#  qos: 0
+
+
+###################
+#                 #
+# Input Boolean   #
+#                 #
+###################
+
+# Used for homekit integration
+input_boolean:
+  set_mode_sleeping:
+    name: set_mode_sleeping
+    initial: off
+  set_mode_home:
+    name: set_mode_home
+  set_mode_away:
+    name: set_mode_away
+
+
+###################
+#                 #
+# Input Select    #
+#                 #
+###################
+
+input_select:
+  automation_mode:
+    name: 'Automation Mode'
+    options:
+     - Home
+     - Away
+     - Sleeping
+     - No Automation
+    initial: Home
+    icon: mdi:panda
+  # List must match harmony.config names for automation scripts
+  living_room_remote:
+    name: 'Living Room Remote'
+    options:
+     - 'Watch TV'
+     - 'Apple TV'
+     - 'Music - cable'
+     - 'PowerOff'
+     - 'Music - cable - deck'
+     - 'Apple TV - Deck'
+     - 'Watch Netflix'
+     - 'Watch Blu-Ray'
+     - 'Watch TV / No Stereo'
+    initial: 'PowerOff'
+    icon: mdi:monitor
+
+      
+###################
+#                 #
+# Input Slider    #
+#                 #
+###################
+
+input_slider:
+  denon_volume:
+    name: Denon Volume
+    initial: 30
+    min: 0
+    max: 50 
+    step: .5
+  denon_deck_volume:
+    name: Denon Volume
+    initial: 40
+    min: 0
+    max: 70 
+    step: .5
+
+group: !include groups.yaml
+
+script: !include scripts.yaml
+
+automation: !include automations.yaml
+
+shell_command: !include shell_commands.yaml
+

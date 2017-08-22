@@ -1,0 +1,126 @@
+# Binary Sensors
+binary_sensor.main_floor_occupancy:
+  friendly_name: Main Floor Occupancy
+  homebridge_hidden: true
+
+# Covers
+cover.dennon:
+  friendly_name: TV Volume
+  entity_picture: mdi:monitor
+  homebridge_hidden: true
+cover.dennon_deck:
+  friendly_name: Deck Volume
+  entity_picture: mdi:radio
+  homebridge_hidden: true
+cover.garage_right:
+  friendly_name: Garage Main
+  homebridge_name: Garage Main
+  homebridge_cover_type: garage_door
+cover.garage_left:
+  friendly_name: Garage Shop
+  homebridge_name: Garage Shop
+  homebridge_cover_type: garage_door
+
+# Devices
+device_tracker.phil:
+  friendly_name: Phil
+device_tracker.nikki:
+  friendly_name: Nikki
+device_tracker.dylan:
+  friendly_name: Dylan
+
+#Groups
+group.room_living:
+  friendly_name: Living Room
+group.outside_lights:
+  friendly_name: Outside Lights
+group.room_other:
+  friendly_name: Other
+group.room_kitchen:
+  friendly_name: Kitchen
+group.climate_page:
+  friendly_name: Climate
+group.rooms_page:
+  friendly_name: Rooms
+group.media_short:
+  friendly_name: Harmony Remote
+group.media_full:
+  friendly_name: Media
+group.darksky_info:
+  friendly_name: Dark Sky Weather
+group.debug_page:
+  friendly_name: Debug
+group.scripts_debug:
+  friendly_name: Scripts
+group.room_garage:
+  friendly_name: Garage
+
+# input_booleans.yaml
+input_boolean.set_mode_sleeping:
+  homebridge_name: 'Set Sleep'
+input_boolean.set_mode_home:
+  homebridge_name: 'Set Home'
+input_boolean.set_mode_away:
+  homebridge_name: 'Set Away'
+
+# input_select.yaml
+input_slider.denon_deck_volume:
+  homebridge_hidden: true
+  friendly_name: Deck Volume
+input_slider.denon_volume:
+  homebridge_hidden: true
+  friendly_name: Main Volume
+
+# Media Players.yaml
+media_player.denon_avrx3000:
+  friendy_name: Denon AVR
+  homebridge_hidden: true
+
+# sensors.yaml
+sensor.main_floor_humidity:
+  homebridge_hidden: true
+sensor.main_floor_temperature:
+  homebridge_hidden: true
+sensor.guest_bedroom_humidity:
+  homebridge_hidden: true
+sensor.guest_bedroom_temperature:
+  homebridge_hidden: true
+sensor.dark_sky_cloud_coverage:
+  homebridge_hidden: true
+sensor.dark_sky_temperature:
+  homebridge_hidden: true
+sensor.garage_service_door:
+  friendly_name: Garage Service Door
+  homebridge_name: Garage Service Door
+  icon: mdi:glassdoor
+
+# switches.yaml
+light.Entry_Walkway_Dimmer_Switch:
+  friendly_name: Outside Lamp Post
+  homebridge_name: Outside Lamp Post
+light.Garage_Outside_Lights:
+  friendly_name: Outside Garage Lights
+  homebridge_name: Outside Garage Lights
+light.ge_living_room_1:
+  friendly_name: Living Room Credenza1
+  homebridge_name: Living Room Credenza1
+light.GE_Living_Room_2:
+  friendly_name: Living Room Credenza2
+  homebridge_name: Living Room Credenza2
+light.GE_Living_Room_3:
+  friendly_name: Living Room End Table
+  homebridge_name: Living Room End Table
+light.Kitchen_Cabinet_Lights:
+  friendly_name: Kitchen Cabinet Lights
+  homebridge_name: Kitchen Cabinet Lights
+light.Kitchen_Island_Lights:
+  friendly_name: Kitchen Island Lights
+  homebridge_name: Kitchen Island Lights
+light.Upstairs_Hall_Scone:
+  friendly_name: Upstairs Hall Scone
+  homebridge_name: Upstairs Hall Scone
+
+remote.living_room:
+  friendly_name: Living Room Remote
+  homebridge_hidden: true
+

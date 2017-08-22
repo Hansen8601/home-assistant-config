@@ -1,0 +1,11 @@
+name: Home-Dev
+
+latitude: !secret latitude
+longitude: !secret longitude
+
+# Impacts weather/sunrise data (altitude above sea level)
+elevation: 278
+
+unit_system: imperial
+time_zone: America/Chicago
+customize: !include customizations.yaml

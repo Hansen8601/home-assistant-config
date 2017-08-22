@@ -1,0 +1,167 @@
+# Groups YAML file
+
+# Default View
+default_view:
+  view: yes
+  icon: mdi:home
+  entities:
+    - group.modes
+    - group.media_short
+    - group.family
+
+modes:
+  view: no
+  name: 'Automation Mode'
+  entities:
+    - input_select.automation_mode
+
+media_short:
+  view: no
+  name: Media Controls
+  entities:
+    - input_select.living_room_remote
+    - input_slider.denon_volume
+    - input_slider.denon_deck_volume
+
+family:
+  view: no
+  entities:
+    - device_tracker.phil
+    - device_tracker.nikki
+    - device_tracker.dylan
+
+# Rooms
+rooms_page:
+  view: yes
+  entities:
+    - group.room_kitchen
+    - group.room_living
+    - group.outside_lights
+    - group.room_other
+    - group.room_garage
+
+room_living:
+  view: no
+  entities:
+    - light.ge_living_room_1
+    - light.ge_living_room_2
+    - light.ge_living_room_3
+
+room_kitchen:
+  view: no
+  entities:
+    - light.kitchen_cabinet_lights
+    - light.kitchen_island_lights
+
+room_other:
+  view: no
+  entities:
+    - light.upstairs_hall_scone
+
+room_garage:
+    - cover.garage_left
+    - cover.garage_right
+    - sensor.garage_service_door
+
+outside_lights:
+  view: no
+  entities:
+    - light.entry_walkway_dimmer_switch
+    - light.garage_outside_lights
+
+# Media View
+media_full:
+  view: yes
+  entities:
+    - group.media_harmony
+    - group.media_denon
+    - media_player.denon_avrx3000
+
+media_harmony:
+  view: no
+  name: 'Living Room Harmony Remote'
+  entities:
+    - input_select.living_room_remote
+#   - remote.living_room
+#    - script.living_room_remote_volume_up
+#    - script.living_room_remote_volume_down
+#   - script.harmony_activity
+#   - script.harmony_off
+#   - script.harmony_tv
+#   - script.harmony_apple_tv
+#   - script.harmony_netflix
+#   - script.harmony_music_cable
+#   - script.harmony_music_cable_deck
+#   - script.harmony_bluray
+#   - script.harmony_apple_tv_deck
+
+media_denon:
+  view: no
+  name: 'Living Room Receiver'
+  entities:
+    - input_slider.denon_volume
+    - input_slider.denon_deck_volume
+    - script.denon_deck_volume_50
+    - script.denon_deck_volume_55
+    - script.denon_deck_volume_60
+
+
+# Climate Page
+climate_page:
+  view: yes
+  entities:
+    - sun.sun
+    - sensor.guest_bedroom_lux
+    - sensor.guest_bedroom_temperature
+    - group.ecobee
+    - group.darksky_info
+
+darksky_info:
+  view: no
+  entities:
+    - sensor.dark_sky_temperature
+    - sensor.dark_sky_cloud_coverage
+    - sensor.dark_sky_wind_speed
+    - sensor.dark_sky_wind_bearing
+
+ecobee:
+  view: no
+  entities:
+    - binary_sensor.main_floor_occupancy
+    - climate.main_floor
+    - sensor.main_foor_temperature
+    - sensor.main_floor_humidity
+
+# Debug Page
+debug_page:
+  view: yes
+  entities:
+    - input_boolean.set_mode_sleeping
+    - input_boolean.set_mode_home
+    - input_boolean.set_mode_away
+    - binary_sensor.low_lux
+    - binary_sensor.high_lux
+    - group.scripts_debug
+    - group.family_debug
+    - sensor.guest_bedroom_lux
+    - sensor.guest_bedroom_humidity
+    - cover.mqtt_cover_test
+
+scripts_debug:
+  view: no
+  entities:
+    - script.twillio_test
+    - script.denon_deck_volume_up
+    - script.denon_deck_volume_down
+    - script.denon_deck_volume_set
+
+
+family_debug:
+  view: no
+  entities:
+    - device_tracker.phil
+    - sensor.device_tracker_phil_since_update
+    - device_tracker.nikki
+    - sensor.device_tracker_nikki_since_update
+    - device_tracker.dylan
+    - sensor.device_tracker_dylan_since_update

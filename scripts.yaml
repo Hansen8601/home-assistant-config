@@ -1,0 +1,102 @@
+# Scripts
+
+
+denon_deck_volume_50:
+  alias: denon_deck_volume_50
+  sequence:
+  - event: LOGBOOK_ENTRY
+    event_data:
+      name: EVENT
+      message: 'Deck Volume Set to 50'
+  - service: rest_command.denon_deck_volume_50
+  - delay: '00:00:01'
+  - service: input_slider.select_value
+    data_template:
+      entity_id: input_slider.denon_deck_volume
+      value: >
+        {{ 50 }}
+
+
+denon_deck_volume_55:  
+  alias: denon_deck_volume_55
+  sequence:
+  - event: LOGBOOK_ENTRY
+    event_data:
+      name: EVENT
+      message: 'Deck Volume Set to 55'
+  - service: rest_command.denon_deck_volume_55
+  - delay: '00:00:01'
+  - service: input_slider.select_value
+    data_template:
+      entity_id: input_slider.denon_deck_volume
+      value: >
+        {{ 55 }}
+  
+
+denon_deck_volume_60:
+  alias: denon_deck_volume_60
+  sequence:
+  - event: LOGBOOK_ENTRY
+    event_data:
+      name: EVENT
+      message: 'Deck Volume Set to 60'
+  - service: rest_command.denon_deck_volume_60
+  - delay: '00:00:01'
+  - service: input_slider.select_value
+    data_template:
+      entity_id: input_slider.denon_deck_volume
+      value: >
+        {{ 60 }}
+  
+
+denon_deck_volume_down:
+  alias: denon_deck_volume_down
+  sequence:
+  - service: rest_command.denon_deck_volume_down
+  
+
+denon_deck_volume_set:
+  alias: denon_deck_volume_set
+  sequence:
+  - service: rest_command.denon_deck_volume_set
+  
+
+denon_deck_volume_up:
+  alias: denon_deck_volume_up
+  sequence:
+  - service: rest_command.denon_deck_volume_up
+
+
+lights_main_on:
+  alias: lights_main_on
+  sequence:
+  - event: LOGBOOK_ENTRY
+    event_data:
+      name: EVENT
+      message: Living room lights on script
+  - service: light.turn_on
+    data:
+      entity_id: group.room_living
+      brightness: 125
+  
+
+lights_all_off:
+  alias: lights_all_off
+  sequence:
+  - service: light.turn_off
+    data:
+      entity_id: group.room_living,light.kitchen_cabinet_lights,light.kitchen_island_lights,light.upstairs_hall_scone
+  
+
+twillo_test:
+  alias: twillo_test
+  sequence:
+  - event: LOGBOOK_ENTRY
+    event_data:
+      name: EVENT
+      message: 'Testing Twilio SMS script called'
+  - service: notify.twilio_sms
+    data:
+      message: "Testing twilio SMS"
+      target:
+        - !secret myphone

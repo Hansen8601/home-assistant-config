@@ -1,0 +1,22 @@
+# swap
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+# session
+Session.vim
+# temporary
+.netrwhist
+*~
+# auto-generated tag files
+tags
+*.json
+*.conf
+secrets.yaml
+home-assistant.log
+home-assistant_v2.db
+harmony_living_room.conf
+custom_components
+known_devices.yaml
+HarmonyHub.AuthorizationToken
+ecobee.conf
+.*
+!/.gitignore

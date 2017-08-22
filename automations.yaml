@@ -1,0 +1,563 @@
+# Automation.yaml
+
+############################
+#                          #
+#    Alerts                #
+#                          #
+############################
+
+ 
+- id: doors_check_status
+  alias: Mode Sleep Check Doors
+  trigger:
+    - platform: state
+      entity_id: input_select.automation_mode
+      to: 'Sleeping'
+    - platform: state
+      entity_id: input_select.automation_mode
+      to: 'Away'
+  condition:
+    condition: or
+    conditions:
+      - condition: state
+        entity_id: binary_sensor.garage_service_door
+        state: 'off'
+      - condition: state
+        entity_id: cover.garage_door_right
+        state: 'open'
+      - condition: state
+        entity_id: cover.garage_door_left
+        state: 'open'
+  action:
+    service: notify.twilio_sms
+    data:
+      message: 'Sleep or Away mode set but doors still open!'
+      target:
+        !secret myphone
+
+
+- id: doors_open_status
+  alias: Doors open during sleep mode
+  trigger:
+    - platform: state
+      entity_id: sensor.garage_service_door
+      to: 'Open'
+    - platform: state
+      entity_id: cover.garage_door_right
+      to: 'open'
+    - platform: state
+      entity_id: cover.garage_door_left
+      to: 'open'
+  condition:
+    condition: or
+    conditions:
+      - condition: state
+        entity_id: input_select.automation_mode
+        state: 'Sleeping'
+      - condition: state
+        entity_id: input_select.automation_mode
+        state: 'Away'
+  action:
+    service: notify.twilio_sms
+    data:
+      message: "Door opened while mode was sleeping or away"
+      target: 
+        !secret myphone
+
+
+############################
+#                          #
+#  Automation Mode - Set   #
+#                          #
+############################
+
+
+- id: automation_mode_home_from_harmony
+  alias: 'Activity with Remote - Set mode to Home'
+  initial_state: 'on'
+  trigger:
+    platform: state
+    entity_id: remote.living_room
+  condition: 
+    condition: and
+    conditions:
+      - condition: template
+        value_template: "{{states.input_select.automation_mode.state != 'No Automation' }}" 
+      - condition: template
+        value_template: "{{ trigger.to_state.attributes.current_activity != 'PowerOff' }}"
+      - condition: template
+        value_template: "{{ states.input_select.automation_mode.state != 'Home' }}" 
+  action:
+    service: input_select.select_option
+    entity_id: input_select.automation_mode 
+    data:
+      option: 'Home'
+
+- id: automation_mode_sleeping_from_harmony
+  alias: 'Activity with remote - Set automation to sleeping'
+  initial_state: 'on'
+  trigger:
+    platform: state
+    entity_id: remote.living_room
+  condition: 
+    condition: and
+    conditions:
+      - condition: template
+        value_template: "{{states.input_select.automation_mode.state != 'No Automation' }}"
+      - condition: template
+        value_template: "{{trigger.to_state.attributes.current_activity == 'PowerOff' }}"
+      - condition: time
+        after: '20:00:00'
+  action:
+    service: input_select.select_option
+    entity_id: input_select.automation_mode
+    data:
+      option: 'Sleeping'
+
+
+- id: automation_mode_home_from_homekit
+  alias: Input Boolean Set Home
+  trigger:
+    platform: state
+    entity_id: input_boolean.set_mode_home
+    to: 'on'
+  condition:
+    condition: and
+    conditions:
+      condition: template
+      value_template: "{{states.input_select.automation_mode.state != 'No Automation'}}"
+  action:
+    - service: input_select.select_option
+      data:
+        entity_id: input_select.automation_mode
+        option: 'Home'
+    - delay: '00:00:02'
+    - service: input_boolean.turn_off
+      data: 
+        entity_id: input_boolean.set_mode_home
+
+
+- id: automation_mode_sleeping_from_homekit
+  alias: Input Boolean Set Sleeping Mode
+  trigger:
+    platform: state
+    entity_id: input_boolean.set_mode_sleeping
+    to: 'on'
+  condition:
+    condition: and
+    conditions:
+      condition: template
+      value_template: "{{states.input_select.automation_mode.state != 'No Automation' }}"
+  action:
+    - service: input_select.select_option
+      data:
+        entity_id: input_select.automation_mode
+        option: 'Sleeping'
+    - delay: '00:00:02'
+    - service: input_boolean.turn_off
+      data: 
+        entity_id: input_boolean.set_mode_sleeping
+
+
+
+- id: automation_mode_away_from_homekit
+  alias: Input Boolean Set away from Im leaving
+  trigger:
+    platform: state
+    entity_id: input_boolean.set_mode_away
+    to: 'on'
+  condition:
+    condition: and
+    conditions:
+      condition: template
+      value_template: "{{states.input_select.automation_mode.state != 'No Automation' }}"
+  action:
+    - service: input_select.select_option
+      data:
+        entity_id: input_select.automation_mode
+        option: 'Away'
+    - delay: '00:00:02'
+    - service: input_boolean.turn_off
+      data: 
+        entity_id: input_boolean.set_mode_away
+
+
+############################
+#                          #
+# Automation Mode - Do     #
+#                          #
+############################
+
+
+- id: automation_mode_sleeping
+  alias: Mode Sleep
+  trigger:
+    platform: state
+    entity_id: input_select.automation_mode
+    to: 'Sleeping'
+  condition:
+    condition: and
+    conditions:
+      condition: template
+      value_template: "{{states.input_select.automation_mode.state != 'No Automation'}}"
+  action:
+    - service: light.turn_off
+      data:
+        entity_id:
+        - group.room_living
+        - group.room_kitchen
+    - service: remote.turn_off
+      entity_id: remote.living_room
+
+
+- id: automation_mode_away
+  alias: Mode Away
+  trigger:
+    platform: state
+    entity_id: input_select.automation_mode
+    to: 'Away'
+  condition:
+    condition: and
+    conditions:
+      condition: template
+      value_template: "{{states.input_select.automation_mode.state != 'No Automation'}}"
+  action:
+    - service: light.turn_off
+      data:
+        entity_id:
+        - group.room_living
+        - group.room_kitchen
+    - service: remote.turn_off
+      entity_id: remote.living_room
+
+
+############################
+#                          #
+#    Device Tracker        #
+#                          #
+############################
+
+
+- id: device_tracker_change
+  alias: Device tracker change
+  trigger:
+    platform: state
+    entity_id: device_tracker.phil,device_tracker.nikki
+  condition:
+    condition: or
+    conditions:
+      - condition: state
+        entity_id: input_select.automation_mode 
+        state: 'Away'
+      - condition: state
+        entity_id: input_select.automation_mode 
+        state: 'Home'
+  action:
+    service: input_select.select_option
+    data_template:
+      entity_id: input_select.automation_mode
+      option: >
+        {%if states.device_tracker.phil.state == 'present' or states.device_tracker.nikki.state == 'present' %}Home{% else %}Away{% endif %}
+
+
+############################
+#                          #
+#    Ecobee Automation     #
+#                          #
+############################
+
+
+- id: ecobee_mode_away
+  alias: Ecobee Mode Away
+  trigger:
+    platform: state
+    entity_id: input_select.automation_mode
+    to: 'Away'
+    for:
+      minutes: 90
+  condition:
+    condition: and
+    conditions:
+      condition: template
+      value_template: "{{states.input_select.automation_mode.state != 'No Automation'}}"
+  action:
+    service: climate.set_away_mode
+    data:
+      entity_id: climate.main_floor
+      away_mode: 'on' 
+
+
+- id: ecobee_mode_home
+  alias: Ecobee Mode Home
+  trigger:
+    platform: state
+    entity_id: input_select.automation_mode
+    to: 'Home'
+  condition:
+    condition: and
+    conditions:
+      condition: template
+      value_template: "{{states.input_select.automation_mode.state != 'No Automation'}}"
+  action:
+    service: climate.set_away_mode
+    data:
+      entity_id: climate.main_floor
+      away_mode: 'off' 
+
+
+############################
+#                          #
+#    Lights - Inside       #
+#                          #
+############################
+
+- id: lights_home_on
+  alias: Lights on when home - on
+  trigger:
+    - platform: state
+      entity_id: input_select.automation_mode
+      to: 'Home'
+  condition:
+    condition: or
+    conditions:
+      - condition: state
+        entity_id: binary_sensor.low_lux
+        state: 'on'
+      - condition: sun
+        after: sunset
+        after_offset: '-00:30:00'
+  action:
+    - service: script.lights_main_on
+    - service: light.turn_on
+      data:
+        entity_id: light.kitchen_island_lights
+        brightness: 75
+
+
+- id: lights_lux_on
+  alias: Lights on from light level
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.low_lux
+      to: 'on'
+      for:
+        minutes: 10
+  condition:
+    condition: and
+    conditions:
+      - condition: template
+        value_template: "{{states.input_select.automation_mode.state != 'No Automation' }}"
+      - condition: state
+        entity_id: input_select.automation_mode
+        state: 'Home'
+  action:
+    service: script.lights_main_on
+
+
+- id: lights_lux_off
+  alias: Lights off from lux level
+  trigger:
+    platform: state
+    entity_id: binary_sensor.high_lux
+    to: 'on'
+    for:
+      minutes: 10
+  condition:
+    condition: and
+    conditions:
+      - condition: template
+        value_template: "{{states.input_select.automation_mode.state != 'No Automation' }}"
+      - condition: sun
+        before: sunset
+        before_offset: '00:30:00'
+      - condition: numeric_state
+        entity_id: sensor.dark_sky_cloud_coverage
+        below: '90'
+  action:
+    service: script.lights_all_off
+
+
+- id: lights_kitchen_cabinet_on_sunset
+  alias: Lights needed sunset - on
+  trigger:
+    platform: sun
+    event: sunset
+    offset: '00:15:00'
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: input_select.automation_mode
+        state: 'Home'
+  action:
+    - service: light.turn_on
+      data:
+        entity_id: light.kitchen_cabinet_lights
+
+
+############################
+#                          #
+#    Lights - Outside      #
+#                          #
+############################
+
+
+- id: lights_sun_off
+  alias: Turn lights off when sun rises
+  trigger:
+    platform: numeric_state
+    entity_id: sun.sun
+    value_template: '{{ state.attributes.elevation }}'
+    above: -10.0
+  action:
+    - service: light.turn_off
+      data:
+        entity_id:
+        - group.outside_lights
+        - light.upstairs_hall_scone
+        - light.kitchen_cabinet_lights
+
+
+- id: lights_sun_on
+  alias: Lights outside sunset turn on
+  trigger:
+    platform : sun
+    event: sunset
+  action:
+    - service: light.turn_on
+      data:
+        entity_id: light.entry_walkway_dimmer_switch
+        # Value sent to mqtt is .38 of value set here.
+        # For 0 - 100, use 0 - 263 here
+        # 100 set = 38% to smarthings
+        # 131 set = 50% to smarthings
+        # 263 set = 100% to smarthings
+        brightness: 50
+    - service: light.turn_on
+      data:
+        entity_id: light.garage_outside_lights
+        brightness: 80
+    - service: light.turn_on
+      data:
+        entity_id: light.upstairs_hall_scone
+        brightness: 50
+
+
+############################
+#                          #
+#    Media Control         #
+#                          #
+############################
+
+
+- id: denon_slider_volume_set
+  alias: Denon - Set Slider to Volume
+  trigger:
+    - platform: state
+      entity_id: media_player.denon_avrx3000
+    - platform: state
+      entity_id: remote.living_room 
+  condition:
+    condition: template
+    value_template: '{{ (states.media_player.denon_avrx3000.attributes.volume_level | float) != (states.input_slider.denon_volume.state | float) }}'
+  action:
+    service: input_slider.select_value
+    data_template:
+      entity_id: input_slider.denon_volume
+      value: > 
+        {{ states.media_player.denon_avrx3000.attributes.volume_level | float * 100 }}
+
+ 
+- id: denon_volume_set
+  alias: Denon set volume
+  trigger:
+    platform: state
+    entity_id: input_slider.denon_volume
+  condition:
+    condition: and
+    conditions:
+      - condition: template
+        value_template: "{{states.input_select.automation_mode.state != 'No Automation'}}"
+      - condition: template
+        value_template: "{{(trigger.to_state.state | float / 100) != (states.media_player.denon_avrx3000.attributes.volume_level | float) }}"
+  action:
+    service: media_player.volume_set
+    data_template:
+      entity_id: media_player.denon_avrx3000
+      volume_level: "{{ trigger.to_state.state | float / 100 }}"
+
+
+- id: denon_deck_volume_set
+  alias: Denon deck volume set
+  trigger:
+    platform: state
+    entity_id: input_slider.denon_deck_volume
+  action:
+    service: rest_command.denon_deck_volume_set
+
+
+############################
+#                          #
+#    Harmony Activity      #
+#                          #
+############################
+
+
+- id: harmony_input_change
+  alias: 'Send Harmony comand when input select changes'
+  trigger:
+    platform: state
+    entity_id: input_select.living_room_remote
+  condition:
+    condition: and
+    conditions:
+      - condition: template
+        value_template: "{{states.input_select.automation_mode.state != 'No Automation'}}"
+      - condition: template
+        value_template: '{{states.input_select.living_room_remote.state != states.remote.living_room.attributes.current_activity }}'
+  action:
+    service: remote.turn_on
+    data_template:
+      entity_id: remote.living_room
+      activity: >
+        {% if trigger.to_state.state == "Watch TV" %}
+          19927261 
+        {% elif  trigger.to_state.state == "Watch TV / No Stereo" %}
+          19925437        
+        {% elif  trigger.to_state.state == "Watch Netflix" %}
+          19933436
+        {% elif  trigger.to_state.state == "Watch Blu-Ray" %}
+          19925431
+        {% elif  trigger.to_state.state == "PowerOff" %}
+          -1
+        {% elif  trigger.to_state.state == "Music - cable - deck" %}
+          19926657
+        {% elif  trigger.to_state.state == "Music - cable" %}
+          19926777
+        {% elif  trigger.to_state.state == "Apple TV" %}
+          19928494
+        {% elif  trigger.to_state.state == "Apple TV - Deck" %}
+          19955801
+        {% endif %}
+
+
+- id: harmony_remote_change
+  alias: 'Set Harmony input select to remote activity'
+  trigger:
+    platform: state
+    entity_id: remote.living_room
+  condition:
+    condition: template
+    value_template: '{{ trigger.to_state.attributes.current_activity != states.input_select.living_room_remote.state }}'
+  action:
+    - service: input_select.select_option
+      data_template:
+        entity_id: input_select.living_room_remote
+        option: '{{ states.remote.living_room.attributes.current_activity }}'
+    - service: input_slider.select_value
+      data_template:
+        entity_id: input_slider.denon_volume
+        value: >
+          {{ states.media_player.denon_avrx3000.attributes.volume_level | float }}
+
+
