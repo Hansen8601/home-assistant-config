@@ -89,7 +89,7 @@ lights_all_off:
   
 
 twillo_test:
-  alias: twillo_test
+  alias: twillio_test
   sequence:
   - event: LOGBOOK_ENTRY
     event_data:
