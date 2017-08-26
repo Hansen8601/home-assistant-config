@@ -7,7 +7,6 @@ homeassistant: !include homeassistant.yaml
 
 # Recorder
 recorder:
-#  db_url: !secret mysqlserver
   purge_days: 14
   exclude:
     entities:
@@ -45,10 +44,11 @@ logbook:
       - automation.denon_slider_volume_set
       - automation.denon_volume_set
       - automation.denon_deck_volume_set
+      - binary_sensor.high_lux
+      - binary_sensor.low_lux
       - input_boolean.set_mode_home
       - input_boolean.set_mode_sleeping
       - input_boolean.set_mode_away
-
 
 # Enables support for tracking state changes over time.
 history:

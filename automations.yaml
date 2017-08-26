@@ -8,7 +8,7 @@
 
  
 - id: doors_check_status
-  alias: Mode Sleep Check Doors
+  alias: Alert for open doors when mode changes
   trigger:
     - platform: state
       entity_id: input_select.automation_mode
@@ -37,7 +37,7 @@
 
 
 - id: doors_open_status
-  alias: Doors open during sleep mode
+  alias: Alert for open doors when sleeping or away
   trigger:
     - platform: state
       entity_id: sensor.garage_service_door
@@ -180,6 +180,29 @@
     - service: input_boolean.turn_off
       data: 
         entity_id: input_boolean.set_mode_away
+
+
+- id: automation_mode_home_from_ecobee
+  alias: automation mode set to home from ecobee activity
+  trigger:
+    platform: state
+    entity_id: binary_sensor.main_floor_occupancy
+    to: 'detected'
+  condition:
+    condition: and
+    conditions:
+      #- condition: template
+      #  value_template: "{{states.input_select.automation_mode.state != 'No Automation' }}"
+      - condition: template
+        value_template: "{{states.input_select.automation_mode.state == 'Sleeping' }}"
+      - condition: time
+        after: '06:00:00'
+        before: '20:00:00'
+  action:
+    - service: input_select.select_option
+      data:
+        entity_id: input_select.automation_mode
+        option: 'Home'
 
 
 ############################
