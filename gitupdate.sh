@@ -14,6 +14,6 @@ git push origin master
 echo "...";
 echo "...";
 read -p "Press [Enter] to start live server update";
-ssh pi@192.168.1.24 "cd /home/homeassistant/.homeassistant; git pull;"
+ssh pi@192.168.1.24 "cd /home/homeassistant/.homeassistant; git pull;sudo systemctl restart home-assistant@homeassistant.service;tail -f /var/log/syslog;"
 
 exit

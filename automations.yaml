@@ -187,7 +187,7 @@
   trigger:
     platform: state
     entity_id: binary_sensor.main_floor_occupancy
-    to: 'detected'
+    to: 'on'
   condition:
     condition: and
     conditions:
