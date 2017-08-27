@@ -2,9 +2,28 @@
 
 This is my home assistant configuration and documentation on how I created my development and live setup, just in case it's useful to others or if I need to rebuild.
 
+Thanks to all the great developers and supporters involved in the home assistant project. This is an amazing community.
+
+## Devices
+
+- Several apple devices (iphones, ipads, apple TVs)
+- Smarthings Hub
+- Raspberry Pi running [Home Assistant](https://home-assistant.io/) and using gpio
+- [GE Z-Wave Wireless Smart Lighting Control](https://www.amazon.com/gp/product/B006LQFHN2/ref=oh_aui_detailpage_o00_s00?ie=UTF8&psc=1)
+- ecobee 3 smart thermostat
+- Denon AVR 3000 receiver
+- Harmony Hub
+
+## Screenshots
+
+![Home](https://raw.githubusercontent.com/Hansen8601/home-assistant-config/master/images/screen1.png)
+![Rooms](https://raw.githubusercontent.com/Hansen8601/home-assistant-config/master/images/screen2.png)
+![Media](https://raw.githubusercontent.com/Hansen8601/home-assistant-config/master/images/screen3.png)
+![Climate](https://raw.githubusercontent.com/Hansen8601/home-assistant-config/master/images/screen4.png)
+
 ## My Test & Development Server Setup
 
-The development server has two virtual environments, a test and development environment.
+I have a virtual linux server used for testing and development. All config changes are done there and then pushed to to Raspberry Pi when ready through github. The server has two virtual environments, a test and development environment.
 
 /home/phil/hass-dev/ (put in my /home/phil directory to avoid permission errors)
 /home/phil/hass-test/
