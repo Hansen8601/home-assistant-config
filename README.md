@@ -16,10 +16,10 @@ Thanks to all the great developers and supporters involved in the home assistant
 
 ## Screenshots
 
-![Home](https://raw.githubusercontent.com/Hansen8601/home-assistant-config/master/images/screen1.png)
-![Rooms](https://raw.githubusercontent.com/Hansen8601/home-assistant-config/master/images/screen2.png)
-![Media](https://raw.githubusercontent.com/Hansen8601/home-assistant-config/master/images/screen3.png)
-![Climate](https://raw.githubusercontent.com/Hansen8601/home-assistant-config/master/images/screen4.png)
+![Home](https://github.com/Hansen8601/home-assistant-config/raw/master/images/screen1.PNG)
+![Rooms](https://github.com/Hansen8601/home-assistant-config/raw/master/images/screen2.PNG)
+![Media](https://github.com/Hansen8601/home-assistant-config/raw/master/images/screen3.PNG)
+![Climate](https://github.com/Hansen8601/home-assistant-config/raw/master/images/screen4.PNG)
 
 ## My Test & Development Server Setup
 
