@@ -106,6 +106,8 @@
         value_template: "{{states.input_select.automation_mode.state != 'No Automation' }}"
       - condition: template
         value_template: "{{trigger.to_state.attributes.current_activity == 'PowerOff' }}"
+      - condition: template
+        value_template: "{{states.device_tracker.nikki.state == 'present' or states.device_tracker.phil.state == 'present' }}"
       - condition: time
         after: '20:00:00'
   action:
