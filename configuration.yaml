@@ -212,10 +212,20 @@ sensor:
         {% endif %}
 
 - platform: mqtt
+  state_topic: "esp8266/garageIO/temperature"
+  name: "living_room_av_temperature"
+  unit_of_measurement: '°F'
+  value_template: '{{ value_json | float }}'
+
+- platform: mqtt
+  state_topic: "esp8266/garageIO/humidity"
+  name: 'living_room_av_humidity'
+  unit_of_measurement: '%'
+  value_template: '{{ value_json | float }}'
+
+- platform: mqtt
   state_topic: "smartthings/Aeon Multisensor 6/illuminance"
   name: "guest_bedroom_lux"
-  #Using deg. here because No. doesn't show a graph.
-  #unit_of_measurement: "°"
   unit_of_measurement: "Lux"
   value_template: '{{ value_json | float }}'
 
@@ -309,9 +319,9 @@ cover:
       name: 'garage right'
 
 - platform: mqtt
-  state_topic: "hass/switch1"
-  command_topic: "hass/switch1/set"
-  name: "mqtt cover test"
+  state_topic: "esp8266/garageIO/switch1"
+  command_topic: "esp8266/garageIO/switch1/set"
+  name: "esp8266 garage 1 test"
   qos: 0
   retain: false
   payload_open: "open"
@@ -319,6 +329,19 @@ cover:
   state_open: "open"
   state_closed: "closed"
   #optimistic: false
+
+- platform: mqtt
+  state_topic: "esp8266/garageIO/switch2"
+  command_topic: "esp8266/garageIO/switch2/set"
+  name: "esp8266 garage 2 test"
+  qos: 0
+  retain: false
+  payload_open: "open"
+  payload_close: "close"
+  state_open: "open"
+  state_closed: "closed"
+  #optimistic: false
+
 
 ###################
 #                 #

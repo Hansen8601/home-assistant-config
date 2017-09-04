@@ -93,6 +93,12 @@ sensor.garage_service_door:
   friendly_name: Garage Service Door
   homebridge_name: Garage Service Door
   icon: mdi:glassdoor
+sensor.living_room_av_temperature:
+  homebridge_hidden: true
+  friendly_name: Living Room AV Temperature
+sensor.living_room_av_humidity:
+  homebridge_hidden: true
+  friendly_name: Living Room AV Humidity
 
 # switches.yaml
 light.Entry_Walkway_Dimmer_Switch:

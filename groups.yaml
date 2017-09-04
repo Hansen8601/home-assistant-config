@@ -145,7 +145,10 @@ debug_page:
     - group.family_debug
     - sensor.guest_bedroom_lux
     - sensor.guest_bedroom_humidity
-    - cover.mqtt_cover_test
+    - cover.esp8266_garage_1_test
+    - cover.esp8266_garage_2_test
+    - sensor.living_room_av_temperature
+    - sensor.living_room_av_humidity
 
 scripts_debug:
   view: no
