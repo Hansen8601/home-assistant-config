@@ -16,6 +16,8 @@ recorder:
       - input_slider.denon_deck_volume 
       - input_slider.denon_volume
       - input_select.living_room_remote
+      - binary_sensor.garage_service_door_rpi
+      - binary_sensor.main_floor_occupancy
       - sensor.dark_sky_wind_bearing
       - sensor.dark_sky_wind_speed
       - sensor.dark_sky_temperature

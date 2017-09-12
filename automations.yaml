@@ -118,7 +118,7 @@
 
 
 - id: automation_mode_home_from_homekit
-  alias: Input Boolean Set Home
+  alias: Automation mode to home from homekit
   trigger:
     platform: state
     entity_id: input_boolean.set_mode_home
@@ -140,7 +140,7 @@
 
 
 - id: automation_mode_sleeping_from_homekit
-  alias: Input Boolean Set Sleeping Mode
+  alias: Automation mode to sleeping from homekit
   trigger:
     platform: state
     entity_id: input_boolean.set_mode_sleeping
@@ -303,8 +303,10 @@
   condition:
     condition: and
     conditions:
-      condition: template
-      value_template: "{{states.input_select.automation_mode.state != 'No Automation'}}"
+      - condition: template
+        value_template: "{{states.input_select.automation_mode.state != 'No Automation'}}"
+      - condition: template
+        value_template: "{{states.automation.mode_away.state == 'off'}}"
   action:
     service: climate.set_away_mode
     data:
@@ -321,8 +323,10 @@
   condition:
     condition: and
     conditions:
-      condition: template
-      value_template: "{{states.input_select.automation_mode.state != 'No Automation'}}"
+      - condition: template
+        value_template: "{{states.input_select.automation_mode.state != 'No Automation'}}"
+      - condition: template
+        value_template: "{{states.automation.mode_away.state == 'on'}}"
   action:
     service: climate.set_away_mode
     data:
