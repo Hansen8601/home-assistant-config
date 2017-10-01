@@ -280,7 +280,7 @@ binary_sensor:
 #
   - platform: threshold
     name: "Low LUX"
-    threshold: 800
+    threshold: 700
     type: lower
     entity_id: sensor.guest_bedroom_lux
 
