@@ -370,7 +370,7 @@
       entity_id: binary_sensor.low_lux
       to: 'on'
       for:
-        minutes: 10
+        minutes: 20
   condition:
     condition: and
     conditions:
