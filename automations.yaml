@@ -376,6 +376,9 @@
     conditions:
       - condition: template
         value_template: "{{states.input_select.automation_mode.state != 'No Automation' }}"
+#      - condition: state
+#        entity_id: binary_sensor.lux_light_control
+#        state: on
       - condition: state
         entity_id: input_select.automation_mode
         state: 'Home'
@@ -390,20 +393,45 @@
     entity_id: binary_sensor.high_lux
     to: 'on'
     for:
-      minutes: 10
+      minutes: 20
   condition:
     condition: and
     conditions:
       - condition: template
         value_template: "{{states.input_select.automation_mode.state != 'No Automation' }}"
+#      - condition: state
+#        entity_id: binary_sensor.lux_light_control
+#        state: on
       - condition: sun
         before: sunset
         before_offset: '00:30:00'
       - condition: numeric_state
         entity_id: sensor.dark_sky_cloud_coverage
-        below: '90'
+        below: '80'
   action:
     service: script.lights_all_off
+
+
+#- id: lights_sunrise_off
+#  alias: Lights off from sun elevation
+#  trigger:
+#    platform: numeric_state
+#    event: sun.sun
+#    value_template: "{{ state.attributes.elevation }} "
+#    above: 4.0
+#  condition:
+#    condition: and
+#    conditions:
+#      - condition: template
+#        value_template: "{{states.input_select.automation_mode.state != 'No Automation' }}"
+#      - condition: sun
+#        before: sunset
+#        before_offset: '00:30:00'
+#      - condition: numeric_state
+#        entity_id: sensor.dark_sky_cloud_coverage
+#        below: '80'
+#  action:
+#    service: script.lights_all_off
 
 
 - id: lights_kitchen_cabinet_on_sunset
