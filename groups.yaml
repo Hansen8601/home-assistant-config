@@ -139,6 +139,7 @@ debug_page:
     - input_boolean.set_mode_sleeping
     - input_boolean.set_mode_home
     - input_boolean.set_mode_away
+    - input_boolean.lux_light_control
     - binary_sensor.low_lux
     - binary_sensor.high_lux
     - group.scripts_debug
