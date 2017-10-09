@@ -516,11 +516,11 @@
       entity_id: remote.living_room 
   condition:
     condition: template
-    value_template: '{{ (states.media_player.denon_avrx3000.attributes.volume_level | float) != (states.input_slider.denon_volume.state | float) }}'
+    value_template: '{{ (states.media_player.denon_avrx3000.attributes.volume_level | float) != (states.input_number.denon_volume.state | float) }}'
   action:
-    service: input_slider.select_value
+    service: input_number.set_value
     data_template:
-      entity_id: input_slider.denon_volume
+      entity_id: input_number.denon_volume
       value: > 
         {{ states.media_player.denon_avrx3000.attributes.volume_level | float * 100 }}
 
@@ -529,7 +529,7 @@
   alias: Denon set volume
   trigger:
     platform: state
-    entity_id: input_slider.denon_volume
+    entity_id: input_number.denon_volume
   condition:
     condition: and
     conditions:
@@ -548,7 +548,7 @@
   alias: Denon deck volume set
   trigger:
     platform: state
-    entity_id: input_slider.denon_deck_volume
+    entity_id: input_number.denon_deck_volume
   action:
     service: rest_command.denon_deck_volume_set
 
@@ -611,9 +611,9 @@
       data_template:
         entity_id: input_select.living_room_remote
         option: '{{ states.remote.living_room.attributes.current_activity }}'
-    - service: input_slider.select_value
+    - service: input_number.set_value
       data_template:
-        entity_id: input_slider.denon_volume
+        entity_id: input_number.denon_volume
         value: >
           {{ states.media_player.denon_avrx3000.attributes.volume_level | float }}
 

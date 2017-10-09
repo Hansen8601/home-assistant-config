@@ -64,10 +64,10 @@ input_boolean.set_mode_away:
   homebridge_name: 'Set Away'
 
 # input_select.yaml
-input_slider.denon_deck_volume:
+input_number.denon_deck_volume:
   homebridge_hidden: true
   friendly_name: Deck Volume
-input_slider.denon_volume:
+input_number.denon_volume:
   homebridge_hidden: true
   friendly_name: Main Volume
 

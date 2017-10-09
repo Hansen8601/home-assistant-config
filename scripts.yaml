@@ -10,9 +10,9 @@ denon_deck_volume_50:
       message: 'Deck Volume Set to 50'
   - service: rest_command.denon_deck_volume_50
   - delay: '00:00:01'
-  - service: input_slider.select_value
+  - service: input_number.set_value
     data_template:
-      entity_id: input_slider.denon_deck_volume
+      entity_id: input_number.denon_deck_volume
       value: >
         {{ 50 }}
 
@@ -26,9 +26,9 @@ denon_deck_volume_55:
       message: 'Deck Volume Set to 55'
   - service: rest_command.denon_deck_volume_55
   - delay: '00:00:01'
-  - service: input_slider.select_value
+  - service: input_number.set_value
     data_template:
-      entity_id: input_slider.denon_deck_volume
+      entity_id: input_number.denon_deck_volume
       value: >
         {{ 55 }}
   
@@ -42,9 +42,9 @@ denon_deck_volume_60:
       message: 'Deck Volume Set to 60'
   - service: rest_command.denon_deck_volume_60
   - delay: '00:00:01'
-  - service: input_slider.select_value
+  - service: input_number.set_value
     data_template:
-      entity_id: input_slider.denon_deck_volume
+      entity_id: input_number.denon_deck_volume
       value: >
         {{ 60 }}
   

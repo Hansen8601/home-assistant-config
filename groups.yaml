@@ -20,8 +20,8 @@ media_short:
   name: Media Controls
   entities:
     - input_select.living_room_remote
-    - input_slider.denon_volume
-    - input_slider.denon_deck_volume
+    - input_number.denon_volume
+    - input_number.denon_deck_volume
 
 family:
   view: no
@@ -99,8 +99,8 @@ media_denon:
   view: no
   name: 'Living Room Receiver'
   entities:
-    - input_slider.denon_volume
-    - input_slider.denon_deck_volume
+    - input_number.denon_volume
+    - input_number.denon_deck_volume
     - script.denon_deck_volume_50
     - script.denon_deck_volume_55
     - script.denon_deck_volume_60
@@ -140,6 +140,9 @@ debug_page:
     - input_boolean.set_mode_home
     - input_boolean.set_mode_away
     - input_boolean.lux_light_control
+    - input_number.lux_hi_setpoint
+    - input_number.lux_low_setpoint
+    #- binary_sensor.lights_needed_from_lux
     - binary_sensor.low_lux
     - binary_sensor.high_lux
     - group.scripts_debug
@@ -150,6 +153,7 @@ debug_page:
     - cover.esp8266_garage_2_test
     - sensor.living_room_av_temperature
     - sensor.living_room_av_humidity
+    - history_graph.lux1
 
 scripts_debug:
   view: no

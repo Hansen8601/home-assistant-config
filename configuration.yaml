@@ -7,14 +7,15 @@ homeassistant: !include homeassistant.yaml
 
 # Recorder
 recorder:
-  purge_days: 14
+  purge_interval: 1
+  purge_keep_days: 14
   exclude:
     entities:
       - input_boolean.set_mode_sleeping
       - input_boolean.set_mode_home
       - input_boolean.set_mode_away
-      - input_slider.denon_deck_volume 
-      - input_slider.denon_volume
+      - input_number.denon_deck_volume 
+      - input_number.denon_volume
       - input_select.living_room_remote
       - binary_sensor.garage_service_door_rpi
       - binary_sensor.main_floor_occupancy
@@ -137,7 +138,7 @@ rest_command:
   denon_deck_volume_set:
     url: !secret denon_url
     method: post
-    payload: 'cmd0=PutMasterVolumeSet%2F{{((states.input_slider.denon_deck_volume.state  | float)) - 80 }}&ZoneName=ZONE2'
+    payload: 'cmd0=PutMasterVolumeSet%2F{{((states.input_number.denon_deck_volume.state  | float)) - 80 }}&ZoneName=ZONE2'
   denon_deck_volume_up:
     url: !secret denon_url
     method: post
@@ -259,12 +260,23 @@ binary_sensor:
   - platform: rpi_gpio
     ports:
       20: Garage Service Door RPI
-#
-#  - platform: template
-#    sensors:
-#      lights_needed:
-#        value_template: '{{(now().hour < 9 and states.sun.sun.attributes.elevation < 7.5) or (now().hour > 15 and  states.sun.sun.attributes.elevation < 9.0) }}'
-#        friendly_name: 'Lights Needed Night'
+#Testing this 10/8/2017
+  - platform: template
+    sensors:
+      lights_needed_from_lux:
+        friendly_name: 'lights needed from lux level'
+        value_template: >
+            {% set sun_elevation = states.sun.sun.attributes.elevation.state|float %}
+            {% set lux = states.sensor.guest_bedroom_lux.state|float %}
+            {% set lux_low_set = states.input_number_lux_low_setpoint.state|float %}
+            {% set lux_high_set = states.input_number_lux_high_setpoint.state|float %}
+            {% set cloud = states.sensor.dark_sky_cloud_coverage.state|float %}
+#            {% macro min(X, Y) -%} {{ X if X|float < Y|float else Y }} {%- endmacro %}
+#            {% macro max(X, Y) -%} {{ X if X|float > Y|float else Y }} {%- endmacro %}
+#            {% if 1==1}on{% endif %}
+
+##'{{(now().hour < 9 and states.sun.sun.attributes.elevation < 7.5) or (now().hour > 15 and  states.sun.sun.attributes.elevation < 9.0) }}'
+##        friendly_name: 'Lights Needed Night'
 #
 #  - platform: template
 #    sensors:
@@ -278,6 +290,15 @@ binary_sensor:
 #        value_template: '{% if states.sensor.guest_bedroom_lux %} {{(states.sensor.guest_bedroom_lux.state | float) < states.input_boolean.lux_level_setpoint.state and (states.sensor.dark_sky_cloud_coverage.state | float) > 25 }} {% endif %}'
 #        friendly_name: 'Lux sensor for turning lights on'
 #
+#  - platform: template
+#    sensor:
+#      lux_level_guest_bedroom:
+#        value_template: '{% states.sensor.guest_bedroom_lux %}
+#        friendly_name: 'Lux level in guest bedroom'
+#
+#  - platform: template
+#    sensor:
+#       dark_sky_cloud_coverage.state
 
 
   - platform: threshold
@@ -293,15 +314,6 @@ binary_sensor:
     entity_id: sensor.guest_bedroom_lux
 
 
-#  - platform: template
-#    sensor:
-#      lux_level_guest_bedroom:
-#        value_template: '{% states.sensor.guest_bedroom_lux %}
-#        friendly_name: 'Lux level in guest bedroom'
-#
-#  - platform: template
-#    sensor:
-#       dark_sky_cloud_coverage.state
 
 
 ###################
@@ -477,8 +489,8 @@ light:
 #                 #
 ###################
 
-# Used for homekit integration
 input_boolean:
+# Used for homekit integration
   set_mode_sleeping:
     name: set_mode_sleeping
     initial: off
@@ -486,30 +498,11 @@ input_boolean:
     name: set_mode_home
   set_mode_away:
     name: set_mode_away
+# Automation Control switches
   lux_light_control:
     name: lux_light_control
     initial: off
 
-
-###################
-#                 #
-# Input Number    #
-#                 #
-###################
-
-#input_number:
-#  lux_low_setpoint:
-#    name: lux_low_setpoint
-#    initial: 50
-#    min: 0
-#    max: 1000
-#    step: 25
-#  lux_hi_setpoint:
-#    name: lux_hi_setpoint
-#    initial: 100
-#    min: 0
-#    max: 1000
-#    step: 25
 
 
 ###################
@@ -547,11 +540,11 @@ input_select:
       
 ###################
 #                 #
-# Input Slider    #
+# Input Number    #
 #                 #
 ###################
 
-input_slider:
+input_number:
   denon_volume:
     name: Denon Volume
     initial: 30
@@ -564,7 +557,38 @@ input_slider:
     min: 0
     max: 70 
     step: .5
+  lux_low_setpoint:
+    name: lux_low_setpoint
+    initial: 50
+    min: 0
+    max: 1000
+    step: 25
+  lux_high_setpoint:
+    name: lux_hi_setpoint
+    initial: 100
+    min: 0
+    max: 1000
+    step: 25
 
+
+###################
+#                 #
+# History Graph   #
+#                 #
+###################
+
+history_graph:
+  lux1:
+    name: Light Levels
+    entities:
+      - binary_sensor.low_lux
+      - binary_sensor.high_lux
+      - sensor.guest_bedroom_lux
+      - sensor.dark_sky_cloud_coverage
+    hours_to_show: 48
+    refresh: 120
+
+ 
 group: !include groups.yaml
 
 script: !include scripts.yaml
