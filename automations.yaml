@@ -357,6 +357,10 @@
         after_offset: '-00:30:00'
   action:
     - service: script.lights_main_on
+    - service: lights.turn_on
+      data:
+        entity_id: light.master_bathroom_chandelier
+        brightness: 25
     - service: light.turn_on
       data:
         entity_id: light.kitchen_island_lights
@@ -434,7 +438,7 @@
 #    service: script.lights_all_off
 
 
-- id: lights_kitchen_cabinet_on_sunset
+- id: lights_on_sunset
   alias: Lights needed sunset - on
   trigger:
     platform: sun
@@ -450,6 +454,10 @@
     - service: light.turn_on
       data:
         entity_id: light.kitchen_cabinet_lights
+    - service: lights.turn_on
+      data:
+        entity_id: light.master_bathroom_chandelier
+        brightness: 25
 
 
 ############################
@@ -493,7 +501,7 @@
     - service: light.turn_on
       data:
         entity_id: light.garage_outside_lights
-        brightness: 80
+        brightness: 70
     - service: light.turn_on
       data:
         entity_id: light.upstairs_hall_scone

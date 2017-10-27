@@ -32,6 +32,8 @@ device_tracker.dylan:
 #Groups
 group.room_living:
   friendly_name: Living Room
+group.master_bathroom:
+  friendly_name: Master Bath
 group.outside_lights:
   friendly_name: Outside Lights
 group.room_other:
@@ -116,6 +118,9 @@ light.GE_Living_Room_2:
 light.GE_Living_Room_3:
   friendly_name: Living Room End Table
   homebridge_name: Living Room End Table
+light.master_bathroom_chandelier:
+  friendly_name: Master Bath Chandelier
+  homebridge_name: Master Bath Chandelier
 light.Kitchen_Cabinet_Lights:
   friendly_name: Kitchen Cabinet Lights
   homebridge_name: Kitchen Cabinet Lights

@@ -36,6 +36,7 @@ rooms_page:
   entities:
     - group.room_kitchen
     - group.room_living
+    - group.master_bathroom
     - group.outside_lights
     - group.room_other
     - group.room_garage
@@ -52,6 +53,11 @@ room_kitchen:
   entities:
     - light.kitchen_cabinet_lights
     - light.kitchen_island_lights
+
+room_master_bathroom:
+  view: no
+  entities:
+    - light.master_bathroom_chandelier
 
 room_other:
   view: no
