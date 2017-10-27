@@ -473,7 +473,7 @@
     platform: numeric_state
     entity_id: sun.sun
     value_template: '{{ state.attributes.elevation }}'
-    above: -10.0
+    above: -5.0
   action:
     - service: light.turn_off
       data:
