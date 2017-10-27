@@ -466,6 +466,19 @@ light:
   payload_off: "off"
   optimistic: false
   retain: true
+- platform: mqtt
+  name: "Master_bathroom_chandelier"
+  state_topic: "smartthings/Master bathroom chandelier/switch"
+  command_topic: "smartthings/Master bathroom chandelier/switch"
+  brightness_state_topic: "smartthings/Master bathroom chandelier/level"
+  brightness_command_topic: "smartthings/Master bathroom chandelier/level"
+  brightness_scale: 99
+  brightness_value_template: '{{ value }}'
+  qos: 0
+  payload_on: "on"
+  payload_off: "off"
+  optimistic: false
+  retain: true
 
 ###################
 #                 #
@@ -501,7 +514,7 @@ input_boolean:
 # Automation Control switches
   lux_light_control:
     name: lux_light_control
-    initial: off
+    initial: on
 
 
 
@@ -559,16 +572,16 @@ input_number:
     step: .5
   lux_low_setpoint:
     name: lux_low_setpoint
-    initial: 50
+    initial: 40
     min: 0
-    max: 1000
-    step: 25
+    max: 500
+    step: 20
   lux_high_setpoint:
-    name: lux_hi_setpoint
+    name: lux_high_setpoint
     initial: 100
     min: 0
-    max: 1000
-    step: 25
+    max: 500
+    step: 20
 
 
 ###################

@@ -140,7 +140,7 @@ debug_page:
     - input_boolean.set_mode_home
     - input_boolean.set_mode_away
     - input_boolean.lux_light_control
-    - input_number.lux_hi_setpoint
+    - input_number.lux_high_setpoint
     - input_number.lux_low_setpoint
     #- binary_sensor.lights_needed_from_lux
     - binary_sensor.low_lux
