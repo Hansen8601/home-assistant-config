@@ -36,7 +36,7 @@ rooms_page:
   entities:
     - group.room_kitchen
     - group.room_living
-    - group.master_bathroom
+    - group.room_master_bathroom
     - group.outside_lights
     - group.room_other
     - group.room_garage

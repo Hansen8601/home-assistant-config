@@ -32,7 +32,7 @@ device_tracker.dylan:
 #Groups
 group.room_living:
   friendly_name: Living Room
-group.master_bathroom:
+group.room_master_bathroom:
   friendly_name: Master Bath
 group.outside_lights:
   friendly_name: Outside Lights
