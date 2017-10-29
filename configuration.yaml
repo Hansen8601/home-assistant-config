@@ -547,14 +547,14 @@ input_number:
     name: lux_low_setpoint
     initial: 40
     min: 0
-    max: 500
-    step: 20
+    max: 400
+    step: 10
   lux_high_setpoint:
     name: lux_high_setpoint
     initial: 100
     min: 0
-    max: 500
-    step: 20
+    max: 400
+    step: 10
 
 
 ###################

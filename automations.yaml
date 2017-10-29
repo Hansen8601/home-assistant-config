@@ -306,7 +306,7 @@
       - condition: template
         value_template: "{{states.input_select.automation_mode.state != 'No Automation'}}"
       - condition: template
-        value_template: "{{states.automation.mode_away.state == 'off'}}"
+        value_template: "{{states.climate.main_floor.attributes.away_mode == 'off'}}"
   action:
     service: climate.set_away_mode
     data:
@@ -326,7 +326,7 @@
       - condition: template
         value_template: "{{states.input_select.automation_mode.state != 'No Automation'}}"
       - condition: template
-        value_template: "{{states.automation.mode_away.state == 'on'}}"
+        value_template: "{{states.climate.main_floor.attributes.away_mode == 'on'}}"
   action:
     service: climate.set_away_mode
     data:
