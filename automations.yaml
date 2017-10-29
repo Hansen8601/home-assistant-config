@@ -357,7 +357,7 @@
         after_offset: '-00:30:00'
   action:
     - service: script.lights_main_on
-    - service: lights.turn_on
+    - service: light.turn_on
       data:
         entity_id: light.master_bathroom_chandelier
         brightness: 25
@@ -454,7 +454,7 @@
     - service: light.turn_on
       data:
         entity_id: light.kitchen_cabinet_lights
-    - service: lights.turn_on
+    - service: light.turn_on
       data:
         entity_id: light.master_bathroom_chandelier
         brightness: 25

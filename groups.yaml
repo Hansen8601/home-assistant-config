@@ -148,18 +148,22 @@ debug_page:
     - input_boolean.lux_light_control
     - input_number.lux_high_setpoint
     - input_number.lux_low_setpoint
-    #- binary_sensor.lights_needed_from_lux
     - binary_sensor.low_lux
     - binary_sensor.high_lux
     - group.scripts_debug
     - group.family_debug
+    - group.lux_testing
     - sensor.guest_bedroom_lux
     - sensor.guest_bedroom_humidity
     - cover.esp8266_garage_1_test
     - cover.esp8266_garage_2_test
     - sensor.living_room_av_temperature
     - sensor.living_room_av_humidity
-    - history_graph.lux1
+    - history_graph.light_levels
+
+lux_testing:
+    - sensor.lights_lux_off
+    - sensor.lights_lux_on
 
 scripts_debug:
   view: no
