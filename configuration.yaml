@@ -266,19 +266,19 @@ binary_sensor:
     sensors:
       low_lux_test:
         value_template: '{% if states.sensor.guest_bedroom_lux %}
-                           {{states.sensor.guest_bedroom_lux.state|float > states.input_number.lux_high_setpoint.state|float
-                             and states.sensor.dark_sky_cloud_coverage.state < states.input_number.cloud_cover_setpoint|float }} 
+                           {{states.sensor.guest_bedroom_lux.state|float < states.input_number.lux_low_setpoint.state|float or
+                             states.sensor.dark_sky_cloud_coverage.state > states.input_number.cloud_cover_setpoint|float }} 
                          {% endif %}'
-        friendly_name: 'Lux sensor for turning lights off'
+        friendly_name: 'Lux sensor for turning lights on'
 
   - platform: template
     sensors:
       high_lux_test:
         value_template: '{% if states.sensor.guest_bedroom_lux %}
-                           {{states.sensor.guest_bedroom_lux.state|float < states.input_number.lux_low_setpoint.state|float or
-                             states.sensor.dark_sky_cloud_coverage.state > states.input_number.cloud_cover_setpoint|float }}
+                           {{states.sensor.guest_bedroom_lux.state|float > states.input_number.lux_high_setpoint.state|float and
+                             states.sensor.dark_sky_cloud_coverage.state < states.input_number.cloud_cover_setpoint|float }}
                          {% endif %}'
-        friendly_name: 'Lux sensor for turning lights on'
+        friendly_name: 'Lux sensor for turning lights off'
 
   - platform: threshold
     name: "Low LUX"
