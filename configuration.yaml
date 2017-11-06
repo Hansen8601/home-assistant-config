@@ -264,14 +264,20 @@ binary_sensor:
 # These two not used, using threshold testing as of 10/28/2017
   - platform: template
     sensors:
-      lights_lux_off:
-        value_template: '{% if states.sensor.guest_bedroom_lux %} {{ (states.sensor.guest_bedroom_lux.state | float) > states.input_boolean.lux_level_setpoint.state and (states.sensor.dark_sky_cloud_coverage.state | float) < 90 }} {% endif %}'
+      low_lux_test:
+        value_template: '{% if states.sensor.guest_bedroom_lux %}
+                           {{states.sensor.guest_bedroom_lux.state|float > states.input_number.lux_high_setpoint.state|float
+                             and states.sensor.dark_sky_cloud_coverage.state < states.input_number.cloud_cover_setpoint|float }} 
+                         {% endif %}'
         friendly_name: 'Lux sensor for turning lights off'
 
   - platform: template
     sensors:
-      lights_lux_on:
-        value_template: '{% if states.sensor.guest_bedroom_lux %} {{(states.sensor.guest_bedroom_lux.state | float) < states.input_boolean.lux_level_setpoint.state and (states.sensor.dark_sky_cloud_coverage.state | float) > 25 }} {% endif %}'
+      high_lux_test:
+        value_template: '{% if states.sensor.guest_bedroom_lux %}
+                           {{states.sensor.guest_bedroom_lux.state|float < states.input_number.lux_low_setpoint.state|float or
+                             states.sensor.dark_sky_cloud_coverage.state > states.input_number.cloud_cover_setpoint|float }}
+                         {% endif %}'
         friendly_name: 'Lux sensor for turning lights on'
 
   - platform: threshold
@@ -547,15 +553,20 @@ input_number:
     name: lux_low_setpoint
     initial: 40
     min: 0
-    max: 400
+    max: 200
     step: 10
   lux_high_setpoint:
     name: lux_high_setpoint
     initial: 100
     min: 0
-    max: 400
+    max: 200
     step: 10
-
+  cloud_cover_setpoint:
+    name: cloud_cover_setpoint
+    initial: 75
+    min: 0
+    max: 100
+    step: 5
 
 ###################
 #                 #
@@ -568,7 +579,9 @@ history_graph:
     name: Light Levels
     entities:
       - binary_sensor.low_lux
+      - binary_sensor.low_lux_test
       - binary_sensor.high_lux
+      - binary_sensor.high_lux_test
       - sensor.guest_bedroom_lux
       - sensor.dark_sky_cloud_coverage
     hours_to_show: 48

@@ -119,7 +119,8 @@ climate_page:
     - sun.sun
     - sensor.guest_bedroom_lux
     - sensor.guest_bedroom_temperature
-    - group.ecobee
+    - group.ecobee_main
+    - group.ecobee_basement
     - group.darksky_info
 
 darksky_info:
@@ -130,13 +131,21 @@ darksky_info:
     - sensor.dark_sky_wind_speed
     - sensor.dark_sky_wind_bearing
 
-ecobee:
+ecobee_main:
   view: no
   entities:
     - binary_sensor.main_floor_occupancy
     - climate.main_floor
     - sensor.main_foor_temperature
     - sensor.main_floor_humidity
+
+ecobee_basement:
+  view: no
+  entities:
+    - binary_sensor.basement_floor_occupancy
+    - climate.basement
+    - sensor.basement_temperature
+    - sensor.basement_humidity
 
 # Debug Page
 debug_page:
@@ -145,14 +154,9 @@ debug_page:
     - input_boolean.set_mode_sleeping
     - input_boolean.set_mode_home
     - input_boolean.set_mode_away
-    - input_boolean.lux_light_control
-    - input_number.lux_high_setpoint
-    - input_number.lux_low_setpoint
-    - binary_sensor.low_lux
-    - binary_sensor.high_lux
     - group.scripts_debug
-    - group.family_debug
-    - group.lux_testing
+#    - group.family_debug
+    - group.lux_debug
     - sensor.guest_bedroom_lux
     - sensor.guest_bedroom_humidity
     - cover.esp8266_garage_1_test
@@ -161,9 +165,6 @@ debug_page:
     - sensor.living_room_av_humidity
     - history_graph.light_levels
 
-lux_testing:
-    - sensor.lights_lux_off
-    - sensor.lights_lux_on
 
 scripts_debug:
   view: no
@@ -174,12 +175,23 @@ scripts_debug:
     - script.denon_deck_volume_set
 
 
-family_debug:
+#family_debug:
+#  view: no
+#  entities:
+#    - device_tracker.phil
+#    - device_tracker.nikki
+#    - device_tracker.dylan
+
+lux_debug:
   view: no
   entities:
-    - device_tracker.phil
-    - sensor.device_tracker_phil_since_update
-    - device_tracker.nikki
-    - sensor.device_tracker_nikki_since_update
-    - device_tracker.dylan
-    - sensor.device_tracker_dylan_since_update
+    - input_boolean.lux_light_control
+    - input_number.lux_high_setpoint
+    - input_number.lux_low_setpoint
+    - input_number.cloud_cover_setpoint
+    - binary_sensor.low_lux
+    - binary_sensor.low_lux_test
+    - binary_sensor.high_lux
+    - binary_sensor.high_lux_test
+
+

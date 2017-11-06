@@ -30,6 +30,12 @@ device_tracker.dylan:
   friendly_name: Dylan
 
 #Groups
+group.debug_lux:
+  friendly_name: Lux Light Controls
+group.ecobee_main:
+  friendly_name: Main Floor Climate
+group.ecobee_basement:
+  friendly_name: Basement Climate
 group.room_living:
   friendly_name: Living Room
 group.room_master_bathroom:
