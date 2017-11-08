@@ -265,20 +265,16 @@ binary_sensor:
   - platform: template
     sensors:
       low_lux_test:
-        value_template: '{% if states.sensor.guest_bedroom_lux %}
-                           {{states.sensor.guest_bedroom_lux.state|float < states.input_number.lux_low_setpoint.state|float or
-                             states.sensor.dark_sky_cloud_coverage.state > states.input_number.cloud_cover_setpoint|float }} 
-                         {% endif %}'
-        friendly_name: 'Lux sensor for turning lights on'
+        value_template: '{{states.sensor.guest_bedroom_lux.state|float < states.input_number.lux_low_setpoint.state|float or
+                           states.sensor.dark_sky_cloud_coverage.state > states.input_number.cloud_cover_setpoint|float }}' 
+        friendly_name: 'Low Lux Test'
 
   - platform: template
     sensors:
       high_lux_test:
-        value_template: '{% if states.sensor.guest_bedroom_lux %}
-                           {{states.sensor.guest_bedroom_lux.state|float > states.input_number.lux_high_setpoint.state|float and
-                             states.sensor.dark_sky_cloud_coverage.state < states.input_number.cloud_cover_setpoint|float }}
-                         {% endif %}'
-        friendly_name: 'Lux sensor for turning lights off'
+        value_template: '{{states.sensor.guest_bedroom_lux.state|float > states.input_number.lux_high_setpoint.state|float and
+                           states.sensor.dark_sky_cloud_coverage.state < states.input_number.cloud_cover_setpoint|float }}'
+        friendly_name: 'High Lux Test'
 
   - platform: threshold
     name: "Low LUX"
@@ -586,7 +582,15 @@ history_graph:
       - sensor.dark_sky_cloud_coverage
     hours_to_show: 48
     refresh: 120
-
+  climate_settings:
+    name: ecobee temperature settings
+    entities:
+#      - climate.main_floor.mode
+#      - climate.basement.mode
+#      - climate.main_floor.temperature
+      - climate.basement
+    hours_to_show: 48
+    refresh: 120
  
 group: !include groups.yaml
 

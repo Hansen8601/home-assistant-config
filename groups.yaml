@@ -142,7 +142,7 @@ ecobee_main:
 ecobee_basement:
   view: no
   entities:
-    - binary_sensor.basement_floor_occupancy
+    - binary_sensor.basement_occupancy
     - climate.basement
     - sensor.basement_temperature
     - sensor.basement_humidity
@@ -164,6 +164,7 @@ debug_page:
     - sensor.living_room_av_temperature
     - sensor.living_room_av_humidity
     - history_graph.light_levels
+    - history_graph.climate_settings
 
 
 scripts_debug:

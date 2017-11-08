@@ -333,6 +333,28 @@
       entity_id: climate.main_floor
       away_mode: 'off' 
 
+
+- id: ecobee_mode_home_from_sleep_heat
+  alias: Ecobee Mode Home from Sleep Heat
+  trigger:
+    platform: state
+    entity_id: input_select.automation_mode
+    from: 'Sleeping'
+    to: 'Home'
+  condition:
+    condition: and
+    conditions:
+      - condition: template
+        value_template: "{{states.input_select.automation_mode.state != 'No Automation'}}"
+      - condition: template
+        value_template: "{{states.climate.main_floor.attributes.operation_mode == 'heat'}}"
+  action:
+    service: climate.set_temperature
+    data:
+      entity_id: climate.main_floor
+      temperature: 70
+
+
 - id: ecobee_mode_sleep_heat
   alias: Ecobee Mode Sleep Heat
   trigger:
