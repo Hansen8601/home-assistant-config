@@ -348,11 +348,17 @@
         value_template: "{{states.input_select.automation_mode.state != 'No Automation'}}"
       - condition: template
         value_template: "{{states.climate.main_floor.attributes.operation_mode == 'heat'}}"
+      - condition: template
+        value_template: "{{states.climate.main_floor.attributes.mode != 'Home'}}"
   action:
-    service: climate.set_temperature
+    service: climate.set_hold_mode
     data:
       entity_id: climate.main_floor
-      temperature: 70
+      hold_mode: 'Home'
+#    service: climate.set_temperature
+#    data:
+#      entity_id: climate.main_floor
+#      temperature: 70
 
 
 - id: ecobee_mode_sleep_heat
@@ -368,11 +374,17 @@
         value_template: "{{states.input_select.automation_mode.state != 'No Automation'}}"
       - condition: template
         value_template: "{{states.climate.main_floor.attributes.operation_mode == 'heat'}}"
+      - condition: template
+        value_template: "{{states.climate.main_floor.attributes.mode != 'Sleep'}}"
   action:
-    service: climate.set_temperature
+    service: climate.set_hold_mode
     data:
       entity_id: climate.main_floor
-      temperature: 64
+      hold_mode: 'Sleep'
+#    service: climate.set_temperature
+#    data:
+#      entity_id: climate.main_floor
+#      temperature: 64
 
 
 ############################
