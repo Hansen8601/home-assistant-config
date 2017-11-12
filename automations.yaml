@@ -354,7 +354,7 @@
     service: climate.set_hold_mode
     data:
       entity_id: climate.main_floor
-      hold_mode: 'Home'
+      hold_mode: 'home'
 #    service: climate.set_temperature
 #    data:
 #      entity_id: climate.main_floor
@@ -366,7 +366,7 @@
   trigger:
     platform: state
     entity_id: input_select.automation_mode
-    to: 'Sleeping'
+    to: 'sleeping'
   condition:
     condition: and
     conditions:

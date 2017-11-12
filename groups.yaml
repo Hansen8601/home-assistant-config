@@ -170,6 +170,8 @@ debug_page:
 scripts_debug:
   view: no
   entities:
+    - script.ecobee_mode_home
+    - script.ecobee_mode_sleep
     - script.twillio_test
     - script.denon_deck_volume_up
     - script.denon_deck_volume_down

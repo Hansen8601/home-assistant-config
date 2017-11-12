@@ -66,6 +66,21 @@ denon_deck_volume_up:
   sequence:
   - service: rest_command.denon_deck_volume_up
 
+ecobee_mode_sleep:
+  alias: ecobee mode sleep
+  sequence:
+  - service: climate.set_hold_mode
+    data:
+      entity_id: climate.main_floor
+      hold_mode: 'sleep'
+
+ecobee_mode_home:
+  alias: ecobee mode home
+  sequence:
+  - service: climate.set_hold_mode
+    data:
+      entity_id: climate.main_floor
+      hold_mode: 'home'
 
 lights_main_on:
   alias: lights_main_on

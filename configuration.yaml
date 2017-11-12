@@ -266,14 +266,14 @@ binary_sensor:
     sensors:
       low_lux_test:
         value_template: '{{states.sensor.guest_bedroom_lux.state|float < states.input_number.lux_low_setpoint.state|float or
-                           states.sensor.dark_sky_cloud_coverage.state > states.input_number.cloud_cover_setpoint|float }}' 
+                           states.sensor.dark_sky_cloud_coverage.state > states.input_number.cloud_cover_setpoint.state|float }}' 
         friendly_name: 'Low Lux Test'
 
   - platform: template
     sensors:
       high_lux_test:
         value_template: '{{states.sensor.guest_bedroom_lux.state|float > states.input_number.lux_high_setpoint.state|float and
-                           states.sensor.dark_sky_cloud_coverage.state < states.input_number.cloud_cover_setpoint|float }}'
+                           states.sensor.dark_sky_cloud_coverage.state < states.input_number.cloud_cover_setpoint.state|float }}'
         friendly_name: 'High Lux Test'
 
   - platform: threshold
