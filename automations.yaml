@@ -591,7 +591,11 @@
       entity_id: remote.living_room 
   condition:
     condition: template
-    value_template: '{{ (states.media_player.denon_avrx3000.attributes.volume_level | float) != (states.input_number.denon_volume.state | float) }}'
+    value_template: "{% if states.media_player.denon_avrx3000.attributes.volume_level is defined %}
+                    {{ (states.media_player.denon_avrx3000.attributes.volume_level | float) != (states.input_number.denon_volume.state | float) }}
+                    {% else %}
+                    False
+                    {% endif %}"
   action:
     service: input_number.set_value
     data_template:

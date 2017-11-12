@@ -191,4 +191,37 @@ source /srv/homeassistant/bin/activate
 hass --script check_config
 ```
 
+### Upgraded Python venv from 3.4 to 3.6
+
+Directions from https://github.com/home-assistant/home-assistant/issues/8342#issuecomment-326918777
+
+```
+sudo apt-get update;
+sudo apt-get upgrade;
+sudo apt-get install build-essential tk-dev libncurses5-dev libncursesw5-dev libreadline6-dev libdb5.3-dev libgdbm-dev libsqlite3-dev libssl-dev libbz2-dev libexpat1-dev liblzma-dev zlib1g-dev
+wget https://www.python.org/ftp/python/3.6.0/Python-3.6.0.tgz
+tar xzvf Python-3.6.0.tgz
+cd Python-3.6.0/
+./configure
+make
+sudo make install
+sudo su -s /bin/bash homeassistant
+source /srv/homeassistant/bin/activate
+cd /home/homeassistant
+pip3 freeze .local > requirements.txt
+deactivate
+exit
+sudo rm -rf /srv/homeassistant
+sudo mkdir /srv/homeassistant
+sudo chown homeassistant:homeassistant /srv/homeassistant
+sudo su -s /bin/bash homeassistant
+python3.6 -m venv /srv/homeassistant
+source /srv/homeassistant/bin/activate
+pip3 install --upgrade homeassistant
+pip3 install -r /home/homeassistant/requirements.txt
+exit
+
+sudo -u homeassistant -H /srv/homeassistant/bin/hass
+'''
+
 
