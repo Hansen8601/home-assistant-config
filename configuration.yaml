@@ -461,14 +461,15 @@ light:
 #                 #
 ###################
 
-#switch:
-#- platform: mqtt
-#  name: "Test Switch"
-#  state_topic: "hass/switch1"
-#  command_topic: "hass/switch1/set"
-#  payload_on: "on"
-#  payload_off: "off"
-#  qos: 0
+switch:
+- platform: mqtt
+  state_topic: "esp8266/fireplace/switch1"
+  command_topic: "esp8266/fireplace/switch1/set"
+  name: "Fireplace"
+  qos: 0
+  retain: false
+  payload_on: "ON"
+  payload_off: "OFF"
 
 
 ###################

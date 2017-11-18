@@ -1,0 +1,77 @@
+# Home assistant configuration file
+
+
+# Used to switch between development & production system
+homeassistant: !include homeassistant.yaml
+
+
+
+
+# View all events in a logbook
+logbook:
+
+# Enables support for tracking state changes over time.
+history:
+
+# Logger settings
+logger:
+  default: warn
+
+
+# Enables the frontend
+frontend:
+
+
+# Track the sun
+sun:
+  elevation: 278
+
+
+# Allows you to issue voice commands from the frontend
+#conversation:
+
+
+# Checks for available updates
+updater:
+
+
+# Discover some devices automatically
+#discovery:
+
+
+# Show configuration panel
+config:
+
+
+
+#mqtt broker for smartthings
+mqtt:
+  broker: !secret mqtt_broker
+  port: 1883
+  keepalive: 60
+
+
+
+
+###################
+#                 #
+# Sensor          #
+#                 #
+###################
+
+switch:
+- platform: mqtt
+  state_topic: "esp8266/fireplace/switch1"
+  command_topic: "esp8266/fireplace/switch1/set"
+  name: "Fireplace switch"
+  qos: 0
+  retain: false
+  payload_on: "ON"
+  payload_off: "OFF"
+
+group:
+  default_view:
+    view: yes
+    icon: mdi:home
+    entities:
+      - switch.Fireplace_switch

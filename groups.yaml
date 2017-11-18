@@ -47,6 +47,7 @@ room_living:
     - light.ge_living_room_1
     - light.ge_living_room_2
     - light.ge_living_room_3
+    - switch.fireplace
 
 room_kitchen:
   view: no
@@ -122,6 +123,7 @@ climate_page:
     - group.ecobee_main
     - group.ecobee_basement
     - group.darksky_info
+    - switch.fireplace
 
 darksky_info:
   view: no
