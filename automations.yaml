@@ -411,7 +411,7 @@
         entity_id: input_boolean.fireplace_automation
         state: "on"
       - condition: template
-        value_template: "{{ sensor.living_room_temperature|float <=  states.input_number.fireplace_low_setpoint.state | float }}"
+        value_template: "{{ states.sensor.living_room_temperature|float <=  states.input_number.fireplace_low_setpoint.state | float }}"
   action:
     - service: switch.turn_on
       data:
