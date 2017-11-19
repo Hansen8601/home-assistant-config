@@ -240,7 +240,6 @@ binary_sensor:
     ports:
       20: Garage Service Door RPI
 
-# These two not used, using threshold testing as of 10/28/2017
   - platform: template
     sensors:
       low_lux:
@@ -254,6 +253,13 @@ binary_sensor:
         value_template: '{{states.sensor.living_room_lux.state | float > states.input_number.lux_high_setpoint.state | float and
                            states.sensor.dark_sky_cloud_coverage.state | float < states.input_number.cloud_cover_setpoint.state | float }}'
         friendly_name: 'High Lux'
+
+  - platform: template
+    sensors:
+      fireplace_off_sensor:
+        value_template: '{{ states.sensor.living_room_temperature.state|float >=  states.input_number.fireplace_high_setpoint.state | float or
+                            states.sensor.main_floor_temperature.state|float  >=  states.input_number.fireplace_high_setpoint.state | float }} '
+        friendly_name: "Fireplace Off Sensor"
 
 #  - platform: threshold
 #    name: "Low LUX"
@@ -523,25 +529,25 @@ input_number:
     max: 50 
     step: .5
   denon_deck_volume:
-    name: Denon Volume
+    name: Denon Deck Volume
     initial: 40
     min: 0
     max: 70 
     step: .5
   lux_low_setpoint:
-    name: lux_low_setpoint
+    name: lux low setpoint
     initial: 40
     min: 0
     max: 200
     step: 5
   lux_high_setpoint:
-    name: lux_high_setpoint
+    name: lux high setpoint
     initial: 50
     min: 0
     max: 200
     step: 5
   cloud_cover_setpoint:
-    name: cloud_cover_setpoint
+    name: cloud cover setpoint
     initial: 75
     min: 0
     max: 100
@@ -552,12 +558,12 @@ input_number:
     min: 60
     max: 70
     step: 1
-#  fireplace_high_setpoint:
-#    name: fireplace_high_setpoint
-#    initial: 72
-#    min: 70
-#    max: 80
-#    step: 1
+  fireplace_high_setpoint:
+    name: fireplace high setpoint
+    initial: 72
+    min: 70
+    max: 80
+    step: 1
 
 ###################
 #                 #

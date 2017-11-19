@@ -175,6 +175,7 @@ esp8266_test_debug:
 fireplace_debug:
     - input_boolean.fireplace_automation
     - input_number.fireplace_low_setpoint
+    - input_number.fireplace_high_setpoint
 
 homekit_debug:
   view: no

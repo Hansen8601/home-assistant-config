@@ -410,8 +410,12 @@
       - condition: state
         entity_id: input_boolean.fireplace_automation
         state: "on"
-      - condition: template
-        value_template: "{{ states.sensor.living_room_temperature|float <=  states.input_number.fireplace_low_setpoint.state | float }}"
+      - condition: or
+        conditions:
+          - condition: template
+            value_template: "{{ states.sensor.living_room_temperature.state|float <=  states.input_number.fireplace_low_setpoint.state | float }}"
+          - condition: template
+            value_template: "{{states.sensor.main_floor_temperature.state|float <=  states.input_number.fireplace_low_setpoint.state | float }}"
   action:
     - service: switch.turn_on
       data:
@@ -420,9 +424,9 @@
 - id: fireplace_hot_off
   alias: "Fireplace off when hot"
   trigger:
-    platform: numeric_state
-    entity_id: sensor.living_room_temperature
-    above: 72
+    platform: state
+    entity_id: binary_sensor.fireplace_off_sensor
+    to: "on"
   condition:
     condition: and
     conditions:
@@ -431,6 +435,9 @@
       - condition: state
         entity_id: input_boolean.fireplace_automation
         state: "on"
+      #- condition: state
+      #  entity_id: switch.fireplace
+      #  state: "on"
   action:
     - service: switch.turn_off
       data:
