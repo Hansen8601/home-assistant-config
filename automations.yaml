@@ -389,6 +389,56 @@
 
 ############################
 #                          #
+#    Fireplace             #
+#                          #
+############################
+
+- id: fireplace_home_on
+  alias: "Fireplace on when home and cold"
+  trigger:
+    platform: state
+    entity_id: input_select.automation_mode
+    to: "Home"
+    from: "Away"
+  condition:
+    condition: and
+    conditions:
+      - condition: template
+        value_template: "{{ states.input_select.automation_mode.state != 'No Automation'}}"
+      - condition: template
+        value_template: "{{ states.climate.main_floor.attributes.operation_mode == 'heat'}}"
+      - condition: state
+        entity_id: input_boolean.fireplace_automation
+        state: "on"
+      - condition: template
+        value_template: "{{ sensor.living_room_temperature|float <=  states.input_number.fireplace_low_setpoint.state | float }}"
+  action:
+    - service: switch.turn_on
+      data:
+        entity_id: switch.fireplace
+  
+- id: fireplace_hot_off
+  alias: "Fireplace off when hot"
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.living_room_temperature
+    above: 72
+  condition:
+    condition: and
+    conditions:
+      - condition: template
+        value_template: "{{ states.input_select.automation_mode.state != 'No Automation'}}"
+      - condition: state
+        entity_id: input_boolean.fireplace_automation
+        state: "on"
+  action:
+    - service: switch.turn_off
+      data:
+        entity_id: switch.fireplace
+
+
+############################
+#                          #
 #    Lights - Inside       #
 #                          #
 ############################
@@ -591,7 +641,7 @@
       entity_id: remote.living_room 
   condition:
     condition: template
-    value_template: "{% if states.media_player.denon_avrx3000.attributes.volume_level is defined %}
+    value_template: "{% if states.media_player.denon_avrx3000.attributes.volume_level %}
                     {{ (states.media_player.denon_avrx3000.attributes.volume_level | float) != (states.input_number.denon_volume.state | float) }}
                     {% else %}
                     False
@@ -615,7 +665,11 @@
       - condition: template
         value_template: "{{states.input_select.automation_mode.state != 'No Automation'}}"
       - condition: template
-        value_template: "{{(trigger.to_state.state | float / 100) != (states.media_player.denon_avrx3000.attributes.volume_level | float) }}"
+        value_template: "{% if states.media_player.denon_avrx3000.attributes.volume_level %}
+                        {{(trigger.to_state.state | float / 100) != (states.media_player.denon_avrx3000.attributes.volume_level | float) }}
+                        {% else %}
+                        False
+                        {% endif %}"
   action:
     service: media_player.volume_set
     data_template:
@@ -678,22 +732,24 @@
 
 
 - id: harmony_remote_change
-  alias: 'Set Harmony input select to remote activity'
+  alias: "Set Harmony input select when remote activity"
   trigger:
     platform: state
     entity_id: remote.living_room
   condition:
     condition: template
-    value_template: '{{ trigger.to_state.attributes.current_activity != states.input_select.living_room_remote.state }}'
+    value_template: "{{ trigger.to_state.attributes.current_activity != states.input_select.living_room_remote.state }}"
   action:
     - service: input_select.select_option
       data_template:
         entity_id: input_select.living_room_remote
-        option: '{{ states.remote.living_room.attributes.current_activity }}'
+        option: "{{ states.remote.living_room.attributes.current_activity }}"
     - service: input_number.set_value
       data_template:
         entity_id: input_number.denon_volume
         value: >
-          {{ states.media_player.denon_avrx3000.attributes.volume_level | float }}
-
-
+          "{% if states.media_player.denon_avrx3000.attributes.volume_level %}
+           {{ states.media_player.denon_avrx3000.attributes.volume_level | float }}
+                    {% else %}
+                    20
+                    {% endif %}"

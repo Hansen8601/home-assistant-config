@@ -117,13 +117,10 @@ media_denon:
 climate_page:
   view: yes
   entities:
-    - sun.sun
-    - sensor.guest_bedroom_lux
-    - sensor.guest_bedroom_temperature
     - group.ecobee_main
     - group.ecobee_basement
+    - group.living_room_climate
     - group.darksky_info
-    - switch.fireplace
 
 darksky_info:
   view: no
@@ -132,6 +129,7 @@ darksky_info:
     - sensor.dark_sky_cloud_coverage
     - sensor.dark_sky_wind_speed
     - sensor.dark_sky_wind_bearing
+    - sun.sun
 
 ecobee_main:
   view: no
@@ -149,25 +147,41 @@ ecobee_basement:
     - sensor.basement_temperature
     - sensor.basement_humidity
 
+living_room_climate:
+  view: no
+  entities:
+    - sensor.living_room_temperature
+    - sensor.living_room_humidity
+    - sensor.living_room_lux
+    - switch.fireplace
+    
 # Debug Page
 debug_page:
   view: yes
   entities:
-    - input_boolean.set_mode_sleeping
-    - input_boolean.set_mode_home
-    - input_boolean.set_mode_away
-    - group.scripts_debug
-#    - group.family_debug
     - group.lux_debug
-    - sensor.guest_bedroom_lux
-    - sensor.guest_bedroom_humidity
+    - group.fireplace_debug
+    - group.homekit_debug
+    - group.scripts_debug
+    - group.esp8266_test_debug
+    - history_graph.light_levels
+
+esp8266_test_debug:
     - cover.esp8266_garage_1_test
     - cover.esp8266_garage_2_test
     - sensor.living_room_av_temperature
     - sensor.living_room_av_humidity
-    - history_graph.light_levels
-    - history_graph.climate_settings
 
+fireplace_debug:
+    - input_boolean.fireplace_automation
+    - input_number.fireplace_low_setpoint
+
+homekit_debug:
+  view: no
+  entities:
+    - input_boolean.set_mode_sleeping
+    - input_boolean.set_mode_home
+    - input_boolean.set_mode_away
 
 scripts_debug:
   view: no
@@ -179,24 +193,16 @@ scripts_debug:
     - script.denon_deck_volume_down
     - script.denon_deck_volume_set
 
-
-#family_debug:
-#  view: no
-#  entities:
-#    - device_tracker.phil
-#    - device_tracker.nikki
-#    - device_tracker.dylan
-
 lux_debug:
   view: no
   entities:
+    - sensor.living_room_lux
+    - sensor.dark_sky_cloud_coverage
     - input_boolean.lux_light_control
     - input_number.lux_high_setpoint
     - input_number.lux_low_setpoint
     - input_number.cloud_cover_setpoint
     - binary_sensor.low_lux
-    - binary_sensor.low_lux_test
     - binary_sensor.high_lux
-    - binary_sensor.high_lux_test
 
 

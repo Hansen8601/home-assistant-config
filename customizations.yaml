@@ -14,10 +14,12 @@ cover.dennon_deck:
   homebridge_hidden: true
 cover.garage_right:
   friendly_name: Garage Main
+  icon: mdi:garage
   homebridge_name: Garage Main
   homebridge_cover_type: garage_door
 cover.garage_left:
   friendly_name: Garage Shop
+  icon: mdi:garage
   homebridge_name: Garage Shop
   homebridge_cover_type: garage_door
 
@@ -36,6 +38,8 @@ group.ecobee_main:
   friendly_name: Main Floor Climate
 group.ecobee_basement:
   friendly_name: Basement Climate
+group.living_room_climate:
+  friendly_name: Living Room Climate
 group.room_living:
   friendly_name: Living Room
 group.room_master_bathroom:
@@ -89,9 +93,14 @@ sensor.main_floor_humidity:
   homebridge_hidden: true
 sensor.main_floor_temperature:
   homebridge_hidden: true
-sensor.guest_bedroom_humidity:
+sensor.living_room_humidity:
+  friendly_name: Living Room Humidity
   homebridge_hidden: true
-sensor.guest_bedroom_temperature:
+sensor.living_room_temperature:
+  friendly_name: Living Room Temperature
+  homebridge_hidden: true
+sensor.living_room_lux:
+  friendly_name: Living Room LUX
   homebridge_hidden: true
 sensor.dark_sky_cloud_coverage:
   homebridge_hidden: true
@@ -108,7 +117,7 @@ sensor.living_room_av_humidity:
   homebridge_hidden: true
   friendly_name: Living Room AV Humidity
 
-# switches.yaml
+# lights
 light.Entry_Walkway_Dimmer_Switch:
   friendly_name: Outside Lamp Post
   homebridge_name: Outside Lamp Post
@@ -140,4 +149,11 @@ light.Upstairs_Hall_Scone:
 remote.living_room:
   friendly_name: Living Room Remote
   homebridge_hidden: true
+
+# switches
+switch.fireplace:
+  friendly_name: Fireplace
+  icon: mdi:fire
+  homebridge_hidden: true
+  
 

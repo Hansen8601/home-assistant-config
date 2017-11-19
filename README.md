@@ -13,6 +13,7 @@ Thanks to all the great developers and supporters involved in the home assistant
 - ecobee 3 smart thermostat
 - Denon AVR 3000 receiver
 - Harmony Hub
+- esp8266 fireplace controller
 
 ## Screenshots
 

@@ -22,9 +22,6 @@ recorder:
       - sensor.dark_sky_wind_bearing
       - sensor.dark_sky_wind_speed
       - sensor.dark_sky_temperature
-      - sensor.device_tracker_phil_since_update
-      - sensor.device_tracker_nikki_since_update
-      - sensor.device_tracker_dylan_since_update
       - automation.denon_set_volume
       - automation.denon__set_slider_to_volume
       - automation.activity_with_remote__set_automation_to_sleeping
@@ -186,24 +183,6 @@ sensor:
 
 - platform: template
   sensors:
-    device_tracker_phil_since_update:
-      value_template: '{{ relative_time(states.device_tracker.phil.last_updated) }}'
-      friendly_name: 'Phil - time since tracker update'
-
-- platform: template
-  sensors:
-    device_tracker_nikki_since_update:
-      value_template: '{{ relative_time(states.device_tracker.nikki.last_updated) }}'
-      friendly_name: 'Nikki - time since tracker update'
-
-- platform: template
-  sensors:
-    device_tracker_dylan_since_update:
-      value_template: '{{ relative_time(states.device_tracker.dylan.last_updated) }}'
-      friendly_name: 'Dylan - time since tracker update'
-
-- platform: template
-  sensors:
      garage_service_door:
        value_template: >-
         {% if states.binary_sensor.garage_service_door_rpi.state == 'on' %}
@@ -228,25 +207,25 @@ sensor:
 
 - platform: mqtt
   state_topic: "smartthings/Aeon Multisensor 6/illuminance"
-  name: "guest_bedroom_lux"
+  name: "living_room_lux"
   unit_of_measurement: "Lux"
   value_template: '{{ value_json | float }}'
 
 - platform: mqtt
   state_topic: "smartthings/Aeon Multisensor 6/temperature"
-  name: "guest_bedroom_temperature"
+  name: "living_room_temperature"
   unit_of_measurement: "°"
   value_template: '{{ value_json | float }}'
 
 - platform: mqtt
   state_topic: "smartthings/Aeon Multisensor 6/humidity"
-  name: "guest_bedroom_humidity"
+  name: "living_room_humidity"
   unit_of_measurement: "%"
   value_template: '{{ value_json | float }}'
 
 #- platform: mqtt
 #  state_topic: "smartthings/Aeon Multisensor 6/battery"
-#  name: "guest_bedroom_battery"
+#  name: "living_room_battery"
 #  unit_of_measure: '%'
 
 
@@ -264,29 +243,29 @@ binary_sensor:
 # These two not used, using threshold testing as of 10/28/2017
   - platform: template
     sensors:
-      low_lux_test:
-        value_template: '{{states.sensor.guest_bedroom_lux.state|float < states.input_number.lux_low_setpoint.state|float or
-                           states.sensor.dark_sky_cloud_coverage.state > states.input_number.cloud_cover_setpoint.state|float }}' 
-        friendly_name: 'Low Lux Test'
+      low_lux:
+        value_template: '{{states.sensor.living_room_lux.state | float  < states.input_number.lux_low_setpoint.state | float or
+                           states.sensor.dark_sky_cloud_coverage.state | float > states.input_number.cloud_cover_setpoint.state | float }}' 
+        friendly_name: 'Low Lux'
 
   - platform: template
     sensors:
-      high_lux_test:
-        value_template: '{{states.sensor.guest_bedroom_lux.state|float > states.input_number.lux_high_setpoint.state|float and
-                           states.sensor.dark_sky_cloud_coverage.state < states.input_number.cloud_cover_setpoint.state|float }}'
-        friendly_name: 'High Lux Test'
+      high_lux:
+        value_template: '{{states.sensor.living_room_lux.state | float > states.input_number.lux_high_setpoint.state | float and
+                           states.sensor.dark_sky_cloud_coverage.state | float < states.input_number.cloud_cover_setpoint.state | float }}'
+        friendly_name: 'High Lux'
 
-  - platform: threshold
-    name: "Low LUX"
-    threshold: 50
-    type: lower
-    entity_id: sensor.guest_bedroom_lux
+#  - platform: threshold
+#    name: "Low LUX"
+#    threshold: 50
+#    type: lower
+#    entity_id: sensor.living_room_lux
 
-  - platform: threshold
-    name: "High LUX"
-    threshold: 100 
-    type: upper
-    entity_id: sensor.guest_bedroom_lux
+#  - platform: threshold
+#    name: "High LUX"
+#    threshold: 100 
+#    type: upper
+#    entity_id: sensor.living_room_lux
 
 
 
@@ -491,7 +470,10 @@ input_boolean:
   lux_light_control:
     name: lux_light_control
     initial: on
-
+# Fireplace Control switch
+  fireplace_automation:
+    name: fireplace_automation
+    initial: off
 
 
 ###################
@@ -551,19 +533,31 @@ input_number:
     initial: 40
     min: 0
     max: 200
-    step: 10
+    step: 5
   lux_high_setpoint:
     name: lux_high_setpoint
-    initial: 100
+    initial: 50
     min: 0
     max: 200
-    step: 10
+    step: 5
   cloud_cover_setpoint:
     name: cloud_cover_setpoint
     initial: 75
     min: 0
     max: 100
     step: 5
+  fireplace_low_setpoint:
+    name: fireplace low setpoint
+    initial: 66
+    min: 60
+    max: 70
+    step: 1
+#  fireplace_high_setpoint:
+#    name: fireplace_high_setpoint
+#    initial: 72
+#    min: 70
+#    max: 80
+#    step: 1
 
 ###################
 #                 #
@@ -579,7 +573,7 @@ history_graph:
       - binary_sensor.low_lux_test
       - binary_sensor.high_lux
       - binary_sensor.high_lux_test
-      - sensor.guest_bedroom_lux
+      - sensor.living_room_lux
       - sensor.dark_sky_cloud_coverage
     hours_to_show: 48
     refresh: 120
