@@ -800,5 +800,5 @@
           "{% if states.media_player.denon_avrx3000.attributes.volume_level %}
            {{ states.media_player.denon_avrx3000.attributes.volume_level | float }}
                     {% else %}
-                    20
+                    20 | float
                     {% endif %}"
