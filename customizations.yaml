@@ -46,8 +46,6 @@ group.room_master_bathroom:
   friendly_name: Master Bath
 group.outside_lights:
   friendly_name: Outside Lights
-group.room_other:
-  friendly_name: Other
 group.room_kitchen:
   friendly_name: Kitchen
 group.climate_page:
@@ -64,8 +62,6 @@ group.debug_page:
   friendly_name: Debug
 group.scripts_debug:
   friendly_name: Scripts
-group.room_garage:
-  friendly_name: Garage
 
 # input_booleans.yaml
 input_boolean.set_mode_sleeping:

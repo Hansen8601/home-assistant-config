@@ -616,13 +616,13 @@ history_graph:
       - sensor.dark_sky_cloud_coverage
     hours_to_show: 48
     refresh: 120
-  climate_settings:
-    name: ecobee temperature settings
+  climate:
+    name: Temperatures
     entities:
-#      - climate.main_floor.mode
-#      - climate.basement.mode
-#      - climate.main_floor.temperature
-      - climate.basement
+       - sensor.basement_temperature
+       - sensor.basement_temperature_2
+       - sensor.living_room_temperature
+       - sensor.main_floor_temperature
     hours_to_show: 48
     refresh: 120
  
