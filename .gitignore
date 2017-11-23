@@ -18,5 +18,6 @@ custom_components
 known_devices.yaml
 HarmonyHub.AuthorizationToken
 ecobee.conf
+configuration.yaml.test
 .*
 !/.gitignore

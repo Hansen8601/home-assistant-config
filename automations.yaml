@@ -74,7 +74,7 @@
 
 - id: automation_mode_home_from_harmony
   alias: 'Activity with Remote - Set mode to Home'
-  initial_state: 'on'
+#  initial_state: 'on'
   trigger:
     platform: state
     entity_id: remote.living_room
@@ -254,6 +254,48 @@
         - group.room_kitchen
     - service: remote.turn_off
       entity_id: remote.living_room
+
+
+############################
+#                          #
+#    Bathroom Fans         #
+#                          #
+############################
+
+- id: guest_bathroom_fan_timer_start
+  alias: guest_bathroom_fan_timer_start
+  trigger:
+    platform: state
+    entity_id: light.guest_bathroom_lights
+    to: 'off'
+  action:
+    service: timer.start
+    entity_id: timer.guest_bathroom_fan_timer
+
+- id: guest_bathroom_fan_timer_done
+  alias: guest_bathroom_fan_timer_done
+  trigger:
+     platform: event
+     event_type: timer.finished
+     event_data:
+       entity_id: timer.guest_bathroom_fan_timer
+  action:
+    service: switch.turn_off
+    entity_id: switch.guest_bathroom_fan
+
+- id: guest_bathroom_fan_timer_cancel
+  alias: guest_bathroom_fan_timer_cancel
+  trigger:
+    platform: state
+    entity_id: switch.guest_bathroom_fan
+    to: 'off'
+  condition:
+    condition: state
+    entity_id: timer.guest_bathroom_fan_timer
+    state: 'active'
+  action:
+    service: timer.cancel
+    entity_id: timer.guest_bathroom_fan_timer
 
 
 ############################

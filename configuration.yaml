@@ -367,6 +367,19 @@ light:
   optimistic: false
   retain: true
 - platform: mqtt
+  name: "Guest Bathroom Lights"
+  state_topic: "smartthings/Guest Bathroom Lights/switch"
+  command_topic: "smartthings/Guest Bathroom Lights/switch"
+  brightness_state_topic: "smartthings/Guest Bathroom Lights/level"
+  brightness_command_topic: "smartthings/Guest Bathroom Lights/level"
+  brightness_scale: 99
+  brightness_value_template: '{{ value }}'
+  qos: 0
+  payload_on: "on"
+  payload_off: "off"
+  optimistic: false
+  retain: true
+- platform: mqtt
   name: "Entry_Walkway_Dimmer_Switch"
   state_topic: "smartthings/Entry Walkway Dimmer Switch/switch"
   command_topic: "smartthings/Entry Walkway Dimmer Switch/switch"
@@ -440,6 +453,7 @@ light:
   optimistic: false
   retain: true
 
+
 ###################
 #                 #
 # Switch          #
@@ -448,13 +462,22 @@ light:
 
 switch:
 - platform: mqtt
+  name: "Fireplace"
   state_topic: "esp8266/fireplace/switch1"
   command_topic: "esp8266/fireplace/switch1/set"
-  name: "Fireplace"
   qos: 0
   retain: false
   payload_on: "ON"
   payload_off: "OFF"
+- platform: mqtt
+  name: "Guest Bathroom Fan"
+  state_topic: "smartthings/Guest Bathroom Fan/switch"
+  command_topic: "smartthings/Guest Bathroom Fan/switch"
+  qos: 0
+  retain: true
+  payload_on: "on"
+  payload_off: "off"
+  optimistic: false
 
 
 ###################
@@ -565,6 +588,18 @@ input_number:
     max: 80
     step: 1
 
+
+###################
+#                 #
+# Timer           #
+#                 #
+###################
+
+timer:
+  guest_bathroom_fan_timer:
+    duration: '00:15:00'
+
+
 ###################
 #                 #
 # History Graph   #
@@ -576,9 +611,7 @@ history_graph:
     name: Light Levels
     entities:
       - binary_sensor.low_lux
-      - binary_sensor.low_lux_test
       - binary_sensor.high_lux
-      - binary_sensor.high_lux_test
       - sensor.living_room_lux
       - sensor.dark_sky_cloud_coverage
     hours_to_show: 48

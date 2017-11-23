@@ -5,8 +5,6 @@
 homeassistant: !include homeassistant.yaml
 
 
-
-
 # View all events in a logbook
 logbook:
 
@@ -55,23 +53,78 @@ mqtt:
 
 ###################
 #                 #
-# Sensor          #
 #                 #
 ###################
 
 switch:
 - platform: mqtt
-  state_topic: "esp8266/fireplace/switch1"
-  command_topic: "esp8266/fireplace/switch1/set"
-  name: "Fireplace switch"
+  name: "Guest Bathroom Fan"
+  state_topic: "smartthings/Guest Bathroom Fan/switch"
+  command_topic: "smartthings/Guest Bathroom Fan/switch"
   qos: 0
-  retain: false
-  payload_on: "ON"
-  payload_off: "OFF"
+  payload_on: "on"
+  payload_off: "off"
+  optimistic: false
+  retain: true
 
-group:
-  default_view:
-    view: yes
-    icon: mdi:home
-    entities:
-      - switch.Fireplace_switch
+light:
+- platform: mqtt
+  name: "Guest Bathroom Lights"
+  state_topic: "smartthings/Guest Bathroom Lights/switch"
+  command_topic: "smartthings/Guest Bathroom Lights/switch"
+  brightness_state_topic: "smartthings/Guest Bathroom Lights/level"
+  brightness_command_topic: "smartthings/Guest Bathroom Lights/level"
+  brightness_scale: 99
+  brightness_value_template: '{{ value }}'
+  qos: 0
+  payload_on: "on"
+  payload_off: "off"
+  optimistic: false
+  retain: true
+
+input_number:
+  guest_fan_off_delay:
+    name: Guest Fan Off Delay
+    initial: 1
+    min: 0
+    max: 60
+    step: 1
+
+timer:
+  guest_bathroom_fan_timer:
+    duration: '00:0:10'
+
+automation:
+  - alias: guest_bathroom_fan_timer_start
+    trigger:
+      platform: state
+      entity_id: light.guest_bathroom_lights
+      to: 'off'
+    action:
+      service: timer.start
+      entity_id: timer.guest_bathroom_fan_timer
+
+  - alias: guest_bathroom_fan_timer_done
+    trigger: 
+       platform: event
+       event_type: timer.finished
+       event_data:
+         entity_id: timer.guest_bathroom_fan_timer
+    action:
+      service: switch.turn_off
+      entity_id: switch.guest_bathroom_fan
+
+  - alias: guest_bathroom_fan_timer_cancel
+    trigger:
+      platform: state
+      entity_id: switch.guest_bathroom_fan
+      to: 'off'
+    condition:
+      condition: state
+      entity_id: timer.guest_bathroom_fan_timer
+      state: 'active'
+    action:
+      service: timer.cancel
+      entity_id: timer.guest_bathroom_fan_timer
+
+

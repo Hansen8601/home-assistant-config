@@ -124,6 +124,9 @@ light.Entry_Walkway_Dimmer_Switch:
 light.Garage_Outside_Lights:
   friendly_name: Outside Garage Lights
   homebridge_name: Outside Garage Lights
+light.guest_bathroom_lights:
+  friendly_name: Guest Bathroom Lights
+  homebridge_hidden: true
 light.ge_living_room_1:
   friendly_name: Living Room Credenza1
   homebridge_name: Living Room Credenza1
@@ -154,6 +157,9 @@ remote.living_room:
 switch.fireplace:
   friendly_name: Fireplace
   icon: mdi:fire
+  homebridge_hidden: true
+switch.guest_bathroom_fan:
+  friendly_name: Guest Bathroom Fan
   homebridge_hidden: true
   
 

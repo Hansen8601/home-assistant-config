@@ -37,6 +37,7 @@ rooms_page:
     - group.room_kitchen
     - group.room_living
     - group.room_master_bathroom
+    - group.room_guest_bathroom
     - group.outside_lights
     - group.room_other
     - group.room_garage
@@ -59,6 +60,12 @@ room_master_bathroom:
   view: no
   entities:
     - light.master_bathroom_chandelier
+
+room_guest_bathroom:
+  view: no
+  entities:
+    - light.guest_bathroom_lights
+    - switch.guest_bathroom_fan
 
 room_other:
   view: no
@@ -163,6 +170,7 @@ debug_page:
     - group.fireplace_debug
     - group.homekit_debug
     - group.scripts_debug
+    - group.guest_bathroom_debug
     - group.esp8266_test_debug
     - history_graph.light_levels
 
@@ -206,4 +214,7 @@ lux_debug:
     - binary_sensor.low_lux
     - binary_sensor.high_lux
 
-
+guest_bath_debug:
+    - timer.guest_bathroom_fan_timer
+    - switch.guest_bathroom_fan
+    - light.guest_bathroom_lights
