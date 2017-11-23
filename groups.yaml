@@ -235,3 +235,4 @@ graphs_page:
   entities:
     - history_graph.light_levels
     - history_graph.temperatures
+
