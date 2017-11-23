@@ -4,6 +4,8 @@
 # Used to switch between development & production system
 homeassistant: !include homeassistant.yaml
 
+frontend:
+  javascript_version: latest
 
 # Recorder
 recorder:
@@ -51,6 +53,7 @@ logbook:
       - input_boolean.set_mode_sleeping
       - input_boolean.set_mode_away
 
+
 # Enables support for tracking state changes over time.
 history:
   exclude:
@@ -59,13 +62,10 @@ history:
       - weblink
       - updater
 
+
 # Logger settings
 logger:
   default: warn
-
-
-# Enables the frontend
-frontend:
 
 
 # Track the sun

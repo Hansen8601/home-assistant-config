@@ -176,10 +176,10 @@ debug_page:
   entities:
     - group.lux_debug
     - group.fireplace_debug
-    - group.homekit_debug
-    - group.scripts_debug
     - group.guest_bathroom_debug
     - group.esp8266_test_debug
+    - group.homekit_debug
+    - group.scripts_debug
 
 esp8266_test_debug:
     - cover.esp8266_garage_1_test
@@ -222,10 +222,11 @@ lux_debug:
     - binary_sensor.high_lux
 
 guest_bathroom_debug:
+  view: no
+  entities:
     - timer.guest_bathroom_fan_timer
     - switch.guest_bathroom_fan
     - light.guest_bathroom_lights
-
 
 # Graphs
 graphs_page:
