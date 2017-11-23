@@ -74,7 +74,6 @@
 
 - id: automation_mode_home_from_harmony
   alias: 'Activity with Remote - Set mode to Home'
-#  initial_state: 'on'
   trigger:
     platform: state
     entity_id: remote.living_room
@@ -193,8 +192,8 @@
   condition:
     condition: and
     conditions:
-      #- condition: template
-      #  value_template: "{{states.input_select.automation_mode.state != 'No Automation' }}"
+      - condition: template
+        value_template: "{{states.input_select.automation_mode.state != 'No Automation' }}"
       - condition: template
         value_template: "{{states.input_select.automation_mode.state == 'Sleeping' }}"
       - condition: time
@@ -423,10 +422,6 @@
     data:
       entity_id: climate.main_floor
       hold_mode: 'sleep'
-#    service: climate.set_temperature
-#    data:
-#      entity_id: climate.main_floor
-#      temperature: 64
 
 
 ############################
@@ -474,12 +469,12 @@
     conditions:
       - condition: template
         value_template: "{{ states.input_select.automation_mode.state != 'No Automation'}}"
-      - condition: state
-        entity_id: input_boolean.fireplace_automation
-        state: "on"
-      #- condition: state
-      #  entity_id: switch.fireplace
-      #  state: "on"
+#      - condition: state
+#        entity_id: input_boolean.fireplace_automation
+#        state: "on"
+#      - condition: state
+#        entity_id: switch.fireplace
+#        state: "on"
   action:
     - service: switch.turn_off
       data:
@@ -546,9 +541,9 @@
     conditions:
       - condition: template
         value_template: "{{states.input_select.automation_mode.state != 'No Automation' }}"
-#      - condition: state
-#        entity_id: binary_sensor.lux_light_control
-#        state: on
+      - condition: state
+        entity_id: binary_sensor.lux_light_control
+        state: "on"
       - condition: state
         entity_id: input_select.automation_mode
         state: 'Home'
@@ -562,16 +557,16 @@
     platform: state
     entity_id: binary_sensor.high_lux
     to: 'on'
-    for:
-      minutes: 20
+#    for:
+#      minutes: 20
   condition:
     condition: and
     conditions:
       - condition: template
         value_template: "{{states.input_select.automation_mode.state != 'No Automation' }}"
-#      - condition: state
-#        entity_id: binary_sensor.lux_light_control
-#        state: on
+      - condition: state
+        entity_id: binary_sensor.lux_light_control
+        state: "on"
       - condition: sun
         before: sunset
         before_offset: '00:30:00'

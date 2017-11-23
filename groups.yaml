@@ -221,7 +221,7 @@ lux_debug:
     - binary_sensor.low_lux
     - binary_sensor.high_lux
 
-guest_bath_debug:
+guest_bathroom_debug:
     - timer.guest_bathroom_fan_timer
     - switch.guest_bathroom_fan
     - light.guest_bathroom_lights
@@ -233,4 +233,4 @@ graphs_page:
   name: "Graphs"
   entities:
     - history_graph.light_levels
-    - history_graph.climate
+    - history_graph.temperatures

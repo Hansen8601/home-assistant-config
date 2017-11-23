@@ -616,7 +616,7 @@ history_graph:
       - sensor.dark_sky_cloud_coverage
     hours_to_show: 48
     refresh: 120
-  climate:
+  temperatures:
     name: Temperatures
     entities:
        - sensor.basement_temperature
