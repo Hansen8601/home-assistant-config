@@ -222,6 +222,8 @@ lux_debug:
     - input_number.cloud_cover_setpoint
     - binary_sensor.low_lux
     - binary_sensor.high_lux
+    - automation.lights_lux_on
+    - automation.lights_lux_off
 
 guest_bathroom_debug:
   view: no
