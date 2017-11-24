@@ -620,7 +620,7 @@ history_graph:
     name: Temperatures
     entities:
        - sensor.basement_temperature
-       - sensor.basement_temperature_2
+#      - sensor.basement_temperature_2
        - sensor.living_room_temperature
        - sensor.main_floor_temperature
     hours_to_show: 48

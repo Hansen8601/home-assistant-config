@@ -576,9 +576,6 @@
       - condition: sun
         before: sunset
         before_offset: '00:30:00'
-      - condition: numeric_state
-        entity_id: sensor.dark_sky_cloud_coverage
-        below: '80'
   action:
     service: script.lights_all_off
 

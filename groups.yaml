@@ -194,6 +194,7 @@ fireplace_debug:
 
 homekit_debug:
   view: no
+  control: hidden
   entities:
     - input_boolean.set_mode_sleeping
     - input_boolean.set_mode_home
@@ -201,6 +202,7 @@ homekit_debug:
 
 scripts_debug:
   view: no
+  control: hidden
   entities:
     - script.ecobee_mode_home
     - script.ecobee_mode_sleep
@@ -223,6 +225,7 @@ lux_debug:
 
 guest_bathroom_debug:
   view: no
+  control: hidden
   entities:
     - timer.guest_bathroom_fan_timer
     - switch.guest_bathroom_fan
