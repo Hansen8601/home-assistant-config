@@ -535,7 +535,7 @@
 
 
 - id: lights_lux_on
-  alias: Lights on from light level
+  alias: Lights on from lux level
   trigger:
     - platform: state
       entity_id: binary_sensor.low_lux
@@ -548,8 +548,8 @@
       - condition: template
         value_template: "{{states.input_select.automation_mode.state != 'No Automation' }}"
       - condition: state
-        entity_id: binary_sensor.lux_light_control
-        state: 'on'
+        entity_id: input_boolean.lux_light_control
+        state: "on"
       - condition: state
         entity_id: input_select.automation_mode
         state: 'Home'
@@ -571,7 +571,7 @@
       - condition: template
         value_template: "{{states.input_select.automation_mode.state != 'No Automation' }}"
       - condition: state
-        entity_id: binary_sensor.lux_light_control
+        entity_id: input_boolean.lux_light_control
         state: "on"
       - condition: sun
         before: sunset

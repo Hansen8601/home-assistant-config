@@ -32,8 +32,7 @@ device_tracker.dylan:
   friendly_name: Dylan
 
 #Groups
-group.debug_lux:
-  friendly_name: Lux Light Controls
+#Think these should all be name entries on the groups page.
 group.ecobee_main:
   friendly_name: Main Floor Climate
 group.ecobee_basement:
@@ -58,10 +57,6 @@ group.media_full:
   friendly_name: Media
 group.darksky_info:
   friendly_name: Dark Sky Weather
-group.debug_page:
-  friendly_name: Debug
-group.scripts_debug:
-  friendly_name: Scripts
 
 # input_booleans.yaml
 input_boolean.set_mode_sleeping:

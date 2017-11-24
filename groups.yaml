@@ -173,6 +173,7 @@ living_room_climate:
 # Debug Page
 debug_page:
   view: yes
+  name: "Debug"
   entities:
     - group.lux_debug
     - group.fireplace_debug
@@ -182,26 +183,34 @@ debug_page:
     - group.scripts_debug
 
 esp8266_test_debug:
+  view: no
+  name: "esp8266 Test Debug"
+  entities:
     - cover.esp8266_garage_1_test
     - cover.esp8266_garage_2_test
     - sensor.living_room_av_temperature
     - sensor.living_room_av_humidity
 
 fireplace_debug:
+  view: no
+  name: "Fireplace Debug"
+  entities:
     - input_boolean.fireplace_automation
     - input_number.fireplace_low_setpoint
     - input_number.fireplace_high_setpoint
 
 homekit_debug:
   view: no
+  name: "Homekit Debug"
   control: hidden
   entities:
     - input_boolean.set_mode_sleeping
     - input_boolean.set_mode_home
     - input_boolean.set_mode_away
-
+  
 scripts_debug:
   view: no
+  name: "Scripts Debug"
   control: hidden
   entities:
     - script.ecobee_mode_home
@@ -213,6 +222,7 @@ scripts_debug:
 
 lux_debug:
   view: no
+  name: "Lux Debug"
   entities:
     - sensor.living_room_lux
     - sensor.dark_sky_cloud_coverage
@@ -222,11 +232,12 @@ lux_debug:
     - input_number.cloud_cover_setpoint
     - binary_sensor.low_lux
     - binary_sensor.high_lux
-    - automation.lights_lux_on
-    - automation.lights_lux_off
+    - automation.lights_off_from_lux_level
+    - automation.lights_on_from_lux_level
 
 guest_bathroom_debug:
   view: no
+  name: "Guest Bathroom Debug"
   control: hidden
   entities:
     - timer.guest_bathroom_fan_timer
