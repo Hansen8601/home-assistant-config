@@ -475,12 +475,9 @@
     conditions:
       - condition: template
         value_template: "{{ states.input_select.automation_mode.state != 'No Automation'}}"
-#      - condition: state
-#        entity_id: input_boolean.fireplace_automation
-#        state: "on"
-#      - condition: state
-#        entity_id: switch.fireplace
-#        state: "on"
+      - condition: state
+        entity_id: switch.fireplace
+        state: "on"
   action:
     - service: switch.turn_off
       data:

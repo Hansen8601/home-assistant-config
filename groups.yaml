@@ -79,6 +79,7 @@ room_other:
 room_garage:
   view: no
   name: "Garage"
+  icon: mdi:garage
   entities:
     - cover.garage_left
     - cover.garage_right
@@ -97,6 +98,9 @@ media_full:
     - group.media_harmony
     - group.media_denon
     - media_player.denon_avrx3000
+    - media_player.apple_tv
+    - media_player.apple_tv_basement
+    - media_player.apple_tv_workout_room
 
 media_harmony:
   view: no

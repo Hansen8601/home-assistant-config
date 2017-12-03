@@ -124,7 +124,21 @@ media_player:
 #    name: Denon AVR 2
 
 ecobee:
-  api_key: qoVtCswARL1uOnJ7zxOtRi5hs4KVSYXH
+  api_key: !secret ecobee_api_key
+
+apple_tv:
+  - host: 192.168.1.127
+    login_id: !secret apple_tv_login_id
+    name: "Apple TV Workout room"
+#    start_off: true
+  - host: 192.168.1.86
+    login_id: !secret apple_tv_login_id
+    name: "Apple TV"
+    start_off: true
+  - host: 192.168.1.95
+    login_id: !secret apple_tv_login_id
+    name: "Apple TV Basement"
+    start_off: true
 
 remote:
   - platform: harmony
