@@ -272,9 +272,10 @@
     entity_id: switch.guest_bathroom_fan
     state: "on"
   action:
-    service: timer.start
-    entity_id: timer.guest_bathroom_fan_timer
-
+    - service: timer.start
+      entity_id: timer.guest_bathroom_fan_timer1
+    - service: timer.cancel
+      entity_id: timer.guest_bathroom_fan_timer2
 
 - id: guest_bathroom_fan_timer_done
   alias: guest_bathroom_fan_timer_done
@@ -282,26 +283,46 @@
      platform: event
      event_type: timer.finished
      event_data:
-       entity_id: timer.guest_bathroom_fan_timer
+       entity_id: timer.guest_bathroom_fan_timer1
   action:
     service: switch.turn_off
     entity_id: switch.guest_bathroom_fan
 
 
-- id: guest_bathroom_fan_timer_cancel
-  alias: guest_bathroom_fan_timer_cancel
+# Not really needed
+#- id: guest_bathroom_fan_timer_cancel
+#  alias: guest_bathroom_fan_timer_cancel  trigger:
+#  trigger:
+#    entity_id: switch.guest_bathroom_fan
+#    to: 'off'
+#  condition:
+#    condition: state
+#    entity_id: timer.guest_bathroom_fan_timer1
+#    state: 'active'
+#  action:
+#    service: timer.cancel
+#    entity_id: timer.guest_bathroom_fan_timer1
+
+- id: guest_bathroom_fan_timer_backup_start
+  alias: guest_bathroom_fan_timer_backup_start
   trigger:
     platform: state
     entity_id: switch.guest_bathroom_fan
-    to: 'off'
-  condition:
-    condition: state
-    entity_id: timer.guest_bathroom_fan_timer
-    state: 'active'
+    to: "on"
   action:
-    service: timer.cancel
-    entity_id: timer.guest_bathroom_fan_timer
+    service: timer.start
+    entity_id: timer.guest_bathroom_fan_timer2
 
+- id: guest_bathroom_fan_timer_backup_done
+  alias: guest_bathroom_fan_timer_backup_done
+  trigger:
+     platform: event
+     event_type: timer.finished
+     event_data:
+       entity_id: timer.guest_bathroom_fan_timer2
+  action:
+    service: switch.turn_off
+    entity_id: switch.guest_bathroom_fan
 
 ############################
 #                          #

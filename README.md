@@ -167,6 +167,12 @@ You can check the status of the homebridge service by calling
 systemctl status homebridge
 ```
 
+#### AppleTV dependencies
+For AppleTV controls to work there are some dependencies.
+```
+sudo apt-get install build-essential libssl-dev libffi-dev python-dev
+```
+
 ### Using HASS on the Raspberry Pi
 
 ```
@@ -223,6 +229,6 @@ pip3 install -r /home/homeassistant/requirements.txt
 exit
 
 sudo -u homeassistant -H /srv/homeassistant/bin/hass
-'''
+```
 
 

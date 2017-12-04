@@ -244,7 +244,8 @@ guest_bathroom_debug:
   name: "Guest Bathroom Debug"
   control: hidden
   entities:
-    - timer.guest_bathroom_fan_timer
+    - timer.guest_bathroom_fan_timer1
+    - timer.guest_bathroom_fan_timer2
     - switch.guest_bathroom_fan
     - light.guest_bathroom_lights
 
