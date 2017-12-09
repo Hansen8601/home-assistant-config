@@ -26,6 +26,7 @@ media_short:
 family:
   view: no
   entities:
+    - input_boolean.presence_homekit
     - device_tracker.phil
     - device_tracker.nikki
     - device_tracker.dylan

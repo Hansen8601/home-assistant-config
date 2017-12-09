@@ -65,6 +65,8 @@ input_boolean.set_mode_home:
   homebridge_name: 'Set Home'
 input_boolean.set_mode_away:
   homebridge_name: 'Set Away'
+input_boolean.presence_homekit:
+  homebridge_name: "Presence for HASS"
 
 # input_select.yaml
 input_number.denon_deck_volume:

@@ -518,12 +518,9 @@ input_boolean:
     name: fireplace_automation
     initial: off
 # Homekit Presence
-  presence_phil_homekit:
-    name: presence_phil_homekit
-    initial: off
-  presence_nikki_homekit:
-    name: presence_nikki_homekit
-    initial: off
+  presence_homekit:
+    name: presence_homekit
+    initial: on
 
 ###################
 #                 #
@@ -649,9 +646,8 @@ history_graph:
   presence:
     name: Presence
     entities:
-      - input_boolean.presence_nikki_homekit
+      - input_boolean.presence_homekit
       - device_tracker.nikki
-      - input_boolean.presence_phil_homekit
       - device_tracker.phil
  
 group: !include groups.yaml
