@@ -130,7 +130,7 @@ apple_tv:
   - host: 192.168.1.127
     login_id: !secret apple_tv_login_id
     name: "Apple TV Workout room"
-#    start_off: true
+    start_off: true
   - host: 192.168.1.86
     login_id: !secret apple_tv_login_id
     name: "Apple TV"
@@ -517,7 +517,13 @@ input_boolean:
   fireplace_automation:
     name: fireplace_automation
     initial: off
-
+# Homekit Presence
+  presence_phil_homekit:
+    name: presence_phil_homekit
+    initial: off
+  presence_nikki_homekit:
+    name: presence_nikki_homekit
+    initial: off
 
 ###################
 #                 #
@@ -640,6 +646,13 @@ history_graph:
        - sensor.main_floor_temperature
     hours_to_show: 48
     refresh: 120
+  presence:
+    name: Presence
+    entities:
+      - input_boolean.presence_nikki_homekit
+      - device_tracker.nikki
+      - input_boolean.presence_phil_homekit
+      - device_tracker.phil
  
 group: !include groups.yaml
 
