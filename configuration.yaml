@@ -228,7 +228,7 @@ sensor:
 - platform: mqtt
   state_topic: "smartthings/Aeon Multisensor 6/temperature"
   name: "living_room_temperature"
-  unit_of_measurement: "°"
+  unit_of_measurement: "°F"
   value_template: '{{ value_json | float }}'
 
 - platform: mqtt

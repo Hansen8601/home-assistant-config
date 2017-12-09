@@ -324,6 +324,7 @@
     service: switch.turn_off
     entity_id: switch.guest_bathroom_fan
 
+
 ############################
 #                          #
 #    Device Tracker        #
