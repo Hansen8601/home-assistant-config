@@ -180,10 +180,18 @@ network_page:
   view: yes
   name: "Network"
   entities:
+    - group.asus_stats
     - sensor.average_load_1m
     - sensor.average_load_5m
     - sensor.ram_used
     - sensor.swap_used
+
+asus_stats:
+  view: no
+  name: "Asus Router"
+  entities:
+    - sensor.internet_speed_in
+    - sensor.internet_speed_out
     - sensor.snmp_wan_in
     - sensor.snmp_wan_out
     - input_number.internet_traffic_delta_in
