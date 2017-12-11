@@ -210,7 +210,7 @@ sensor:
 - platform: mqtt
   state_topic: "esp8266/garageIO/temperature"
   name: "living_room_av_temperature"
-  unit_of_measurement: '°F'
+  unit_of_measurement: 'Fahrenheit'
   value_template: '{{ value_json | float }}'
 
 - platform: mqtt
@@ -228,7 +228,7 @@ sensor:
 - platform: mqtt
   state_topic: "smartthings/Aeon Multisensor 6/temperature"
   name: "living_room_temperature"
-  unit_of_measurement: "°F"
+  unit_of_measurement: "Fahrenheit"
   value_template: '{{ value_json | float }}'
 
 - platform: mqtt
