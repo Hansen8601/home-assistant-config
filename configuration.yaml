@@ -242,6 +242,28 @@ sensor:
 #  name: "living_room_battery"
 #  unit_of_measure: '%'
 
+- platform: snmp
+  name: snmp_wan_in
+  host: 192.168.1.1
+  version: 2c
+  accept_errors: true
+  community: !secret snmp_community
+  baseoid: 1.3.6.1.2.1.2.2.1.16.1
+
+- platform: snmp
+  name: snmp_wan_out
+  host: 192.168.1.1
+  version: 2c
+  accept_errors: true
+  community: !secret snmp_community
+  baseoid: 1.3.6.1.2.1.2.2.1.16.2
+
+- platform: systemmonitor
+  resources:
+    - type: memory_use_percent
+    - type: swap_use_percent
+    - type: load_1m
+    - type: load_5m
 
 ###################
 #                 #
@@ -604,6 +626,20 @@ input_number:
     min: 70
     max: 80
     step: 1
+  internet_traffic_delta_in:
+    name: "Traffic IN Delta"
+    mode: box
+    initial: 0
+    min: 0
+    max: 1000000000000
+    unit_of_measurement: 'Mbps'
+  internet_traffic_delta_out:
+    name: "Traffic OUT Delta"
+    mode: box
+    initial: 0
+    min: 0
+    max: 1000000000000
+    unit_of_measurement: 'Mbps'
 
 
 ###################

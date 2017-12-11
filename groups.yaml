@@ -174,7 +174,21 @@ living_room_climate:
     - sensor.living_room_humidity
     - sensor.living_room_lux
     - switch.fireplace
-    
+
+# Network
+network_page:
+  view: yes
+  name: "Network"
+  entities:
+    - sensor.average_load_1m
+    - sensor.average_load_5m
+    - sensor.ram_used
+    - sensor.swap_used
+    - sensor.snmp_wan_in
+    - sensor.snmp_wan_out
+    - input_number.internet_traffic_delta_in
+    - input_number.internet_traffic_delta_out
+
 # Debug Page
 debug_page:
   view: yes
@@ -186,6 +200,7 @@ debug_page:
     - group.esp8266_test_debug
     - group.homekit_debug
     - group.scripts_debug
+    - group.snmp_debug
 
 esp8266_test_debug:
   view: no
@@ -212,7 +227,7 @@ homekit_debug:
     - input_boolean.set_mode_sleeping
     - input_boolean.set_mode_home
     - input_boolean.set_mode_away
-  
+
 scripts_debug:
   view: no
   name: "Scripts Debug"
@@ -249,6 +264,16 @@ guest_bathroom_debug:
     - timer.guest_bathroom_fan_timer2
     - switch.guest_bathroom_fan
     - light.guest_bathroom_lights
+
+snmp_debug:
+  view: no
+  name: "SNMP Debug"
+  control: hidden
+  entities:
+    - sensor.snmp_wan_in
+    - sensor.snmp_wan_out
+    - input_number.internet_traffic_delta_in
+    - input_number.internet_traffic_delta_out
 
 # Graphs
 graphs_page:
