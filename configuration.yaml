@@ -10,7 +10,7 @@ frontend:
 # Recorder
 recorder:
   purge_interval: 1
-  purge_keep_days: 14
+  purge_keep_days: 7
   exclude:
     entities:
       - input_boolean.set_mode_sleeping
@@ -24,6 +24,8 @@ recorder:
       - sensor.dark_sky_wind_bearing
       - sensor.dark_sky_wind_speed
       - sensor.dark_sky_temperature
+      - sensor.snmp_wan_in
+      - sensor.snmp_wan_out
       - automation.denon_set_volume
       - automation.denon__set_slider_to_volume
       - automation.activity_with_remote__set_automation_to_sleeping
@@ -32,6 +34,8 @@ recorder:
       - script.denon_deck_volume_down
       - script.denon_deck_volume_up
       - script.denon_deck_volume_set
+      - input_number.internet_traffic_delta_in
+      - input_number.internet_traffic_delta_out
     domains:
       - sun
       - script
