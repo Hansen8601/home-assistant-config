@@ -31,6 +31,8 @@ recorder:
       - automation.activity_with_remote__set_automation_to_sleeping
       - automation.activity_with_remote__set_mode_to_home
       - automation.set_harmony_input_select_to_remote_activity
+      - automation.monitor_in_traffic
+      - automation.monitor_out_traffic
       - script.denon_deck_volume_down
       - script.denon_deck_volume_up
       - script.denon_deck_volume_set
