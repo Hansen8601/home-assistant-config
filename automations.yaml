@@ -758,7 +758,7 @@
 ############################
 
 - id: monitor_in_traffic
-  alias: Monitor Out Traffic
+  alias: Monitor In Traffic
 
   trigger:
     platform: state
