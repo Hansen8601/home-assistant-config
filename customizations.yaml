@@ -84,6 +84,10 @@ media_player.denon_avrx3000:
   homebridge_hidden: true
 
 # sensors.yaml
+sensor.average_load_5m:
+  homebridge_hidden: true
+sensor.average_load_1m:
+  homebridge_hidden: true
 sensor.main_floor_humidity:
   homebridge_hidden: true
 sensor.main_floor_temperature:
@@ -111,6 +115,10 @@ sensor.living_room_av_temperature:
 sensor.living_room_av_humidity:
   homebridge_hidden: true
   friendly_name: Living Room AV Humidity
+sensor.wan_traffic_in:
+  homebridge_hidden:  true
+sensor.wan_traffic_out:
+  homebridge_hidden: true
 
 # lights
 light.Entry_Walkway_Dimmer_Switch:

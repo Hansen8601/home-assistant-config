@@ -21,6 +21,8 @@ recorder:
       - input_select.living_room_remote
       - binary_sensor.garage_service_door_rpi
       - binary_sensor.main_floor_occupancy
+      - sensor.average_load_1m
+      - sensor.average_load_5m
       - sensor.dark_sky_wind_bearing
       - sensor.dark_sky_wind_speed
       - sensor.dark_sky_temperature
@@ -53,6 +55,7 @@ logbook:
       - automation.denon_slider_volume_set
       - automation.denon_volume_set
       - automation.denon_deck_volume_set
+      
       - binary_sensor.high_lux
       - binary_sensor.low_lux
       - input_boolean.set_mode_home
