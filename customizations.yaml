@@ -1,3 +1,9 @@
+# Automation
+automation.monitor_in_traffic:
+  homebridge_hidden: true
+automation.monitor_out_traffic:
+  homebridge_hidden: true
+
 # Binary Sensors
 binary_sensor.main_floor_occupancy:
   friendly_name: Main Floor Occupancy
@@ -77,8 +83,12 @@ input_number.denon_deck_volume:
 input_number.denon_volume:
   homebridge_hidden: true
   friendly_name: Main Volume
+input_number.internet_traffic_delta_in:
+  homebridge_hidden: true
+input_number.internet_traffic_delta_out:
+  homebridge_hidden: true
 
-# Media Players.yaml
+# Media Players
 media_player.denon_avrx3000:
   friendy_name: Denon AVR
   homebridge_hidden: true
@@ -115,6 +125,10 @@ sensor.living_room_av_temperature:
 sensor.living_room_av_humidity:
   homebridge_hidden: true
   friendly_name: Living Room AV Humidity
+sensor.snmp_wan_in:
+  homebridge_hidden: true
+sensor.snmp_wan_out:
+  homebridge_hidden: true
 sensor.wan_traffic_in:
   homebridge_hidden:  true
 sensor.wan_traffic_out:
