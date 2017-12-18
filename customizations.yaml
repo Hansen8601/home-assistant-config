@@ -1,27 +1,24 @@
 # Binary Sensors
 binary_sensor.main_floor_occupancy:
   friendly_name: Main Floor Occupancy
-  homebridge_hidden: true
 
 # Covers
 cover.dennon:
   friendly_name: TV Volume
   entity_picture: mdi:monitor
-  homebridge_hidden: true
 cover.dennon_deck:
   friendly_name: Deck Volume
   entity_picture: mdi:radio
-  homebridge_hidden: true
 cover.garage_right:
   friendly_name: Garage Main
   icon: mdi:garage
-  homebridge_hidden: false
+  homebridge_visible: true
   homebridge_name: Garage Main
   homebridge_cover_type: garage_door
 cover.garage_left:
   friendly_name: Garage Shop
   icon: mdi:garage
-  homebridge_hidden: false
+  homebridge_visible: true
   homebridge_name: Garage Shop
   homebridge_cover_type: garage_door
 
@@ -62,16 +59,16 @@ group.darksky_info:
 
 # input_booleans.yaml
 input_boolean.set_mode_sleeping:
-  homebridge_hidden: false
+  homebridge_visible: true
   homebridge_name: 'Set Sleep'
 input_boolean.set_mode_home:
-  homebridge_hidden: false
+  homebridge_visible: true
   homebridge_name: 'Set Home'
 input_boolean.set_mode_away:
-  homebridge_hidden: false
+  homebridge_visible: true
   homebridge_name: 'Set Away'
 input_boolean.presence_homekit:
-  homebridge_hidden: false
+  homebridge_visible: true
   homebridge_name: "Presence for HASS"
   icon: mdi:home-map-marker
   friendly_name: Homekit Presence
@@ -89,26 +86,21 @@ media_player.denon_avrx3000:
 # sensors.yaml
 sensor.living_room_humidity:
   friendly_name: Living Room Humidity
-  homebridge_hidden: true
 sensor.living_room_temperature:
   friendly_name: Living Room Temperature
-  homebridge_hidden: true
 sensor.living_room_lux:
   friendly_name: Living Room LUX
-  homebridge_hidden: true
 sensor.dark_sky_cloud_coverage:
-  homebridge_hidden: true
+  friendly_name: Dark sky cloud coverage
 sensor.dark_sky_temperature:
-  homebridge_hidden: true
+  friendly_name: Dark sky temperature
 sensor.garage_service_door:
   friendly_name: Garage Service Door
   homebridge_name: Garage Service Door
   icon: mdi:glassdoor
 sensor.living_room_av_temperature:
-  homebridge_hidden: true
   friendly_name: Living Room AV Temperature
 sensor.living_room_av_humidity:
-  homebridge_hidden: true
   friendly_name: Living Room AV Humidity
 
 # lights
@@ -120,7 +112,6 @@ light.Garage_Outside_Lights:
   homebridge_name: Outside Garage Lights
 light.guest_bathroom_lights:
   friendly_name: Guest Bathroom Lights
-  homebridge_hidden: true
 light.ge_living_room_1:
   friendly_name: Living Room Credenza1
   homebridge_name: Living Room Credenza1
@@ -145,15 +136,10 @@ light.Upstairs_Hall_Scone:
 
 remote.living_room:
   friendly_name: Living Room Remote
-  homebridge_hidden: true
 
 # switches
 switch.fireplace:
   friendly_name: Fireplace
   icon: mdi:fire
-  homebridge_hidden: true
 switch.guest_bathroom_fan:
   friendly_name: Guest Bathroom Fan
-  homebridge_hidden: true
-  
-
