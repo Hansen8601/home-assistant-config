@@ -1,6 +1,5 @@
 # Home assistant configuration file
 
-
 # Used to switch between development & production system
 homeassistant: !include homeassistant.yaml
 

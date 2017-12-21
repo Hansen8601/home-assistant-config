@@ -1,4 +1,4 @@
-name: Home-Dev
+name: Home-Sever
 
 latitude: !secret latitude
 longitude: !secret longitude
