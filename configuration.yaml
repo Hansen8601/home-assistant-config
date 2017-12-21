@@ -229,6 +229,12 @@ sensor:
   value_template: '{{ value_json | float }}'
 
 - platform: mqtt
+  state_topic: "esp8266/garageIO/humidity"
+  name: 'garage_service_door_test'
+  unit_of_measurement: '%'
+  value_template: '{{ value_json | float }}'
+
+- platform: mqtt
   state_topic: "smartthings/Aeon Multisensor 6/illuminance"
   name: "living_room_lux"
   unit_of_measurement: "Lux"
@@ -366,7 +372,7 @@ cover:
   state_topic: "esp8266/garageIO/switch1"
   command_topic: "esp8266/garageIO/switch1/set"
   name: "esp8266 garage 1 test"
-  qos: 0
+  qos: 2
   retain: false
   payload_open: "open"
   payload_close: "close"
@@ -378,7 +384,7 @@ cover:
   state_topic: "esp8266/garageIO/switch2"
   command_topic: "esp8266/garageIO/switch2/set"
   name: "esp8266 garage 2 test"
-  qos: 0
+  qos: 2
   retain: false
   payload_open: "open"
   payload_close: "close"
@@ -402,7 +408,7 @@ light:
   brightness_command_topic: "smartthings/GE Living Room 1/level"
   brightness_scale: 99
   brightness_value_template: '{{ value }}'
-  #qos: 0
+  qos: 1
   payload_on: "on"
   payload_off: "off"
   optimistic: false
@@ -415,7 +421,7 @@ light:
   brightness_command_topic: "smartthings/GE Living Room 2/level"
   brightness_scale: 99
   brightness_value_template: '{{ value }}'
-  qos: 0
+  qos: 1
   payload_on: "on"
   payload_off: "off"
   optimistic: false
@@ -428,7 +434,7 @@ light:
   brightness_command_topic: "smartthings/GE Living Room 3/level"
   brightness_scale: 99
   brightness_value_template: '{{ value }}'
-  qos: 0
+  qos: 1
   payload_on: "on"
   payload_off: "off"
   optimistic: false
@@ -441,7 +447,7 @@ light:
   brightness_command_topic: "smartthings/Guest Bathroom Lights/level"
   brightness_scale: 99
   brightness_value_template: '{{ value }}'
-  qos: 0
+  qos: 1
   payload_on: "on"
   payload_off: "off"
   optimistic: false
@@ -454,7 +460,7 @@ light:
   brightness_command_topic: "smartthings/Entry Walkway Dimmer Switch/level"
   brightness_scale: 99
   brightness_value_template: '{{ value }}'
-  qos: 0
+  qos: 1
   payload_on: "on"
   payload_off: "off"
   optimistic: false
@@ -467,7 +473,7 @@ light:
   brightness_command_topic: "smartthings/Garage Outside Lights/level"
   brightness_scale: 99
   brightness_value_template: '{{ value }}'
-  qos: 0
+  qos: 1
   payload_on: "on"
   payload_off: "off"
   optimistic: false
@@ -480,7 +486,7 @@ light:
   brightness_command_topic: "smartthings/Upstairs Hall Scone/level"
   brightness_scale: 99
   brightness_value_template: '{{ value }}'
-  qos: 0
+  qos: 1
   payload_on: "on"
   payload_off: "off"
   optimistic: false
@@ -501,7 +507,7 @@ light:
   brightness_command_topic: "smartthings/Kitchen Island Lights/level"
   brightness_scale: 99
   brightness_value_template: '{{ value }}'
-  qos: 0
+  qos: 1
   payload_on: "on"
   payload_off: "off"
   optimistic: false
@@ -514,7 +520,7 @@ light:
   brightness_command_topic: "smartthings/Master bathroom chandelier/level"
   brightness_scale: 99
   brightness_value_template: '{{ value }}'
-  qos: 0
+  qos: 1
   payload_on: "on"
   payload_off: "off"
   optimistic: false
