@@ -13,7 +13,8 @@ git push origin master
 
 echo "...";
 echo "...";
-read -p "Press [Enter] to start live server update";
-ssh pi@192.168.1.24 "cd /home/homeassistant/.homeassistant; git pull;sudo systemctl restart home-assistant@homeassistant.service;tail -f /var/log/syslog;"
+#read -p "Press [Enter] to start live server update";
+#ssh pi@192.168.1.24 "cd /home/homeassistant/.homeassistant; git pull;sudo systemctl restart home-assistant@homeassistant.service;tail -f /var/log/syslog;"
+ssh pi@192.168.1.22 "cd /opt/docker-compose-projects/home-assistant/home-assistant/home-assistant-config;sudo git pull;"
 
 exit
