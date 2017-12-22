@@ -205,19 +205,18 @@ debug_page:
     - group.lux_debug
     - group.fireplace_debug
     - group.guest_bathroom_debug
-    - group.esp8266_test_debug
     - group.homekit_debug
     - group.scripts_debug
     - group.snmp_debug
 
-esp8266_test_debug:
-  view: no
-  name: "esp8266 Test Debug"
-  entities:
-    - cover.esp8266_garage_1_test
-    - cover.esp8266_garage_2_test
-    - sensor.living_room_av_temperature
-    - sensor.living_room_av_humidity
+#esp8266_test_debug:
+#  view: no
+#  name: "esp8266 Test Debug"
+#  entities:
+#    - cover.esp8266_garage_1_test
+#    - cover.esp8266_garage_2_test
+#    - sensor.living_room_av_temperature
+#    - sensor.living_room_av_humidity
 
 fireplace_debug:
   view: no

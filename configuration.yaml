@@ -18,7 +18,6 @@ recorder:
       - input_number.denon_deck_volume 
       - input_number.denon_volume
       - input_select.living_room_remote
-      - binary_sensor.garage_service_door_rpi
       - binary_sensor.main_floor_occupancy
       - sensor.average_load_1m
       - sensor.average_load_5m
@@ -180,127 +179,6 @@ rest_command:
     payload: 'cmd0=PutMasterVolumeSet%2F-20&ZoneName=ZONE2'
 
 
-
-###################
-#                 #
-# Sensor          #
-#                 #
-###################
-
-sensor:
-- platform: darksky
-  api_key: !secret dark_sky_api
-  scan_interval: 240
-  monitored_conditions:
-    - temperature
-    - cloud_cover
-    - wind_speed
-    - wind_bearing
-
-- platform: template
-  sensors:
-    living_room_remote_activity:
-      value_template: '{{ states.remote.living_room.attributes.current_activity }}'
-      friendly_name: 'Living Room Remote Activity'
-
-- platform: template
-  sensors:
-     garage_service_door:
-       value_template: >-
-        {% if states.binary_sensor.garage_service_door_rpi.state == 'on' %}
-          Closed
-        {% elif states.binary_sensor.garage_service_door_rpi.state == 'off' %}
-          Open
-        {% else %}
-          n/a
-        {% endif %}
-
-- platform: mqtt
-  state_topic: "esp8266/garageIO/temperature"
-  name: "living_room_av_temperature"
-  unit_of_measurement: "°F"
-  value_template: '{{ value_json | float }}'
-
-- platform: mqtt
-  state_topic: "esp8266/garageIO/humidity"
-  name: 'living_room_av_humidity'
-  unit_of_measurement: '%'
-  value_template: '{{ value_json | float }}'
-
-- platform: mqtt
-  state_topic: "esp8266/garageIO/humidity"
-  name: 'garage_service_door_test'
-  unit_of_measurement: '%'
-  value_template: '{{ value_json | float }}'
-
-- platform: mqtt
-  state_topic: "smartthings/Aeon Multisensor 6/illuminance"
-  name: "living_room_lux"
-  unit_of_measurement: "Lux"
-  value_template: '{{ value_json | float }}'
-
-- platform: mqtt
-  state_topic: "smartthings/Aeon Multisensor 6/temperature"
-  name: "living_room_temperature"
-  unit_of_measurement: "°F"
-  value_template: '{{ value_json | float }}'
-
-- platform: mqtt
-  state_topic: "smartthings/Aeon Multisensor 6/humidity"
-  name: "living_room_humidity"
-  unit_of_measurement: "%"
-  value_template: '{{ value_json | float }}'
-
-#- platform: mqtt
-#  state_topic: "smartthings/Aeon Multisensor 6/battery"
-#  name: "living_room_battery"
-#  unit_of_measure: '%'
-
-- platform: snmp
-  name: snmp_wan_in
-  host: 192.168.1.1
-  version: 2c
-  accept_errors: true
-  community: !secret snmp_community
-  baseoid: 1.3.6.1.2.1.2.2.1.16.1
-
-- platform: snmp
-  name: snmp_wan_out
-  host: 192.168.1.1
-  version: 2c
-  accept_errors: true
-  community: !secret snmp_community
-  baseoid: 1.3.6.1.2.1.2.2.1.16.2
-
-- platform: template
-  sensors: 
-    internet_speed_in:
-      friendly_name: 'Internet Speed In'
-      value_template: '{{ ((states.input_number.internet_traffic_delta_in.state | float ) / 1000000 ) | round(2) }}'
-      unit_of_measurement: 'Mbps'
-
-- platform: template
-  sensors:
-    internet_speed_out:
-      friendly_name: 'Internet Speed Out'
-      value_template: '{{ ((states.input_number.internet_traffic_delta_out.state | float ) / 1000000 ) | round(2) }}'
-      unit_of_measurement: 'Mbps'
-
-- platform: statistics
-  name: 'WAN Traffic IN'
-  entity_id: sensor.internet_speed_in
-
-- platform: statistics
-  name: 'WAN Traffic OUT'
-  entity_id: sensor.internet_speed_out
-
-- platform: systemmonitor
-  resources:
-    - type: memory_use_percent
-    - type: swap_use_percent
-    - type: load_1m
-    - type: load_5m
-
 ###################
 #                 #
 # Binary Sensor   #
@@ -308,9 +186,9 @@ sensor:
 ###################
 
 binary_sensor:
-  - platform: rpi_gpio
-    ports:
-      20: Garage Service Door RPI
+#  - platform: rpi_gpio
+#    ports:
+#      20: Garage Service Door RPI
 
   - platform: template
     sensors:
@@ -346,8 +224,6 @@ binary_sensor:
 #    entity_id: sensor.living_room_lux
 
 
-
-
 ###################
 #                 #
 # Cover           #
@@ -355,38 +231,44 @@ binary_sensor:
 ###################
 
 cover:
-- platform: rpi_gpio
-  covers:
-    - relay_pin: 23
-      state_pin: 12
-      name: 'garage left'
+#- platform: rpi_gpio
+#  covers:
+#    - relay_pin: 23
+#      state_pin: 12
+#      name: 'garage left'
 
-- platform: rpi_gpio
-  covers:
-    - relay_pin: 24
-      state_pin: 13
-      name: 'garage right'
+#- platform: rpi_gpio
+#  covers:
+#    - relay_pin: 24
+#      state_pin: 13
+#      name: 'garage right'
 
 - platform: mqtt
-  state_topic: "esp8266/garageIO/switch1"
-  command_topic: "esp8266/garageIO/switch1/set"
-  name: "esp8266 garage 1 test"
-  qos: 2
-  retain: false
-  payload_open: "open"
-  payload_close: "close"
+  state_topic: "rpi/garage/input/garagedoormain"
+  command_topic: "rpi/garage/output/garagedoormain/set_on_ms"
+  availability_topic: "rpi/garage/status"
+  payload_available: "running"
+  payload_not_available: "stopped"
+  name: "garage right"
+  qos: 0 #Must be zero to work correctly
+  retain: false 
+  payload_open: "500"
+  payload_close: "500"
   state_open: "open"
   state_closed: "closed"
   #optimistic: false
 
 - platform: mqtt
-  state_topic: "esp8266/garageIO/switch2"
-  command_topic: "esp8266/garageIO/switch2/set"
-  name: "esp8266 garage 2 test"
-  qos: 2
+  state_topic: "rpi/garage/input/garagedoorshop"
+  command_topic: "rpi/garage/output/garagedoorshop/set_on_ms"
+  availability_topic: "rpi/garage/status"
+  payload_available: "running"
+  payload_not_available: "stopped"
+  name: "garage left"
+  qos: 0 #must be zero to work correctly.
   retain: false
-  payload_open: "open"
-  payload_close: "close"
+  payload_open: "500"
+  payload_close: "500"
   state_open: "open"
   state_closed: "closed"
   #optimistic: false
@@ -524,6 +406,131 @@ light:
   payload_off: "off"
   optimistic: false
   retain: true
+
+
+###################
+#                 #
+# Sensor          #
+#                 #
+###################
+
+sensor:
+- platform: darksky
+  api_key: !secret dark_sky_api
+  scan_interval: 240
+  monitored_conditions:
+    - temperature
+    - cloud_cover
+    - wind_speed
+    - wind_bearing
+
+- platform: template
+  sensors:
+    living_room_remote_activity:
+      value_template: '{{ states.remote.living_room.attributes.current_activity }}'
+      friendly_name: 'Living Room Remote Activity'
+
+#- platform: template
+#  sensors:
+#     garage_service_door:
+#       value_template: >-
+#        {% if states.binary_sensor.garage_service_door_rpi.state == 'on' %}
+#          Closed
+#        {% elif states.binary_sensor.garage_service_door_rpi.state == 'off' %}
+#          Open
+#        {% else %}
+#          n/a
+#        {% endif %}
+
+- platform: mqtt
+  state_topic: "rpi/garage/input/servicedoor"
+  name: "garage service door"
+
+#- platform: mqtt
+#  state_topic: "esp8266/garageIO/temperature"
+#  name: "living_room_av_temperature"
+#  unit_of_measurement: "°F"
+#  value_template: '{{ value_json | float }}'
+
+#- platform: mqtt
+#  state_topic: "esp8266/garageIO/humidity"
+#  name: 'living_room_av_humidity'
+#  unit_of_measurement: '%'
+#  value_template: '{{ value_json | float }}'
+
+#- platform: mqtt
+#  state_topic: "esp8266/garageIO/humidity"
+#  name: 'garage_service_door_test'
+#  unit_of_measurement: '%'
+#  value_template: '{{ value_json | float }}'
+
+- platform: mqtt
+  state_topic: "smartthings/Aeon Multisensor 6/illuminance"
+  name: "living_room_lux"
+  unit_of_measurement: "Lux"
+  value_template: '{{ value_json | float }}'
+
+- platform: mqtt
+  state_topic: "smartthings/Aeon Multisensor 6/temperature"
+  name: "living_room_temperature"
+  unit_of_measurement: "°F"
+  value_template: '{{ value_json | float }}'
+
+- platform: mqtt
+  state_topic: "smartthings/Aeon Multisensor 6/humidity"
+  name: "living_room_humidity"
+  unit_of_measurement: "%"
+  value_template: '{{ value_json | float }}'
+
+#- platform: mqtt
+#  state_topic: "smartthings/Aeon Multisensor 6/battery"
+#  name: "living_room_battery"
+#  unit_of_measure: '%'
+
+- platform: snmp
+  name: snmp_wan_in
+  host: 192.168.1.1
+  version: 2c
+  accept_errors: true
+  community: !secret snmp_community
+  baseoid: 1.3.6.1.2.1.2.2.1.16.1
+
+- platform: snmp
+  name: snmp_wan_out
+  host: 192.168.1.1
+  version: 2c
+  accept_errors: true
+  community: !secret snmp_community
+  baseoid: 1.3.6.1.2.1.2.2.1.16.2
+
+- platform: template
+  sensors: 
+    internet_speed_in:
+      friendly_name: 'Internet Speed In'
+      value_template: '{{ ((states.input_number.internet_traffic_delta_in.state | float ) / 1000000 ) | round(2) }}'
+      unit_of_measurement: 'Mbps'
+
+- platform: template
+  sensors:
+    internet_speed_out:
+      friendly_name: 'Internet Speed Out'
+      value_template: '{{ ((states.input_number.internet_traffic_delta_out.state | float ) / 1000000 ) | round(2) }}'
+      unit_of_measurement: 'Mbps'
+
+- platform: statistics
+  name: 'WAN Traffic IN'
+  entity_id: sensor.internet_speed_in
+
+- platform: statistics
+  name: 'WAN Traffic OUT'
+  entity_id: sensor.internet_speed_out
+
+- platform: systemmonitor
+  resources:
+    - type: memory_use_percent
+    - type: swap_use_percent
+    - type: load_1m
+    - type: load_5m
 
 
 ###################

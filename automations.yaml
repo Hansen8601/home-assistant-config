@@ -20,8 +20,8 @@
     condition: or
     conditions:
       - condition: state
-        entity_id: binary_sensor.garage_service_door
-        state: 'off'
+        entity_id: sensor.garage_service_door
+        state: 'open'
       - condition: state
         entity_id: cover.garage_door_right
         state: 'open'
@@ -41,7 +41,7 @@
   trigger:
     - platform: state
       entity_id: sensor.garage_service_door
-      to: 'Open'
+      to: 'open'
     - platform: state
       entity_id: cover.garage_door_right
       to: 'open'
