@@ -40,6 +40,8 @@ group.living_room_climate:
   friendly_name: Living Room Climate
 group.room_living:
   friendly_name: Living Room
+group.room_living_fireplace:
+  friendly_name: Living Room Fireplace
 group.room_master_bathroom:
   friendly_name: Master Bath
 group.outside_lights:

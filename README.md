@@ -1,6 +1,6 @@
 # Home Assistant Config Files
 
-This is my home assistant configuration and documentation on how I created my development and live setup, just in case it's useful to others or if I need to rebuild.
+This is my home assistant configuration and documentation on how I created my test/development server and live docker setup, just in case it's useful to others or if I need to rebuild.
 
 Thanks to all the great developers and supporters involved in the home assistant project. This is an amazing community.
 
@@ -14,6 +14,7 @@ Thanks to all the great developers and supporters involved in the home assistant
 - Denon AVR 3000 receiver
 - Harmony Hub
 - esp8266 fireplace controller
+- Raspberry Pi garage door controller
 
 ## Screenshots
 
@@ -58,177 +59,112 @@ git fetch upstream dev  # to pull the latest changes into a local dev branch
 git rebase upstream/dev # to put those changes into your feature branch before your changes
 ```
 
-## Raspberry Pi HASS
+## Docker HASS
 
-Installed 10/8/2016 with Hassbian image from the home assistant website. The address is http://192.168.1.x:8123. 
+Moved from a Raspberry Pi to docker running on a virtual Ubuntu server on 12/27/2017.
 
-The following extras are included on the image:
-GPIO pins are ready to use.
-Mosquitto MQTT broker is installed (not activated by default).
-Bluetooth is ready to use (supported models only, no Bluetooth LE).
-
-The Home Assistant configuration is located at /home/homeassistant/.homeassistant/. 
-Home Assistant is installed in a virtual Python environment at srv/homeassistant
-Home Assistant will be started as a service run by the user homeassistant
+The files are located in /opt/docker-compose-projects/home-assistant
 
 
-## My Raspberry Pi HASS Setup Process
+## My Setup
 
-#### Installed Hassbian image
+#### Docker Compose File
 
-#### Installed NPM for the SmartThings bridge
-
-directions from https://www.losant.com/blog/how-to-install-nodejs-on-raspberry-pi
 
 ```
-curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh | bash;
-nvm install v6.9.2; #was 5.7.0
-nvm alias default v6.9.2;
-```
+version: '2'
+services:
+  mqtt:
+      image: matteocollina/mosca
+      volumes:
+          - /opt/docker-compose-projects/home-assistant/mosca:/config
+      ports:
+          - 1883:1883
+      restart: unless-stopped
 
-#### Installed smartthings-mqtt-bridge
+  mqttbridge:
+      image: stjohnjohnson/smartthings-mqtt-bridge:latest
+      depends_on:
+          - mqtt
+      volumes:
+          - /opt/docker-compose-projects/home-assistant/mqtt-bridge:/config
+      ports:
+          - 8080:8080
+      depends_on:
+          - mqtt
+      restart: unless-stopped
 
-smarthings configuration files are in /home/pi/
+  homeassistant:
+      image: homeassistant/home-assistant:latest
+      ports:
+          - 192.168.1.22:80:80
+          - 192.168.1.22:8123:8123
+      volumes:
+          - /opt/docker-compose-projects/home-assistant/home-assistant/home-assistant-config:/config
+          - /etc/localtime:/etc/localtime:ro
+      depends_on:
+          - mqtt
+          - mqttbridge
+      restart: unless-stopped
 
-```
-npm install -g smartthings-mqtt-bridge
-```
+  homebridge-docker:
+      build:
+          context: ./homebridge-docker
+      image: cbrandlehner/homebridge:0.18
+      ports:
+          - 0.0.0.0:51826:51826
+      depends_on:
+          - homeassistant
+      volumes:
+          - /opt/docker-compose-projects/home-assistant/homebridge:/root/.homebridge
 
-#### Installed pm2 process manager
-directions from http://pm2.keymetrics.io/docs/usage/quick-start/
-```
-npm install pm2@latest -g;
-pm2 start smartthings-mqtt-bridge;
-pm2 startup;
-```
-
-Some useful pm2 commands
-```
-List:		pm2 list
-Logs:		pm2 logs smartthings-mqtt-bridge
-Restart:	pm2 restart smartthings-mqtt-bridge
-```
-
-#### Install Harmony Hub Control
-Harmony hub control was done via command line switches before this was integrated into HASS.  This is no longer being used, and now is integrated into HASS. I had to copy HarmonyHub.AuthorizationToken to / to get it working in hass. Haven't went  back and tested if this has changed in recent updates.
-
-https://github.com/NovaGL/HarmonyHubControl
-https://community.home-assistant.io/t/harmony-hub/978/68
-
-```
-git clone https://github.com/NovaGL/HarmonyHubControl.git
-Make
-```
-
-#### Mosquitto mqtt broker
-
-Mosquitto mqtt broker was pre-installed, but not set to auto-start. Enabled mosquitto to autostart
-```
-sudo systemctl enable mosquitto
-sudo systemctl start mosquitto
-```
-
-#### Installed HomeBridge 
-
-Directions from https://github.com/nfarina/homebridge/wiki/Running-HomeBridge-on-a-Raspberry-Pi
-
-```
-sudo apt-get install -y nodejs;
-sudo apt-get install libavahi-compat-libdnssd-dev --assume-yes;
-sudo npm install -g --unsafe-perm homebridge hap-nodejs node-gyp;
-cd /usr/lib/node_modules/homebridge/;
-sudo npm install --unsafe-perm bignum;
-cd /usr/lib/node_modules/hap-nodejs/node_modules/mdns;
-sudo node-gyp BUILDTYPE=Release rebuild;
-sudo npm install -g homebridge-homeassistant;
-sudo useradd -rm homebridge;
-sudo mkdir /var/homebridge;
-cd /var;
-sudo chown homebridge:homebridge homebridge;
-```
-
-Create 3 files to setup autostart:
-```
-sudo vi /etc/default/homebridge
-sudo vi /etc/systemd/system/homebridge.service
-sudo vi /var/homebridge/config.json
-```
-
-Then to start homebridge:
-```
-sudo systemctl daemon-reload;
-sudo systemctl enable homebridge;
-sudo systemctl start homebridge;
-tail -F /var/log/syslog;
-```
-
-You can check the status of the homebridge service by calling
-```
-systemctl status homebridge
-```
-
-#### AppleTV dependencies
-For AppleTV controls to work there are some dependencies.
-```
-sudo apt-get install build-essential libssl-dev libffi-dev python-dev
-```
-
-### Using HASS on the Raspberry Pi
-
-```
-sudo systemctl restart home-assistant@homeassistant.service
-```
-
-### Upgrading HASS on the Raspberry Pi
-```
-sudo systemctl stop home-assistant@homeassistant.service;
-sudo su -s /bin/bash homeassistant;
-source /srv/homeassistant/bin/activate;
-pip3 install --upgrade homeassistant;
-exit;
-sudo systemctl start home-assistant@homeassistant.service;
-tail -f /var/log/syslog;
-```
-
-### Validating your configuration on the Raspberry Pi
-```
-Check your configuration on Hassbian
-sudo su -s /bin/bash homeassistant
-source /srv/homeassistant/bin/activate
-hass --script check_config
-```
-
-### Upgraded Python venv from 3.4 to 3.6
-
-Directions from https://github.com/home-assistant/home-assistant/issues/8342#issuecomment-326918777
-
-```
-sudo apt-get update;
-sudo apt-get upgrade;
-sudo apt-get install build-essential tk-dev libncurses5-dev libncursesw5-dev libreadline6-dev libdb5.3-dev libgdbm-dev libsqlite3-dev libssl-dev libbz2-dev libexpat1-dev liblzma-dev zlib1g-dev
-wget https://www.python.org/ftp/python/3.6.0/Python-3.6.0.tgz
-tar xzvf Python-3.6.0.tgz
-cd Python-3.6.0/
-./configure
-make
-sudo make install
-sudo su -s /bin/bash homeassistant
-source /srv/homeassistant/bin/activate
-cd /home/homeassistant
-pip3 freeze .local > requirements.txt
-deactivate
-exit
-sudo rm -rf /srv/homeassistant
-sudo mkdir /srv/homeassistant
-sudo chown homeassistant:homeassistant /srv/homeassistant
-sudo su -s /bin/bash homeassistant
-python3.6 -m venv /srv/homeassistant
-source /srv/homeassistant/bin/activate
-pip3 install --upgrade homeassistant
-pip3 install -r /home/homeassistant/requirements.txt
-exit
-
-sudo -u homeassistant -H /srv/homeassistant/bin/hass
+      ports:
+          - 51826:51826
+      network_mode: "host" #Needed for IOS to find homebridge
+      restart: unless-stopped
 ```
 
 
+#### Homebridge Configuration
+
+config.json file located at /opt/docker-compose-projects/home-assistant/homebridge
+
+```
+{
+    "bridge": {
+        "name": "Homebridge",
+        "username": "CC:22:3D:E3:CE:30",
+        "port": 51826,
+        "pin": "mypin"
+    },
+
+    "description": "My configuration file.",
+
+    "platforms": [
+        {
+          "platform": "HomeAssistant",
+          "name": "HomeAssistant",
+          "host": "http://myip:8123",
+          "supported_types": ["binary_sensor", "cover", "device_tracker", "fan", "group", "input_boolean", "light", "media_player", "remote", "scene", "script", "sensor", "switch"],
+          "default_visibility":"hidden",
+          "logging": true
+    }],
+
+    "accessories": [
+    ]
+}
+```
+
+### Using docker-compose
+
+#### Startup and shutdown
+
+```
+docker-compose down
+docker-compose pull
+docker-compose start
+```
+#### Show logs
+```
+docker-compose logs -f
+```
