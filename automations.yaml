@@ -88,8 +88,8 @@
         value_template: "{{ states.input_select.automation_mode.state != 'Home' }}" 
   action:
     service: input_select.select_option
-    entity_id: input_select.automation_mode 
     data:
+      entity_id: input_select.automation_mode 
       option: 'Home'
 
 - id: automation_mode_sleeping_from_harmony
@@ -111,8 +111,8 @@
         after: '20:00:00'
   action:
     service: input_select.select_option
-    entity_id: input_select.automation_mode
     data:
+      entity_id: input_select.automation_mode
       option: 'Sleeping'
 
 
@@ -261,6 +261,11 @@
 #                          #
 ############################
 
+# Timer 1 - main timer
+# Timer 2 - backup timer
+
+# Guest Bath
+
 - id: guest_bathroom_fan_timer_start
   alias: guest_bathroom_fan_timer_start
   trigger:
@@ -277,32 +282,6 @@
     - service: timer.cancel
       entity_id: timer.guest_bathroom_fan_timer2
 
-- id: guest_bathroom_fan_timer_done
-  alias: guest_bathroom_fan_timer_done
-  trigger:
-     platform: event
-     event_type: timer.finished
-     event_data:
-       entity_id: timer.guest_bathroom_fan_timer1
-  action:
-    service: switch.turn_off
-    entity_id: switch.guest_bathroom_fan
-
-
-# Not really needed
-#- id: guest_bathroom_fan_timer_cancel
-#  alias: guest_bathroom_fan_timer_cancel  trigger:
-#  trigger:
-#    entity_id: switch.guest_bathroom_fan
-#    to: 'off'
-#  condition:
-#    condition: state
-#    entity_id: timer.guest_bathroom_fan_timer1
-#    state: 'active'
-#  action:
-#    service: timer.cancel
-#    entity_id: timer.guest_bathroom_fan_timer1
-
 - id: guest_bathroom_fan_timer_backup_start
   alias: guest_bathroom_fan_timer_backup_start
   trigger:
@@ -313,16 +292,75 @@
     service: timer.start
     entity_id: timer.guest_bathroom_fan_timer2
 
-- id: guest_bathroom_fan_timer_backup_done
-  alias: guest_bathroom_fan_timer_backup_done
+- id: guest_bathroom_fan_off
+  alias: guest_bathroom_fan_off
+  trigger:
+    platform: state
+    entity_id: switch.guest_bathroom_fan
+    to: "off"
+  action:
+    service: timer.cancel
+    entity_id: timer.guest_bathroom_fan_timer1, timer.guest_bathroom_fan_timer2
+
+- id: guest_bathroom_fan_timer_done
+  alias: guest_bathroom_fan_timer_done
   trigger:
      platform: event
      event_type: timer.finished
      event_data:
-       entity_id: timer.guest_bathroom_fan_timer2
+       entity_id: timer.guest_bathroom_fan_timer1, timer.guest_bathroom_fan_timer2
   action:
     service: switch.turn_off
     entity_id: switch.guest_bathroom_fan
+
+
+# Master Bath
+- id: master_bathroom_fan_timer_start
+  alias: master_bathroom_fan_timer_start
+  trigger:
+    platform: state
+    entity_id: light.master_bathroom_shower, light.master_bathroom_dimmer
+    to: "off"
+  condition:
+    condition: state
+    entity_id: switch.master_bathroom_fan
+    state: "on"
+  action:
+    - service: timer.start
+      entity_id: timer.master_bathroom_fan_timer1
+    - service: timer.cancel
+      entity_id: timer.master_bathroom_fan_timer2
+
+- id: master_bathroom_fan_timer_backup_start
+  alias: master_bathroom_fan_timer_backup_start
+  trigger:
+    platform: state
+    entity_id: switch.master_bathroom_fan
+    to: "on"
+  action:
+    service: timer.start
+    entity_id: timer.master_bathroom_fan_timer2
+
+- id: master_bathroom_fan_off
+  alias: master_bathroom_fan_off
+  trigger:
+    platform: state
+    entity_id: switch.master_bathroom_fan
+    to: "off"
+  action:
+    service: timer.cancel
+    entity_id: timer.master_bathroom_fan_timer1, timer.master_bathroom_fan_timer2
+
+- id: master_bathroom_fan_timer_done
+  alias: master_bathroom_fan_timer_done
+  trigger:
+     platform: event
+     event_type: timer.finished
+     event_data:
+       entity_id: timer.master_bathroom_fan_timer1,  timer.master_bathroom_fan_timer2
+  action:
+    service: switch.turn_off
+    entity_id: switch.master_bathroom_fan
 
 
 ############################
@@ -641,6 +679,18 @@
       data:
         entity_id: light.master_bathroom_chandelier
         brightness: 50
+
+# Master Bath Lights
+- id: master_bath_lights_on_from_fan
+  alias: Master bath lights on from fan
+  trigger:
+    platform: state
+    entity_id: switch.master_bathroom_fan
+    to: 'on'
+  action:
+    service: light.turn_on
+    data:
+      entity_id: light.master_bathroom_shower
 
 
 ############################
