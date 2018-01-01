@@ -65,6 +65,9 @@ room_master_bathroom:
   name: "Master Bathroom"
   entities:
     - light.master_bathroom_chandelier
+    - light.master_bathroom_dimmer
+    - light.master_bathroom_shower
+    - switch.master_bathroom_fan
 
 room_guest_bathroom:
   view: no
@@ -102,6 +105,7 @@ media_full:
     - group.media_harmony
     - group.media_denon
     - media_player.denon_avrx3000
+    - media_player.plex_web_chrome
     - media_player.apple_tv
     - media_player.apple_tv_basement
     - media_player.apple_tv_workout_room
@@ -209,7 +213,7 @@ debug_page:
   entities:
     - group.lux_debug
     - group.fireplace_debug
-    - group.guest_bathroom_debug
+    - group.bathroom_debug
     - group.homekit_debug
     - group.scripts_debug
     - group.snmp_debug
@@ -258,7 +262,7 @@ lux_debug:
     - automation.lights_off_from_lux_level
     - automation.lights_on_from_lux_level
 
-guest_bathroom_debug:
+bathroom_debug:
   view: no
   name: "Guest Bathroom Debug"
   control: hidden
@@ -267,6 +271,11 @@ guest_bathroom_debug:
     - timer.guest_bathroom_fan_timer2
     - switch.guest_bathroom_fan
     - light.guest_bathroom_lights
+    - timer.master_bathroom_fan_timer1
+    - timer.master_bathroom_fan_timer2
+    - switch.master_bathroom_fan
+    - light.master_bathroom_dimmer
+    - light.master_bathroom_shower
 
 snmp_debug:
   view: no

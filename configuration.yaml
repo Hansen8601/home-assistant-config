@@ -89,7 +89,7 @@ updater:
 
 
 # Discover some devices automatically
-#discovery:
+discovery:
 
 
 # Show configuration panel
@@ -374,6 +374,28 @@ light:
   optimistic: false
   retain: true
 - platform: mqtt
+  name: "Master_Bathroom_Dimmer"
+  state_topic: "smartthings/Master bathroom dimmer/switch"
+  command_topic: "smartthings/Master bathroom dimmer/switch"
+  brightness_state_topic: "smartthings/Master bathroom dimmer/level"
+  brightness_command_topic: "smartthings/master bathroom dimmer/level"
+  brightness_scale: 99
+  brightness_value_template: '{{ value }}'
+  qos: 1
+  payload_on: "on"
+  payload_off: "off"
+  optimistic: false
+  retain: true
+- platform: mqtt
+  name: "Master_Bathroom_Shower"
+  state_topic: "smartthings/Master bathroom shower/switch"
+  command_topic: "smartthings/Master bathroom shower/switch"
+  qos: 1
+  payload_on: "on"
+  payload_off: "off"
+  optimistic: false
+  retain: true
+- platform: mqtt
   name: "Upstairs_Hall_Scone"
   state_topic: "smartthings/Upstairs Hall Scone/switch"
   command_topic: "smartthings/Upstairs Hall Scone/switch"
@@ -572,6 +594,15 @@ switch:
   payload_on: "on"
   payload_off: "off"
   optimistic: false
+- platform: mqtt
+  name: "Master Bathroom Fan"
+  state_topic: "smartthings/Master bathroom fan/switch"
+  command_topic: "smartthings/Master bathroom fan/switch"
+  qos: 0
+  retain: true
+  payload_on: "on"
+  payload_off: "off"
+  optimistic: false
 
 
 ###################
@@ -711,6 +742,10 @@ timer:
     duration: '00:15:00'
   guest_bathroom_fan_timer2:
     duration: '00:30:00'
+  master_bathroom_fan_timer1:
+    duration: '00:15:00'
+  master_bathroom_fan_timer2:
+    duration: '00:45:00'
 
 ###################
 #                 #
