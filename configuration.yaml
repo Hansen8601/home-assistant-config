@@ -124,14 +124,9 @@ notify:
 
 media_player:
   - platform: denonavr
-#  - platform: denon
     host: !secret dennon_ip
     name: Denon AVRX3000
-
-# Experiment with custom component for z2
-#  - platform: denon2
-#    host: !secret dennon_ip
-#    name: Denon AVR 2
+  - platform: plex
 
 
 ecobee:
