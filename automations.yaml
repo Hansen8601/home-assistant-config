@@ -557,7 +557,7 @@
       - condition: template
         value_template: "{{ states.input_select.automation_mode.state != 'No Automation'}}"
   action:
-    - service: climate.fan_min_on_time
+    - service: climate.ecobee_set_fan_min_on_time
       data:
         entity_id: climate.main_floor
         fan_min_on_time: 60
@@ -574,7 +574,7 @@
       - condition: template
         value_template: "{{ states.input_select.automation_mode.state != 'No Automation'}}"
   action:
-    - service: climate.fan_min_on_time
+    - service: climate.ecobee_set_fan_min_on_time
       data:
         entity_id: climate.main_floor
         fan_min_on_time: 0
