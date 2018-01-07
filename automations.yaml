@@ -251,6 +251,8 @@
         entity_id:
         - group.room_living
         - group.room_kitchen
+        #- group.room_guest_bathroom leaving out because Dylan's not in home/away detection
+        - group.room_master_bathroom
     - service: remote.turn_off
       entity_id: remote.living_room
 
@@ -513,7 +515,7 @@
       - condition: state
         entity_id: input_boolean.fireplace_automation
         state: "on"
-      - condition: or
+      - condition: and
         conditions:
           - condition: template
             value_template: "{{ states.sensor.living_room_temperature.state|float <=  states.input_number.fireplace_low_setpoint.state | float }}"
@@ -542,6 +544,40 @@
     - service: switch.turn_off
       data:
         entity_id: switch.fireplace
+
+- id: furnace_fan_on_when_fireplace_on
+  alias: "Furnace fan on when fireplace on"
+  trigger:
+    platform: state
+    entity_id: switch.fireplace
+    to: "on"
+  condition:
+    condition: and
+    conditions:
+      - condition: template
+        value_template: "{{ states.input_select.automation_mode.state != 'No Automation'}}"
+  action:
+    - service: climate.fan_min_on_time
+      data:
+        entity_id: climate.main_floor
+        fan_min_on_time: 60
+
+- id: furnace_fan_off_when_fireplace_off
+  alias: "Furnace fan on when fireplace on"
+  trigger:
+    platform: state
+    entity_id: switch.fireplace
+    to: "off"
+  condition:
+    condition: and
+    conditions:
+      - condition: template
+        value_template: "{{ states.input_select.automation_mode.state != 'No Automation'}}"
+  action:
+    - service: climate.fan_min_on_time
+      data:
+        entity_id: climate.main_floor
+        fan_min_on_time: 0
 
 
 ############################

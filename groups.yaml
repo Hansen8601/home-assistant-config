@@ -216,7 +216,7 @@ debug_page:
     - group.bathroom_debug
     - group.homekit_debug
     - group.scripts_debug
-    - group.snmp_debug
+#    - group.snmp_debug
 
 fireplace_debug:
   view: no
@@ -277,15 +277,15 @@ bathroom_debug:
     - light.master_bathroom_dimmer
     - light.master_bathroom_shower
 
-snmp_debug:
-  view: no
-  name: "SNMP Debug"
-  control: hidden
-  entities:
-    - sensor.snmp_wan_in
-    - sensor.snmp_wan_out
-    - input_number.internet_traffic_delta_in
-    - input_number.internet_traffic_delta_out
+#snmp_debug:
+#  view: no
+#  name: "SNMP Debug"
+#  control: hidden
+#  entities:
+#    - sensor.snmp_wan_in
+#    - sensor.snmp_wan_out
+#    - input_number.internet_traffic_delta_in
+#    - input_number.internet_traffic_delta_out
 
 # Graphs
 graphs_page:

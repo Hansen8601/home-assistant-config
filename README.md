@@ -6,15 +6,19 @@ Thanks to all the great developers and supporters involved in the home assistant
 
 ## Devices
 
+- Docker running on a ubuntu Hyper-V virtual machine running
+  - [Home Assistant](https://home-assistant.io/)
+  - Mosca MQTT
+  - SmarthThings Bridge
+  - HomeBridge
 - Several apple devices (iphones, ipads, apple TVs)
 - Smarthings Hub
-- Raspberry Pi running [Home Assistant](https://home-assistant.io/) and using gpio
-- [GE Z-Wave Wireless Smart Lighting Control](https://www.amazon.com/gp/product/B006LQFHN2/ref=oh_aui_detailpage_o00_s00?ie=UTF8&psc=1)
-- ecobee 3 smart thermostat
+- Raspberry Pi [pi-mqtt-gpio](https://github.com/Hansen8601/pi-mqtt-gpio1-config) for garage door control
+- esp8266 fireplace controller
+- - [GE Z-Wave Wireless Smart Lighting Control](https://www.amazon.com/gp/product/B006LQFHN2/ref=oh_aui_detailpage_o00_s00?ie=UTF8&psc=1)
+- two ecobee 3 smart thermostats
 - Denon AVR 3000 receiver
 - Harmony Hub
-- esp8266 fireplace controller
-- Raspberry Pi garage door controller
 
 ## Screenshots
 
@@ -25,7 +29,7 @@ Thanks to all the great developers and supporters involved in the home assistant
 
 ## My Test & Development Server Setup
 
-I have a virtual linux server used for testing and development. All config changes are done there and then pushed to to Raspberry Pi when ready through github. The server has two virtual environments, a test and development environment.
+I have a virtual linux server used for testing and development. Config changes can be done there and then pushed to production via github, or done dirctly on the production server and then backed up to github.
 
 /home/phil/hass-dev/ (put in my /home/phil directory to avoid permission errors)
 /home/phil/hass-test/
@@ -167,4 +171,15 @@ docker-compose start
 #### Show logs
 ```
 docker-compose logs -f
+```
+
+### Using github
+
+#### Common commands
+```
+sudo git add     # Update what files will be committed
+sudo git commit  # Commit added files to local repository with message
+sudo git push    # Push local changes to github
+
+sudo git pull    # Pull any github changes locally 
 ```
