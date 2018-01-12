@@ -734,11 +734,11 @@ input_number:
 
 timer:
   guest_bathroom_fan_timer1:
-    duration: '00:15:00'
+    duration: '00:10:00'
   guest_bathroom_fan_timer2:
     duration: '00:30:00'
   master_bathroom_fan_timer1:
-    duration: '00:15:00'
+    duration: '00:10:00'
   master_bathroom_fan_timer2:
     duration: '00:45:00'
 

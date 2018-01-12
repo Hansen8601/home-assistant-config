@@ -267,7 +267,7 @@
 # Timer 2 - backup timer
 
 # Guest Bath
-
+#
 - id: guest_bathroom_fan_timer_start
   alias: guest_bathroom_fan_timer_start
   trigger:
@@ -307,22 +307,32 @@
 - id: guest_bathroom_fan_timer_done
   alias: guest_bathroom_fan_timer_done
   trigger:
-     platform: event
-     event_type: timer.finished
-     event_data:
-       entity_id: timer.guest_bathroom_fan_timer1, timer.guest_bathroom_fan_timer2
+    - platform: event
+      event_type: timer.finished
+      event_data:
+        entity_id: timer.guest_bathroom_fan_timer1
+    - platform: event
+      event_type: timer.finished
+      event_data:
+        entity_id: timer.guest_bathroom_fan_timer2
+  condition:
+    condition: state
+    entity_id: switch.guest_bathroom_fan
+    state: "on"
   action:
     service: switch.turn_off
     entity_id: switch.guest_bathroom_fan
-
 
 # Master Bath
 - id: master_bathroom_fan_timer_start
   alias: master_bathroom_fan_timer_start
   trigger:
-    platform: state
-    entity_id: light.master_bathroom_shower, light.master_bathroom_dimmer
-    to: "off"
+    - platform: state
+      entity_id: light.master_bathroom_shower
+      to: "off"
+    - platform: state
+      entity_id: light.master_bathroom_dimmer
+      to: "off"
   condition:
     condition: state
     entity_id: switch.master_bathroom_fan
@@ -356,10 +366,18 @@
 - id: master_bathroom_fan_timer_done
   alias: master_bathroom_fan_timer_done
   trigger:
-     platform: event
-     event_type: timer.finished
-     event_data:
-       entity_id: timer.master_bathroom_fan_timer1,  timer.master_bathroom_fan_timer2
+    - platform: event
+      event_type: timer.finished
+      event_data:
+        entity_id: timer.master_bathroom_fan_timer1
+    - platform: event
+      event_type: timer.finished
+      event_data:
+        entity_id: timer.master_bathroom_fan_timer2
+  condition:
+    condition: state
+    entity_id: switch.master_bathroom_fan
+    state: "on"
   action:
     service: switch.turn_off
     entity_id: switch.master_bathroom_fan
