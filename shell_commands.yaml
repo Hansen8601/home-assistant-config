@@ -1,3 +1,6 @@
+restart_garage_id: "ssh pi@192.168.1.24 'echo raspberry | sudo /sbin/shutdown -r now'"
+
+
 # No Longer used
 # Using the HASS component vs command line
 
