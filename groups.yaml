@@ -37,6 +37,7 @@ rooms_page:
   entities:
     - group.room_kitchen
     - group.room_living
+    - group.room_living_fireplace
     - group.room_master_bathroom
     - group.room_guest_bathroom
     - group.outside_lights
@@ -49,6 +50,8 @@ room_living:
     - light.ge_living_room_1
     - light.ge_living_room_2
     - light.ge_living_room_3
+
+room_living_fireplace:
     - switch.fireplace
 
 room_kitchen:
@@ -62,6 +65,9 @@ room_master_bathroom:
   name: "Master Bathroom"
   entities:
     - light.master_bathroom_chandelier
+    - light.master_bathroom_dimmer
+    - light.master_bathroom_shower
+    - switch.master_bathroom_fan
 
 room_guest_bathroom:
   view: no
@@ -99,6 +105,7 @@ media_full:
     - group.media_harmony
     - group.media_denon
     - media_player.denon_avrx3000
+    - media_player.plex_web_chrome
     - media_player.apple_tv
     - media_player.apple_tv_basement
     - media_player.apple_tv_workout_room
@@ -180,22 +187,24 @@ network_page:
   view: yes
   name: "Network"
   entities:
-    - group.asus_stats
+#    - sensor.wan_traffic_in_mean
+#    - sensor.wan_traffic_out_mean
+#    - group.asus_stats
     - sensor.average_load_1m
     - sensor.average_load_5m
     - sensor.ram_used
     - sensor.swap_used
 
-asus_stats:
-  view: no
-  name: "Asus Router"
-  entities:
-    - sensor.internet_speed_in
-    - sensor.internet_speed_out
-    - sensor.snmp_wan_in
-    - sensor.snmp_wan_out
-    - input_number.internet_traffic_delta_in
-    - input_number.internet_traffic_delta_out
+#asus_stats:
+#  view: no
+#  name: "Asus Router"
+#  entities:
+#    - sensor.internet_speed_in
+#    - sensor.internet_speed_out
+#    - sensor.snmp_wan_in
+#    - sensor.snmp_wan_out
+#    - input_number.internet_traffic_delta_in
+#    - input_number.internet_traffic_delta_out
 
 # Debug Page
 debug_page:
@@ -204,19 +213,10 @@ debug_page:
   entities:
     - group.lux_debug
     - group.fireplace_debug
-    - group.guest_bathroom_debug
+    - group.bathroom_debug
     - group.homekit_debug
     - group.scripts_debug
-    - group.snmp_debug
-
-#esp8266_test_debug:
-#  view: no
-#  name: "esp8266 Test Debug"
-#  entities:
-#    - cover.esp8266_garage_1_test
-#    - cover.esp8266_garage_2_test
-#    - sensor.living_room_av_temperature
-#    - sensor.living_room_av_humidity
+#    - group.snmp_debug
 
 fireplace_debug:
   view: no
@@ -263,7 +263,7 @@ lux_debug:
     - automation.lights_off_from_lux_level
     - automation.lights_on_from_lux_level
 
-guest_bathroom_debug:
+bathroom_debug:
   view: no
   name: "Guest Bathroom Debug"
   control: hidden
@@ -272,16 +272,21 @@ guest_bathroom_debug:
     - timer.guest_bathroom_fan_timer2
     - switch.guest_bathroom_fan
     - light.guest_bathroom_lights
+    - timer.master_bathroom_fan_timer1
+    - timer.master_bathroom_fan_timer2
+    - switch.master_bathroom_fan
+    - light.master_bathroom_dimmer
+    - light.master_bathroom_shower
 
-snmp_debug:
-  view: no
-  name: "SNMP Debug"
-  control: hidden
-  entities:
-    - sensor.snmp_wan_in
-    - sensor.snmp_wan_out
-    - input_number.internet_traffic_delta_in
-    - input_number.internet_traffic_delta_out
+#snmp_debug:
+#  view: no
+#  name: "SNMP Debug"
+#  control: hidden
+#  entities:
+#    - sensor.snmp_wan_in
+#    - sensor.snmp_wan_out
+#    - input_number.internet_traffic_delta_in
+#    - input_number.internet_traffic_delta_out
 
 # Graphs
 graphs_page:

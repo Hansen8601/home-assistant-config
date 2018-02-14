@@ -88,8 +88,8 @@
         value_template: "{{ states.input_select.automation_mode.state != 'Home' }}" 
   action:
     service: input_select.select_option
-    entity_id: input_select.automation_mode 
     data:
+      entity_id: input_select.automation_mode 
       option: 'Home'
 
 - id: automation_mode_sleeping_from_harmony
@@ -111,8 +111,8 @@
         after: '20:00:00'
   action:
     service: input_select.select_option
-    entity_id: input_select.automation_mode
     data:
+      entity_id: input_select.automation_mode
       option: 'Sleeping'
 
 
@@ -251,6 +251,8 @@
         entity_id:
         - group.room_living
         - group.room_kitchen
+        #- group.room_guest_bathroom leaving out because Dylan's not in home/away detection
+        - group.room_master_bathroom
     - service: remote.turn_off
       entity_id: remote.living_room
 
@@ -261,6 +263,11 @@
 #                          #
 ############################
 
+# Timer 1 - main timer
+# Timer 2 - backup timer
+
+# Guest Bath
+#
 - id: guest_bathroom_fan_timer_start
   alias: guest_bathroom_fan_timer_start
   trigger:
@@ -277,32 +284,6 @@
     - service: timer.cancel
       entity_id: timer.guest_bathroom_fan_timer2
 
-- id: guest_bathroom_fan_timer_done
-  alias: guest_bathroom_fan_timer_done
-  trigger:
-     platform: event
-     event_type: timer.finished
-     event_data:
-       entity_id: timer.guest_bathroom_fan_timer1
-  action:
-    service: switch.turn_off
-    entity_id: switch.guest_bathroom_fan
-
-
-# Not really needed
-#- id: guest_bathroom_fan_timer_cancel
-#  alias: guest_bathroom_fan_timer_cancel  trigger:
-#  trigger:
-#    entity_id: switch.guest_bathroom_fan
-#    to: 'off'
-#  condition:
-#    condition: state
-#    entity_id: timer.guest_bathroom_fan_timer1
-#    state: 'active'
-#  action:
-#    service: timer.cancel
-#    entity_id: timer.guest_bathroom_fan_timer1
-
 - id: guest_bathroom_fan_timer_backup_start
   alias: guest_bathroom_fan_timer_backup_start
   trigger:
@@ -313,16 +294,93 @@
     service: timer.start
     entity_id: timer.guest_bathroom_fan_timer2
 
-- id: guest_bathroom_fan_timer_backup_done
-  alias: guest_bathroom_fan_timer_backup_done
+- id: guest_bathroom_fan_off
+  alias: guest_bathroom_fan_off
   trigger:
-     platform: event
-     event_type: timer.finished
-     event_data:
-       entity_id: timer.guest_bathroom_fan_timer2
+    platform: state
+    entity_id: switch.guest_bathroom_fan
+    to: "off"
+  action:
+    service: timer.cancel
+    entity_id: timer.guest_bathroom_fan_timer1, timer.guest_bathroom_fan_timer2
+
+- id: guest_bathroom_fan_timer_done
+  alias: guest_bathroom_fan_timer_done
+  trigger:
+    - platform: event
+      event_type: timer.finished
+      event_data:
+        entity_id: timer.guest_bathroom_fan_timer1
+    - platform: event
+      event_type: timer.finished
+      event_data:
+        entity_id: timer.guest_bathroom_fan_timer2
+  condition:
+    condition: state
+    entity_id: switch.guest_bathroom_fan
+    state: "on"
   action:
     service: switch.turn_off
     entity_id: switch.guest_bathroom_fan
+
+# Master Bath
+- id: master_bathroom_fan_timer_start
+  alias: master_bathroom_fan_timer_start
+  trigger:
+    - platform: state
+      entity_id: light.master_bathroom_shower
+      to: "off"
+    - platform: state
+      entity_id: light.master_bathroom_dimmer
+      to: "off"
+  condition:
+    condition: state
+    entity_id: switch.master_bathroom_fan
+    state: "on"
+  action:
+    - service: timer.start
+      entity_id: timer.master_bathroom_fan_timer1
+    - service: timer.cancel
+      entity_id: timer.master_bathroom_fan_timer2
+
+- id: master_bathroom_fan_timer_backup_start
+  alias: master_bathroom_fan_timer_backup_start
+  trigger:
+    platform: state
+    entity_id: switch.master_bathroom_fan
+    to: "on"
+  action:
+    service: timer.start
+    entity_id: timer.master_bathroom_fan_timer2
+
+- id: master_bathroom_fan_off
+  alias: master_bathroom_fan_off
+  trigger:
+    platform: state
+    entity_id: switch.master_bathroom_fan
+    to: "off"
+  action:
+    service: timer.cancel
+    entity_id: timer.master_bathroom_fan_timer1, timer.master_bathroom_fan_timer2
+
+- id: master_bathroom_fan_timer_done
+  alias: master_bathroom_fan_timer_done
+  trigger:
+    - platform: event
+      event_type: timer.finished
+      event_data:
+        entity_id: timer.master_bathroom_fan_timer1
+    - platform: event
+      event_type: timer.finished
+      event_data:
+        entity_id: timer.master_bathroom_fan_timer2
+  condition:
+    condition: state
+    entity_id: switch.master_bathroom_fan
+    state: "on"
+  action:
+    service: switch.turn_off
+    entity_id: switch.master_bathroom_fan
 
 
 ############################
@@ -475,7 +533,7 @@
       - condition: state
         entity_id: input_boolean.fireplace_automation
         state: "on"
-      - condition: or
+      - condition: and
         conditions:
           - condition: template
             value_template: "{{ states.sensor.living_room_temperature.state|float <=  states.input_number.fireplace_low_setpoint.state | float }}"
@@ -504,6 +562,40 @@
     - service: switch.turn_off
       data:
         entity_id: switch.fireplace
+
+- id: furnace_fan_on_when_fireplace_on
+  alias: "Furnace fan on when fireplace on"
+  trigger:
+    platform: state
+    entity_id: switch.fireplace
+    to: "on"
+  condition:
+    condition: and
+    conditions:
+      - condition: template
+        value_template: "{{ states.input_select.automation_mode.state != 'No Automation'}}"
+  action:
+    - service: climate.ecobee_set_fan_min_on_time
+      data:
+        entity_id: climate.main_floor
+        fan_min_on_time: 60
+
+- id: furnace_fan_off_when_fireplace_off
+  alias: "Furnace fan on when fireplace on"
+  trigger:
+    platform: state
+    entity_id: switch.fireplace
+    to: "off"
+  condition:
+    condition: and
+    conditions:
+      - condition: template
+        value_template: "{{ states.input_select.automation_mode.state != 'No Automation'}}"
+  action:
+    - service: climate.ecobee_set_fan_min_on_time
+      data:
+        entity_id: climate.main_floor
+        fan_min_on_time: 0
 
 
 ############################
@@ -642,6 +734,18 @@
         entity_id: light.master_bathroom_chandelier
         brightness: 50
 
+# Master Bath Lights
+- id: master_bath_lights_on_from_fan
+  alias: Master bath lights on from fan
+  trigger:
+    platform: state
+    entity_id: switch.master_bathroom_fan
+    to: 'on'
+  action:
+    service: light.turn_on
+    data:
+      entity_id: light.master_bathroom_shower
+
 
 ############################
 #                          #
@@ -757,31 +861,31 @@
 #                          #
 ############################
 
-- id: monitor_in_traffic
-  alias: Monitor In Traffic
+#- id: monitor_in_traffic
+#  alias: Monitor In Traffic
+#  trigger:
+#    platform: state
+#    entity_id: sensor.snmp_wan_in
+#  action:
+#    - service: input_number.set_value
+#      data_template:
+#        entity_id: input_number.internet_traffic_delta_in
+#        #value: '{{ ((trigger.to_state.state | int - trigger.from_state.state | int) * 8 ) / ( as_timestamp(trigger.to_state.last_updated) - as_timestamp(trigger.from_state.last_updated) ) }}'
+#        value: '{{ ((trigger.to_state.state | int - trigger.from_state.state | int) * 8 / 1048576 ) / ( as_timestamp(trigger.to_state.last_updated) - as_timestamp(trigger.from_state.last_updated) ) }}'
+#
+#- id: monitor_out_traffic
+#  alias: Monitor Out Traffic
+#  trigger:
+#    platform: state
+#    entity_id: sensor.snmp_wan_out
+#  action:
+#    - service: input_number.set_value
+#      data_template:
+#        entity_id: input_number.internet_traffic_delta_out
+#        #value: '{{ ((trigger.to_state.state | int - trigger.from_state.state | int) * 8 ) / ( as_timestamp(trigger.to_state.last_updated) - as_timestamp(trigger.from_state.last_updated) ) }}'
+#        value: '{{ ((trigger.to_state.state | int - trigger.from_state.state | int) * 8 / 1048576 ) / ( as_timestamp(trigger.to_state.last_updated) - as_timestamp(trigger.from_state.last_updated) ) }}'
 
-  trigger:
-    platform: state
-    entity_id: sensor.snmp_wan_in
 
-  action:
-    - service: input_number.set_value
-      data_template:
-        entity_id: input_number.internet_traffic_delta_in
-        value: '{{ ((trigger.to_state.state | int - trigger.from_state.state | int) * 8 ) / ( as_timestamp(trigger.to_state.last_updated) - as_timestamp(trigger.from_state.last_updated) ) }}'
-
-- id: monitor_out_traffic
-  alias: Monitor Out Traffic
-
-  trigger:
-    platform: state
-    entity_id: sensor.snmp_wan_out
-
-  action:
-    - service: input_number.set_value
-      data_template:
-        entity_id: input_number.internet_traffic_delta_out
-        value: '{{ ((trigger.to_state.state | int - trigger.from_state.state | int) * 8 ) / ( as_timestamp(trigger.to_state.last_updated) - as_timestamp(trigger.from_state.last_updated) ) }}'
 ############################
 #                          #
 #    Harmony Activity      #

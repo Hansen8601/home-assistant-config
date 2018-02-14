@@ -40,6 +40,8 @@ group.living_room_climate:
   friendly_name: Living Room Climate
 group.room_living:
   friendly_name: Living Room
+group.room_living_fireplace:
+  friendly_name: Living Room Fireplace
 group.room_master_bathroom:
   friendly_name: Master Bath
 group.outside_lights:
@@ -124,6 +126,10 @@ light.GE_Living_Room_3:
 light.master_bathroom_chandelier:
   friendly_name: Master Bath Chandelier
   homebridge_name: Master Bath Chandelier
+light.master_bathroom_shower:
+  friendly_name: Master Bath Shower
+light.master_bathroom_dimmer:
+  friendly_name: Master Bath Dimmer
 light.Kitchen_Cabinet_Lights:
   friendly_name: Kitchen Cabinet Lights
   homebridge_name: Kitchen Cabinet Lights
