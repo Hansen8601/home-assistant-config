@@ -102,10 +102,10 @@ lights_all_off:
     data:
       entity_id: group.room_living,light.kitchen_cabinet_lights,light.kitchen_island_lights,light.upstairs_hall_scone
 
-restart_garage_id:
-  alias: restart_garage_id
+restart_garage_io:
+  alias: restart_garage_io
   sequence:
-  - service: shell_command.restart_garage_id 
+  - service: shell_command.restart_garage_io
 
 twillio_test:
   alias: twillio_test

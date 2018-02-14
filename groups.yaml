@@ -246,7 +246,7 @@ scripts_debug:
     - script.denon_deck_volume_up
     - script.denon_deck_volume_down
     - script.denon_deck_volume_set
-    - script.restart_garage_id
+    - script.restart_garage_io
 
 lux_debug:
   view: no
