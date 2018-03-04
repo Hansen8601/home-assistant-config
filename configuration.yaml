@@ -89,7 +89,7 @@ updater:
 
 
 # Discover some devices automatically
-discovery:
+#discovery:
 
 
 # Show configuration panel
@@ -231,6 +231,29 @@ binary_sensor:
 #    threshold: 100 
 #    type: upper
 #    entity_id: sensor.living_room_lux
+
+  - platform: template
+    sensors:
+      indoor_lights_auto_on:
+        friendly_name: 'Indoor Lights Auto On'
+        value_template: >-
+            {%- if is_state("input_select.automation_mode","Home") -%}
+              {%- if (states.sun.sun.attributes.elevation | int < 10 ) -%}
+                True
+              {%- elif ( (states.sun.sun.attributes.elevation | int < 25) and (states.sensor.dark_sky_cloud_coverage.state | int > 70)) -%}
+                True
+              {%- elif (states.sensor.dark_sky_cloud_coverage.state | int > 95) -%}
+                True
+              {%- else -%}
+                False
+              {%- endif -%}
+            {%- else -%}
+              False
+            {%- endif -%}
+        entity_id:
+            - sun.sun
+            - sensor.dark_sky_cloud_coverage
+            - input_select.automation_mode
 
 
 ###################
@@ -513,6 +536,36 @@ sensor:
   unit_of_measurement: "%"
   value_template: '{{ value_json | float }}'
 
+- platform: mqtt
+  state_topic: "smartthings/Aeon Multisensor 6/illuminance"
+  name: "living_room_lux"
+  unit_of_measurement: "Lux"
+  value_template: '{{ value_json | float }}'
+
+- platform: mqtt
+  state_topic: 'smartthings/Multisensor 6 Kitchen/tamper'
+  name: 'kitchen_multisensor_tamper'
+
+- platform: mqtt
+  state_topic: 'smartthings/Multisensor 6 Kitchen/temperature'
+  name: 'kitchen_multisensor_temperature'
+
+- platform: mqtt
+  state_topic: 'smartthings/Multisensor 6 Kitchen/motion'
+  name: 'kitchen_multisensor_motion'
+
+- platform: mqtt
+  state_topic: 'smartthings/Multisensor 6 Kitchen/humidity'
+  name: 'kitchen_multisensor_humidity'
+
+- platform: mqtt
+  state_topic: 'smartthings/Multisensor 6 Kitchen/illuminance'
+  name: 'kitchen_multisensor_lux'
+
+- platform: mqtt
+  state_topic: 'smarthings/Multisensor 6 Kitchen/battery'
+  name: 'kitchen_multisensor_battery'
+
 #- platform: mqtt
 #  state_topic: "smartthings/Aeon Multisensor 6/battery"
 #  name: "living_room_battery"
@@ -755,6 +808,7 @@ history_graph:
       - binary_sensor.low_lux
       - binary_sensor.high_lux
       - sensor.living_room_lux
+      - sensor.kitchen_multisensor_lux
       - sensor.dark_sky_cloud_coverage
     hours_to_show: 48
     refresh: 120

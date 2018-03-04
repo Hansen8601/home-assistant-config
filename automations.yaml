@@ -626,19 +626,34 @@
         entity_id: light.kitchen_island_lights
         brightness: 75
 
-- id: lights_home_sunset_on
-  alias: Lights on when home and sunset
+- id: lights_auto_on from binary sensor
+  alias: lights_auto_on from binary sensor
   trigger:
     - platform: state
-      entity_id: input_select.automation_mode
-      to: 'Home'
-  condition:
-    condition: or
-    conditions:
-      - condition: sun
-        after: sunset
-        after_offset: '-00:15:00'
+      entity_id: binary_sensor.indoor_lights_auto_on
+      to: 'True'
   action:
+    - service: light.turn_on
+      data:
+        entity_id: group.room_living
+
+
+- id: lights_on_sunset
+  alias: Lights needed sunset - on
+  trigger:
+    platform: sun
+    event: sunset
+    offset: '00:15:00'
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: input_select.automation_mode
+        state: 'Home'
+  action:
+    - service: light.turn_on
+      data:
+        entity_id: light.kitchen_cabinet_lights
     - service: light.turn_on
       data:
         entity_id: light.master_bathroom_chandelier
@@ -690,49 +705,6 @@
   action:
     service: script.lights_all_off
 
-
-#- id: lights_sunrise_off
-#  alias: Lights off from sun elevation
-#  trigger:
-#    platform: numeric_state
-#    event: sun.sun
-#    value_template: "{{ state.attributes.elevation }} "
-#    above: 4.0
-#  condition:
-#    condition: and
-#    conditions:
-#      - condition: template
-#        value_template: "{{states.input_select.automation_mode.state != 'No Automation' }}"
-#      - condition: sun
-#        before: sunset
-#        before_offset: '00:30:00'
-#      - condition: numeric_state
-#        entity_id: sensor.dark_sky_cloud_coverage
-#        below: '80'
-#  action:
-#    service: script.lights_all_off
-
-
-- id: lights_on_sunset
-  alias: Lights needed sunset - on
-  trigger:
-    platform: sun
-    event: sunset
-    offset: '00:15:00'
-  condition:
-    condition: and
-    conditions:
-      - condition: state
-        entity_id: input_select.automation_mode
-        state: 'Home'
-  action:
-    - service: light.turn_on
-      data:
-        entity_id: light.kitchen_cabinet_lights
-    - service: light.turn_on
-      data:
-        entity_id: light.master_bathroom_chandelier
-        brightness: 50
 
 # Master Bath Lights
 - id: master_bath_lights_on_from_fan
