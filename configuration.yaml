@@ -250,10 +250,6 @@ binary_sensor:
             {%- else -%}
               False
             {%- endif -%}
-        entity_id:
-            - sun.sun
-            - sensor.dark_sky_cloud_coverage
-            - input_select.automation_mode
 
 
 ###################
