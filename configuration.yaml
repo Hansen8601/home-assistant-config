@@ -545,6 +545,8 @@ sensor:
 - platform: mqtt
   state_topic: 'smartthings/Multisensor 6 Kitchen/temperature'
   name: 'kitchen_multisensor_temperature'
+  unit_of_measurement: "°F"
+  value_template: '{{ value_json | float }}'
 
 - platform: mqtt
   state_topic: 'smartthings/Multisensor 6 Kitchen/motion'
@@ -553,14 +555,20 @@ sensor:
 - platform: mqtt
   state_topic: 'smartthings/Multisensor 6 Kitchen/humidity'
   name: 'kitchen_multisensor_humidity'
+  unit_of_measurement: "%"
+  value_template: '{{ value_json | float }}'
 
 - platform: mqtt
   state_topic: 'smartthings/Multisensor 6 Kitchen/illuminance'
   name: 'kitchen_multisensor_lux'
+  unit_of_measurement: "Lux"
+  value_template: '{{ value_json | float }}'
 
 - platform: mqtt
   state_topic: 'smarthings/Multisensor 6 Kitchen/battery'
   name: 'kitchen_multisensor_battery'
+  unit_of_measurement: "%"
+  value_template: '{{ value_json | float }}'
 
 #- platform: mqtt
 #  state_topic: "smartthings/Aeon Multisensor 6/battery"
