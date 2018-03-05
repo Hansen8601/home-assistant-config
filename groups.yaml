@@ -180,6 +180,9 @@ living_room_climate:
     - sensor.living_room_temperature
     - sensor.living_room_humidity
     - sensor.living_room_lux
+    - sensor.kitchen_multisensor_temperature
+    - sensor.kitchen_multisensor_humidity
+    - sensor.kitchen_multisensor_lux
     - switch.fireplace
 
 # Network

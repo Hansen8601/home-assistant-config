@@ -92,6 +92,12 @@ sensor.living_room_temperature:
   friendly_name: Living Room Temperature
 sensor.living_room_lux:
   friendly_name: Living Room LUX
+sensor.kitchen_multisensor_humidity:
+  friendly_name: Kitchen Humidity
+sensor.kitchen_multisensor_temperature:
+  friendly_name: Kitchen Temperature
+sensor.kitchen_multisensor__lux:
+  friendly_name: Kitchen LUX
 sensor.dark_sky_cloud_coverage:
   friendly_name: Dark sky cloud coverage
 sensor.dark_sky_temperature:
