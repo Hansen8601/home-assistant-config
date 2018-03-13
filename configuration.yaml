@@ -616,7 +616,7 @@ sensor:
 #  name: 'WAN Traffic OUT'
 #  entity_id: sensor.internet_speed_out
 
-- platorm: statistics
+- platform: statistics
   name 'Living Room Lux Stats'
   entity_id: sensor.living_room_lux
   max_age:
