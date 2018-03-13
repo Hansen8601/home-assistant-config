@@ -164,9 +164,10 @@ config.json file located at /opt/docker-compose-projects/home-assistant/homebrid
 #### Startup and shutdown
 
 ```
-docker-compose down
-docker-compose pull
-docker-compose start
+docker-compose down;
+docker-compose pull;
+docker-compose up --no-start;
+docker-compose start;
 ```
 #### Show logs
 ```

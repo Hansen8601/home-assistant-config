@@ -214,6 +214,7 @@ debug_page:
   view: yes
   name: "Debug"
   entities:
+    - group.indoor_lights_auto_debug
     - group.lux_debug
     - group.fireplace_debug
     - group.bathroom_debug
@@ -251,11 +252,22 @@ scripts_debug:
     - script.denon_deck_volume_set
     - script.restart_garage_io
 
+indoor_lights_auto_debug:
+  view: no
+  name: "Indoor Lights Auto Debug"
+  entities:
+    - binary_sensor.indoor_lights_auto_on
+    - sensor.dark_sky_cloud_coverage
+    - sensor.living_room_lux
+    - input_number.lux_low_setpoint
+    - input_number.cloud_cover_setpoint
+
 lux_debug:
   view: no
   name: "Lux Debug"
   entities:
     - sensor.living_room_lux
+    - sensor.kitchen_multisensor_lux
     - sensor.dark_sky_cloud_coverage
     - input_boolean.lux_light_control
     - input_number.lux_high_setpoint
@@ -265,6 +277,7 @@ lux_debug:
     - binary_sensor.high_lux
     - automation.lights_off_from_lux_level
     - automation.lights_on_from_lux_level
+    - sensor.kitchen_multisensor_battery
 
 bathroom_debug:
   view: no

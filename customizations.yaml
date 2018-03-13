@@ -96,7 +96,7 @@ sensor.kitchen_multisensor_humidity:
   friendly_name: Kitchen Humidity
 sensor.kitchen_multisensor_temperature:
   friendly_name: Kitchen Temperature
-sensor.kitchen_multisensor__lux:
+sensor.kitchen_multisensor_lux:
   friendly_name: Kitchen LUX
 sensor.dark_sky_cloud_coverage:
   friendly_name: Dark sky cloud coverage
