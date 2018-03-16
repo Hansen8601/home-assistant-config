@@ -195,42 +195,20 @@ rest_command:
 ###################
 
 binary_sensor:
-#  - platform: rpi_gpio
-#    ports:
-#      20: Garage Service Door RPI
 
-  - platform: template
-    sensors:
-      low_lux:
-        value_template: '{{states.sensor.living_room_lux.state | float  < states.input_number.lux_low_setpoint.state | float or
-                           states.sensor.dark_sky_cloud_coverage.state | float > states.input_number.cloud_cover_setpoint.state | float }}' 
-        friendly_name: 'Low Lux'
+#  - platform: template
+#    sensors:
+#      low_lux:
+#        value_template: '{{states.sensor.living_room_lux.state | float  < states.input_number.lux_low_setpoint.state | float or
+#                           states.sensor.dark_sky_cloud_coverage.state | float > states.input_number.cloud_cover_setpoint.state | float }}' 
+#        friendly_name: 'Low Lux'
 
-  - platform: template
-    sensors:
-      high_lux:
-        value_template: '{{states.sensor.living_room_lux.state | float > states.input_number.lux_high_setpoint.state | float and
-                           states.sensor.dark_sky_cloud_coverage.state | float < states.input_number.cloud_cover_setpoint.state | float }}'
-        friendly_name: 'High Lux'
-
-  - platform: template
-    sensors:
-      fireplace_off_sensor:
-        value_template: '{{ states.sensor.living_room_temperature.state|float >=  states.input_number.fireplace_high_setpoint.state | float or
-                            states.sensor.main_floor_temperature.state|float  >=  states.input_number.fireplace_high_setpoint.state | float }} '
-        friendly_name: "Fireplace Off Sensor"
-
-#  - platform: threshold
-#    name: "Low LUX"
-#    threshold: 50
-#    type: lower
-#    entity_id: sensor.living_room_lux
-
-#  - platform: threshold
-#    name: "High LUX"
-#    threshold: 100 
-#    type: upper
-#    entity_id: sensor.living_room_lux
+#  - platform: template
+#    sensors:
+#      high_lux:
+#        value_template: '{{states.sensor.living_room_lux.state | float > states.input_number.lux_high_setpoint.state | float and
+#                           states.sensor.dark_sky_cloud_coverage.state | float < states.input_number.cloud_cover_setpoint.state | float }}'
+#        friendly_name: 'High Lux'
 
   - platform: template
     sensors:
@@ -252,6 +230,13 @@ binary_sensor:
             {%- else -%}
               False
             {%- endif -%}
+
+  - platform: template
+    sensors:
+      fireplace_off_sensor:
+        value_template: '{{ states.sensor.living_room_temperature.state|float >=  states.input_number.fireplace_high_setpoint.state | float or
+                            states.sensor.main_floor_temperature.state|float  >=  states.input_number.fireplace_high_setpoint.state | float }} '
+        friendly_name: "Fireplace Off Sensor"
 
 
 ###################
@@ -482,18 +467,6 @@ sensor:
       value_template: '{{ states.remote.living_room.attributes.current_activity }}'
       friendly_name: 'Living Room Remote Activity'
 
-#- platform: template
-#  sensors:
-#     garage_service_door:
-#       value_template: >-
-#        {% if states.binary_sensor.garage_service_door_rpi.state == 'on' %}
-#          Closed
-#        {% elif states.binary_sensor.garage_service_door_rpi.state == 'off' %}
-#          Open
-#        {% else %}
-#          n/a
-#        {% endif %}
-
 - platform: mqtt
   state_topic: "rpi/garage/input/servicedoor"
   name: "garage service door"
@@ -572,11 +545,6 @@ sensor:
   unit_of_measurement: "%"
   value_template: '{{ value_json | float }}'
 
-#- platform: mqtt
-#  state_topic: "smartthings/Aeon Multisensor 6/battery"
-#  name: "living_room_battery"
-#  unit_of_measure: '%'
-
 # Disabling, not returning accurate results.
 # Seems to be an ASUS snmp issue.
 #- platform: snmp
@@ -616,11 +584,12 @@ sensor:
 #  name: 'WAN Traffic OUT'
 #  entity_id: sensor.internet_speed_out
 
-- platform: statistics
-  name 'Living Room Lux Stats'
-  entity_id: sensor.living_room_lux
-  max_age:
-    minutes: 5
+# Disabled - Causes errors if less than two points in 5 minutes
+#- platform: statistics
+#  name: 'Living Room Lux Stats'
+#  entity_id: sensor.living_room_lux
+#  max_age:
+#    minutes: 5
 
 - platform: systemmonitor
   resources:
@@ -745,18 +714,25 @@ input_number:
     min: 0
     max: 70 
     step: .5
-  lux_low_setpoint:
-    name: lux low setpoint
-    initial: 60
+#  lux_low_setpoint:
+#    name: lux low setpoint
+#    initial: 60
+#    min: 0
+#    max: 300
+#    step: 10
+#  lux_high_setpoint:
+#    name: lux high setpoint
+#    initial: 60
+#    min: 0
+#    max: 300
+#    step: 10
+  lux_setpoint:
+    name: lux setpoint
+    initial: 20
     min: 0
-    max: 300
-    step: 10
-  lux_high_setpoint:
-    name: lux high setpoint
-    initial: 60
-    min: 0
-    max: 300
-    step: 10
+    max: 100
+    step: 5
+
   cloud_cover_setpoint:
     name: cloud cover setpoint
     initial: 75
@@ -775,21 +751,6 @@ input_number:
     min: 70
     max: 80
     step: 1
-  internet_traffic_delta_in:
-    name: "Traffic IN Delta"
-    mode: box
-    initial: 0
-    min: 0
-    max: 1000000000000
-    unit_of_measurement: 'Mbps'
-  internet_traffic_delta_out:
-    name: "Traffic OUT Delta"
-    mode: box
-    initial: 0
-    min: 0
-    max: 1000000000000
-    unit_of_measurement: 'Mbps'
-
 
 ###################
 #                 #
@@ -815,17 +776,15 @@ timer:
 
 history_graph:
   lux1:
-    name: Light Levels
+    name: Living Room Light Levels
     entities:
       - sensor.living_room_lux
-      - sensor.kitchen_multisensor_lux
-    hours_to_show: 48
+    hours_to_show: 24
     refresh: 120
   lux2:
-    name: Light Levels Binary
+    name: Kitchen Light Levels
     entities:
-      - binary_sensor.low_lux
-      - binary_sensor.high_lux
+      - sensor.kitchen_multisensor_lux
   temperatures:
     name: Temperatures
     entities:
@@ -833,7 +792,7 @@ history_graph:
 #      - sensor.basement_temperature_2
        - sensor.living_room_temperature
        - sensor.main_floor_temperature
-    hours_to_show: 48
+    hours_to_show: 24
     refresh: 120
   presence:
     name: Presence

@@ -614,7 +614,7 @@
     condition: or
     conditions:
       - condition: state
-        entity_id: binary_sensor.low_lux
+        entity_id: binary_sensor.lights_auto_on
         state: 'on'
       - condition: sun
         after: sunset
@@ -631,12 +631,29 @@
   trigger:
     - platform: state
       entity_id: binary_sensor.indoor_lights_auto_on
-      to: 'True'
+      to: 'on'
+      for: 
+        minutes: 5
   action:
     - service: light.turn_on
       data:
-        entity_id: group.room_living
+        entity_id:
+        - group.room_living
+    - service: light.turn_on
+      data:
+        entity_id: light.kitchen_island_lights
+        brightness: 75
 
+- id: lights_auto_off from binary sensor
+  alias: lights_auto_off from binary sensor
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.indoor_lights_auto_on
+      to: 'off'
+      for:
+        minutes: 5
+  action:
+    - service: script.lights_all_off
 
 - id: lights_on_sunset
   alias: Lights needed sunset - on
@@ -660,50 +677,50 @@
         brightness: 50
 
 
-- id: lights_lux_on
-  alias: Lights on from lux level
-  trigger:
-    - platform: state
-      entity_id: binary_sensor.low_lux
-      to: 'on'
-      for:
-        minutes: 20
-  condition:
-    condition: and
-    conditions:
-      - condition: template
-        value_template: "{{states.input_select.automation_mode.state != 'No Automation' }}"
-      - condition: state
-        entity_id: input_boolean.lux_light_control
-        state: "on"
-      - condition: state
-        entity_id: input_select.automation_mode
-        state: 'Home'
-  action:
-    service: script.lights_main_on
+#- id: lights_lux_on
+#  alias: Lights on from lux level
+#  trigger:
+#    - platform: state
+#      entity_id: binary_sensor.low_lux
+#      to: 'on'
+#      for:
+#        minutes: 20
+#  condition:
+#    condition: and
+#    conditions:
+#      - condition: template
+#        value_template: "{{states.input_select.automation_mode.state != 'No Automation' }}"
+#      - condition: state
+#        entity_id: input_boolean.lux_light_control
+#        state: "on"
+#      - condition: state
+#        entity_id: input_select.automation_mode
+#        state: 'Home'
+#  action:
+#    service: script.lights_main_on
 
 
-- id: lights_lux_off
-  alias: Lights off from lux level
-  trigger:
-    platform: state
-    entity_id: binary_sensor.high_lux
-    to: 'on'
+#- id: lights_lux_off
+#  alias: Lights off from lux level
+#  trigger:
+#    platform: state
+#    entity_id: binary_sensor.high_lux
+#    to: 'on'
 #    for:
 #      minutes: 20
-  condition:
-    condition: and
-    conditions:
-      - condition: template
-        value_template: "{{states.input_select.automation_mode.state != 'No Automation' }}"
-      - condition: state
-        entity_id: input_boolean.lux_light_control
-        state: "on"
-      - condition: sun
-        before: sunset
-        before_offset: '00:30:00'
-  action:
-    service: script.lights_all_off
+#  condition:
+#    condition: and
+#    conditions:
+#      - condition: template
+#        value_template: "{{states.input_select.automation_mode.state != 'No Automation' }}"
+#      - condition: state
+#        entity_id: input_boolean.lux_light_control
+#        state: "on"
+#      - condition: sun
+#        before: sunset
+#        before_offset: '00:30:00'
+#  action:
+#    service: script.lights_all_off
 
 
 # Master Bath Lights
