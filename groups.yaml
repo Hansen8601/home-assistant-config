@@ -257,9 +257,11 @@ indoor_lights_auto_debug:
   name: "Indoor Lights Auto Debug"
   entities:
     - binary_sensor.indoor_lights_auto_on
+    - sun.sun
     - sensor.dark_sky_cloud_coverage
     - sensor.living_room_lux
     - sensor.kitchen_multisensor_lux
+    - sensor.average_lux
     - input_number.lux_setpoint
     - input_number.cloud_cover_setpoint
 
@@ -295,21 +297,13 @@ bathroom_debug:
     - light.master_bathroom_dimmer
     - light.master_bathroom_shower
 
-#snmp_debug:
-#  view: no
-#  name: "SNMP Debug"
-#  control: hidden
-#  entities:
-#    - sensor.snmp_wan_in
-#    - sensor.snmp_wan_out
-#    - input_number.internet_traffic_delta_in
-#    - input_number.internet_traffic_delta_out
-
 # Graphs
 graphs_page:
   view: yes
   name: "Graphs"
   entities:
-    - history_graph.light_levels
+    - history_graph.living_room_light_levels
+    - history_graph.kitchen_light_levels
+    - history_graph.average_light_levels
     - history_graph.temperatures
     - history_graph.presence

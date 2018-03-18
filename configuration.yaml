@@ -222,7 +222,7 @@ binary_sensor:
                 True
               {%- elif (states.sensor.dark_sky_cloud_coverage.state | int > 95) -%}
                 True
-              {%- elif (states.sensor.living_room_lux.state | int < states.input_number.lux_low_setpoint.state | int ) -%}
+              {%- elif (states.sensor.living_room_lux.state | int < states.input_number.lux_setpoint.state | int ) -%}
                 True
               {%- else -%}
                 False
@@ -576,6 +576,20 @@ sensor:
 #      value_template: '{{ ((states.input_number.internet_traffic_delta_out.state | float )) | round(2) }}'
 #      unit_of_measurement: 'Mbps'
 
+
+# Testing average Lux
+- platform: template
+  sensors:
+    average_lux:
+      friendly_name: 'Average Lux'
+      value_template: >-
+        {%- if (states.sensor.living_room_lux.state | int + states.sensor.kitchen_multisensor_lux.state | int  < 400 ) -%}
+          {{(states.sensor.living_room_lux.state | int + states.sensor.kitchen_multisensor_lux.state | int) / 2 }}
+        {%- else -%}
+          200
+        {%- endif -%}
+      unit_of_measurement: 'Lux'
+
 #- platform: statistics
 #  name: 'WAN Traffic IN'
 #  entity_id: sensor.internet_speed_in
@@ -785,6 +799,14 @@ history_graph:
     name: Kitchen Light Levels
     entities:
       - sensor.kitchen_multisensor_lux
+    hours_to_show: 24
+    refresh: 120
+  lux3:
+    name: Average light Levels
+    entities:
+      - sensor.avearge_lux
+    hours_to_show: 24
+    refresh: 120
   temperatures:
     name: Temperatures
     entities:

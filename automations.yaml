@@ -604,27 +604,30 @@
 #                          #
 ############################
 
-- id: lights_home_on
-  alias: Lights on when home - on
-  trigger:
-    - platform: state
-      entity_id: input_select.automation_mode
-      to: 'Home'
-  condition:
-    condition: or
-    conditions:
-      - condition: state
-        entity_id: binary_sensor.lights_auto_on
-        state: 'on'
-      - condition: sun
-        after: sunset
-        after_offset: '-00:30:00'
-  action:
-    - service: script.lights_main_on
-    - service: light.turn_on
-      data:
-        entity_id: light.kitchen_island_lights
-        brightness: 75
+#- id: lights_home_on
+#  alias: Lights on when home - on
+#  trigger:
+#    - platform: state
+#      entity_id: input_select.automation_mode
+#      to: 'Home'
+#  condition:
+#    condition: or
+#    conditions:
+#      - condition: state
+#        entity_id: binary_sensor.lights_auto_on
+#        state: 'on'
+#      - condition: sun
+#        after: sunset
+#        after_offset: '-00:30:00'
+#      - condition: sun
+#        before: sunrise
+#        before_offset: '-00:30:00'
+#  action:
+#    - service: script.lights_main_on
+#    - service: light.turn_on
+#      data:
+#        entity_id: light.kitchen_island_lights
+#        brightness: 75
 
 - id: lights_auto_on from binary sensor
   alias: lights_auto_on from binary sensor
@@ -632,8 +635,9 @@
     - platform: state
       entity_id: binary_sensor.indoor_lights_auto_on
       to: 'on'
-      for: 
-        minutes: 5
+      # Delay not used - want linghts on immediately when coming home.
+      #for: 
+      #  minutes: 5
   action:
     - service: light.turn_on
       data:
@@ -642,7 +646,8 @@
     - service: light.turn_on
       data:
         entity_id: light.kitchen_island_lights
-        brightness: 75
+#        brightness: 75
+
 
 - id: lights_auto_off from binary sensor
   alias: lights_auto_off from binary sensor
@@ -655,18 +660,25 @@
   action:
     - service: script.lights_all_off
 
-- id: lights_on_sunset
-  alias: Lights needed sunset - on
+
+- id: ambiience_lights_on
+  alias: Ambience Lights - on
   trigger:
-    platform: sun
-    event: sunset
-    offset: '00:15:00'
+    - platform: sun
+      event: sunset
+      offset: '00:15:00'
+    - platform: state
+      entity_id: input_select.automation_mode
+      to: 'Home'
   condition:
     condition: and
     conditions:
       - condition: state
         entity_id: input_select.automation_mode
         state: 'Home'
+      - condition: sun
+        after: sunset
+        after_offset: '00:15:00'
   action:
     - service: light.turn_on
       data:
@@ -674,6 +686,10 @@
     - service: light.turn_on
       data:
         entity_id: light.master_bathroom_chandelier
+        brightness: 50
+    - service: light.turn_on
+      data:
+        entity_id: light.upstairs_hall_scone
         brightness: 50
 
 
@@ -756,7 +772,6 @@
         entity_id:
         - group.outside_lights
         - light.upstairs_hall_scone
-        - light.kitchen_cabinet_lights
 
 
 - id: lights_sun_on
@@ -778,10 +793,6 @@
       data:
         entity_id: light.garage_outside_lights
         brightness: 70
-    - service: light.turn_on
-      data:
-        entity_id: light.upstairs_hall_scone
-        brightness: 50
 
 
 ############################
