@@ -656,7 +656,7 @@
       entity_id: binary_sensor.indoor_lights_auto_on
       to: 'off'
       for:
-        minutes: 5
+        minutes: 6
   action:
     - service: script.lights_all_off
 

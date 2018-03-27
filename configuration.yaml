@@ -224,6 +224,8 @@ binary_sensor:
                 True
               {%- elif (states.sensor.living_room_lux.state | int < states.input_number.lux_setpoint.state | int ) -%}
                 True
+              {%- elif (states.sensor.kitchen_multisensor_lux.state | int < 10 ) -%}
+                True
               {%- else -%}
                 False
               {%- endif -%}
@@ -804,7 +806,7 @@ history_graph:
   lux3:
     name: Average light Levels
     entities:
-      - sensor.avearge_lux
+      - sensor.average_lux
     hours_to_show: 24
     refresh: 120
   temperatures:
