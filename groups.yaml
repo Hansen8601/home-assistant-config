@@ -8,6 +8,7 @@ default_view:
     - group.modes
     - group.media_short
     - group.family
+    - camera.amcrest_camera
 
 modes:
   view: no
@@ -37,7 +38,6 @@ rooms_page:
   entities:
     - group.room_kitchen
     - group.room_living
-    - group.room_living_fireplace
     - group.room_master_bathroom
     - group.room_guest_bathroom
     - group.outside_lights
@@ -50,8 +50,7 @@ room_living:
     - light.ge_living_room_1
     - light.ge_living_room_2
     - light.ge_living_room_3
-
-room_living_fireplace:
+    - sensor.living_room_lux
     - switch.fireplace
 
 room_kitchen:
@@ -59,6 +58,7 @@ room_kitchen:
   entities:
     - light.kitchen_cabinet_lights
     - light.kitchen_island_lights
+    - sensor.kitchen_multisensor_lux
 
 room_master_bathroom:
   view: no

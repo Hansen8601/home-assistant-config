@@ -44,6 +44,7 @@ recorder:
       - media_player
       - remote
       - group
+      - timer
 
 
 # View all events in a logbook
@@ -95,6 +96,20 @@ updater:
 # Show configuration panel
 config:
 
+
+# Used for camera display
+ffmpeg:
+
+
+amcrest:
+  - host: 192.168.1.153
+    username: !secret amcrestuser
+    password: !secret amcrestpwd
+    scan_interval: 1
+    stream_source: snapshot
+
+camera:
+  - platform: amcrest
 
 device_tracker:
   platform: mqtt
@@ -222,9 +237,7 @@ binary_sensor:
                 True
               {%- elif (states.sensor.dark_sky_cloud_coverage.state | int > 95) -%}
                 True
-              {%- elif (states.sensor.living_room_lux.state | int < states.input_number.lux_setpoint.state | int ) -%}
-                True
-              {%- elif (states.sensor.kitchen_multisensor_lux.state | int < 10 ) -%}
+              {%- elif (states.sensor.living_room_lux.state | int < states.input_number.lux_setpoint.state | int and states.sensor.kitchen_multisensor_lux.state | int < 10 ) -%}
                 True
               {%- else -%}
                 False
