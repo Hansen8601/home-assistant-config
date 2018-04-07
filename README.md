@@ -13,7 +13,7 @@ Thanks to all the great developers and supporters involved in the home assistant
   - HomeBridge
 - Several apple devices (iphones, ipads, apple TVs)
 - Smarthings Hub
-- Raspberry Pi [pi-mqtt-gpio](https://github.com/Hansen8601/pi-mqtt-gpio1-config) for garage door control
+- Raspberry Pi running [pi-mqtt-gpio](https://github.com/flyte/pi-mqtt-gpio) . Configuration is  [pi-mqtt-gpio](https://github.com/Hansen8601/pi-mqtt-gpio1-config) for garage door control
 - esp8266 fireplace controller
 - - [GE Z-Wave Wireless Smart Lighting Control](https://www.amazon.com/gp/product/B006LQFHN2/ref=oh_aui_detailpage_o00_s00?ie=UTF8&psc=1)
 - two ecobee 3 smart thermostats
