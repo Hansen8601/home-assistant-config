@@ -99,17 +99,33 @@ config:
 
 # Used for camera display
 ffmpeg:
+  ffmpeg_bin: /usr/bin/ffmpeg
 
 
+# The camera in the GUI drops out when using this.
+# Using ffmpeg instead for GUI
 amcrest:
-  - host: 192.168.1.153
+  - host: !secret camera_front_ip
+    port: 80
+    name: 'Front Door 2'
     username: !secret amcrestuser
     password: !secret amcrestpwd
-    scan_interval: 1
+    resolution: low
+#    stream_source: rtsp
     stream_source: snapshot
+#    stream_source: mjpeg
+#    scan_interval: 5
+    sensors:
+      - motion_detector
+      - sdcard
+
 
 camera:
-  - platform: amcrest
+#  - platform: amcrest
+  - platform: ffmpeg
+    input: !secret camera_front_url1
+    name: 'Front Door'
+
 
 device_tracker:
   platform: mqtt
@@ -210,41 +226,31 @@ rest_command:
 ###################
 
 binary_sensor:
-
-#  - platform: template
-#    sensors:
-#      low_lux:
-#        value_template: '{{states.sensor.living_room_lux.state | float  < states.input_number.lux_low_setpoint.state | float or
-#                           states.sensor.dark_sky_cloud_coverage.state | float > states.input_number.cloud_cover_setpoint.state | float }}' 
-#        friendly_name: 'Low Lux'
-
-#  - platform: template
-#    sensors:
-#      high_lux:
-#        value_template: '{{states.sensor.living_room_lux.state | float > states.input_number.lux_high_setpoint.state | float and
-#                           states.sensor.dark_sky_cloud_coverage.state | float < states.input_number.cloud_cover_setpoint.state | float }}'
-#        friendly_name: 'High Lux'
-
   - platform: template
     sensors:
       indoor_lights_auto_on:
         friendly_name: 'Indoor Lights Auto On'
         value_template: >-
-            {%- if is_state("input_select.automation_mode","Home") -%}
-              {%- if (states.sun.sun.attributes.elevation | int < 10 ) -%}
-                True
-              {%- elif ( (states.sun.sun.attributes.elevation | int < 25) and (states.sensor.dark_sky_cloud_coverage.state | int > 70)) -%}
-                True
-              {%- elif (states.sensor.dark_sky_cloud_coverage.state | int > 95) -%}
-                True
-              {%- elif (states.sensor.living_room_lux.state | int < states.input_number.lux_setpoint.state | int and states.sensor.kitchen_multisensor_lux.state | int < 10 ) -%}
-                True
-              {%- else -%}
-                False
-              {%- endif -%}
-            {%- else -%}
+          {%- if is_state("input_select.automation_mode","Home") -%}
+            {%- if as_timestamp(now()) - as_timestamp(states.binary_sensor.indoor_lights_auto_on.last_changed) > 600 or
+                   as_timestamp(now()) - as_timestamp(states.input_select.automation_mode.last_changed) < 600 %}
+                {%- if (states.sun.sun.attributes.elevation | int < 10 ) -%}
+                  True
+                {%- elif ( (states.sun.sun.attributes.elevation | int < 25) and (states.sensor.dark_sky_cloud_coverage.state | int > 70)) -%}
+                  True
+                {%- elif (states.sensor.dark_sky_cloud_coverage.state | int > 95) -%}
+                  True
+                {%- elif (states.sensor.living_room_lux.state | int < states.input_number.lux_setpoint.state | int and states.sensor.kitchen_multisensor_lux.state | int < 10 ) -%}
+                  True
+                {%- else -%} 
+                  False
+                {%- endif -%}
+            {%- else -%}    
               False
-            {%- endif -%}
+            {%- endif -%}  
+          {%- else -%}    
+            False
+          {%- endif -%}  
 
   - platform: template
     sensors:

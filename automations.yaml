@@ -635,9 +635,6 @@
     - platform: state
       entity_id: binary_sensor.indoor_lights_auto_on
       to: 'on'
-      # Delay not used - want linghts on immediately when coming home.
-      #for: 
-      #  minutes: 5
   action:
     - service: light.turn_on
       data:
@@ -654,9 +651,6 @@
   trigger:
     - platform: state
       entity_id: binary_sensor.indoor_lights_auto_on
-      to: 'off'
-      for:
-        minutes: 6
   action:
     - service: script.lights_all_off
 
