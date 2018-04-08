@@ -107,7 +107,7 @@ ffmpeg:
 amcrest:
   - host: !secret camera_front_ip
     port: 80
-    name: 'Front Door 2'
+    name: 'Front Door'
     username: !secret amcrestuser
     password: !secret amcrestpwd
     resolution: low
@@ -121,10 +121,10 @@ amcrest:
 
 
 camera:
-#  - platform: amcrest
-  - platform: ffmpeg
-    input: !secret camera_front_url1
-    name: 'Front Door'
+  - platform: amcrest
+#  - platform: ffmpeg
+#    input: !secret camera_front_url1
+#    name: 'Front Door 2'
 
 
 device_tracker:

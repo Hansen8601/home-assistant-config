@@ -8,7 +8,7 @@ default_view:
     - group.modes
     - group.media_short
     - group.family
-    - camera.amcrest_camera
+    - camera.front_door
 
 modes:
   view: no
