@@ -1,4 +1,4 @@
-name: Home-Sever
+name: Hansen Home
 
 latitude: !secret latitude
 longitude: !secret longitude

@@ -9,6 +9,7 @@ default_view:
     - group.media_short
     - group.family
     - camera.front_door
+    - camera.driveway
 
 modes:
   view: no
@@ -46,12 +47,15 @@ rooms_page:
 
 room_living:
   view: no
+  control: hidden
   entities:
     - light.ge_living_room_1
     - light.ge_living_room_2
     - light.ge_living_room_3
     - sensor.living_room_lux
     - switch.fireplace
+    - input_boolean.fireplace_automation
+    - input_number.fireplace_high_setpoint
 
 room_kitchen:
   view: no
@@ -185,50 +189,27 @@ living_room_climate:
     - sensor.kitchen_multisensor_lux
     - switch.fireplace
 
-# Network
-network_page:
-  view: yes
-  name: "Network"
-  entities:
-#    - sensor.wan_traffic_in_mean
-#    - sensor.wan_traffic_out_mean
-#    - group.asus_stats
-    - sensor.average_load_1m
-    - sensor.average_load_5m
-    - sensor.ram_used
-    - sensor.swap_used
-
-#asus_stats:
-#  view: no
-#  name: "Asus Router"
-#  entities:
-#    - sensor.internet_speed_in
-#    - sensor.internet_speed_out
-#    - sensor.snmp_wan_in
-#    - sensor.snmp_wan_out
-#    - input_number.internet_traffic_delta_in
-#    - input_number.internet_traffic_delta_out
 
 # Debug Page
 debug_page:
   view: yes
   name: "Debug"
   entities:
+    - group.network_page
     - group.indoor_lights_auto_debug
-    - group.lux_debug
-    - group.fireplace_debug
     - group.bathroom_debug
     - group.homekit_debug
     - group.scripts_debug
-#    - group.snmp_debug
 
-fireplace_debug:
+# Network
+network_page:
   view: no
-  name: "Fireplace Debug"
+  name: "Network"
   entities:
-    - input_boolean.fireplace_automation
-    - input_number.fireplace_low_setpoint
-    - input_number.fireplace_high_setpoint
+    - sensor.average_load_1m
+    - sensor.average_load_5m
+    - sensor.ram_used
+    - sensor.swap_used
 
 homekit_debug:
   view: no
@@ -251,36 +232,24 @@ scripts_debug:
     - script.denon_deck_volume_down
     - script.denon_deck_volume_set
     - script.restart_garage_io
+    - script.indoor_lights_auto_on_log
 
 indoor_lights_auto_debug:
   view: no
   name: "Indoor Lights Auto Debug"
   entities:
+    - input_boolean.lux_light_control
     - binary_sensor.indoor_lights_auto_on
     - sun.sun
     - sensor.dark_sky_cloud_coverage
-    - sensor.living_room_lux
+    - sensor.dark_sky_cloud_coverage_stats_mean
     - sensor.kitchen_multisensor_lux
+    - sensor.living_room_lux
+    - sensor.Living_room_lux_stats_mean
     - sensor.average_lux
+    - sensor.average_lux_stats_mean
     - input_number.lux_setpoint
-    - input_number.cloud_cover_setpoint
-
-#lux_debug:
-#  view: no
-#  name: "Lux Debug"
-#  entities:
-#    - sensor.living_room_lux
-#    - sensor.kitchen_multisensor_lux
-#    - sensor.dark_sky_cloud_coverage
-#    - input_boolean.lux_light_control
-#    - input_number.lux_high_setpoint
-#    - input_number.lux_low_setpoint
-#    - input_number.cloud_cover_setpoint
-#    - binary_sensor.low_lux
-#    - binary_sensor.high_lux
-#    - automation.lights_off_from_lux_level
-#    - automation.lights_on_from_lux_level
-#    - sensor.kitchen_multisensor_battery
+    
 
 bathroom_debug:
   view: no

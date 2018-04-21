@@ -24,8 +24,6 @@ recorder:
       - sensor.dark_sky_wind_bearing
       - sensor.dark_sky_wind_speed
       - sensor.dark_sky_temperature
-#      - sensor.snmp_wan_in
-#      - sensor.snmp_wan_out
       - automation.denon_set_volume
       - automation.denon__set_slider_to_volume
       - automation.activity_with_remote__set_automation_to_sleeping
@@ -55,8 +53,6 @@ logbook:
       - automation.denon_volume_set
       - automation.denon_deck_volume_set
       
-      - binary_sensor.high_lux
-      - binary_sensor.low_lux
       - input_boolean.set_mode_home
       - input_boolean.set_mode_sleeping
       - input_boolean.set_mode_away
@@ -102,22 +98,27 @@ ffmpeg:
   ffmpeg_bin: /usr/bin/ffmpeg
 
 
-# The camera in the GUI drops out when using this.
-# Using ffmpeg instead for GUI
 amcrest:
   - host: !secret camera_front_ip
     port: 80
     name: 'Front Door'
     username: !secret amcrestuser
     password: !secret amcrestpwd
-    resolution: low
-#    stream_source: rtsp
-    stream_source: snapshot
-#    stream_source: mjpeg
-#    scan_interval: 5
+    resolution: high
+    stream_source: rtsp
     sensors:
       - motion_detector
       - sdcard
+  - host: !secret camera_driveway_ip
+    port: 80
+    name: 'Driveway'
+    username: !secret amcrestuser
+    password: !secret amcrestpwd
+    resolution: high
+    stream_source: rtsp
+#    sensors:
+#      - motion_detector
+#      - sdcard
 
 
 camera:
@@ -232,22 +233,24 @@ binary_sensor:
         friendly_name: 'Indoor Lights Auto On'
         value_template: >-
           {%- if is_state("input_select.automation_mode","Home") -%}
-            {%- if as_timestamp(now()) - as_timestamp(states.binary_sensor.indoor_lights_auto_on.last_changed) > 600 or
-                   as_timestamp(now()) - as_timestamp(states.input_select.automation_mode.last_changed) < 600 %}
-                {%- if (states.sun.sun.attributes.elevation | int < 10 ) -%}
-                  True
-                {%- elif ( (states.sun.sun.attributes.elevation | int < 25) and (states.sensor.dark_sky_cloud_coverage.state | int > 70)) -%}
-                  True
-                {%- elif (states.sensor.dark_sky_cloud_coverage.state | int > 95) -%}
-                  True
-                {%- elif (states.sensor.living_room_lux.state | int < states.input_number.lux_setpoint.state | int and states.sensor.kitchen_multisensor_lux.state | int < 10 ) -%}
-                  True
-                {%- else -%} 
-                  False
-                {%- endif -%}
-            {%- else -%}    
-              False
-            {%- endif -%}  
+             {%- if as_timestamp(now()) - as_timestamp(states.binary_sensor.indoor_lights_auto_on.last_changed) > 600 or
+                    as_timestamp(now()) - as_timestamp(states.input_select.automation_mode.last_changed) < 600 or
+                    as_timestamp(now()) - as_timestamp(states.input_number.lux_setpoint.last_changed) < 10 %}
+                 {%- if (states.sun.sun.attributes.elevation | int < 10 ) -%}
+                   True
+                 {%- elif ( (states.sun.sun.attributes.elevation | int < 25) and (states.sensor.dark_sky_cloud_coverage_stats_mean.state | int > 70)) -%}
+                   True
+                 {%- elif (states.sensor.dark_sky_cloud_coverage_stats_mean.state | int > 95) -%}
+                   True
+                 #{%- elif (states.sensor.living_room_lux.state | int < states.input_number.lux_setpoint.state | int and states.sensor.kitchen_multisensor_lux.state | int < 15 ) -%}
+                 {%- elif (states.sensor.living_room_lux_stats_mean.state | int < states.input_number.lux_setpoint.state | int ) -%}
+                   True
+                 {%- else -%} 
+                   False
+                 {%- endif -%}
+             {%- else -%}    
+               {%- if is_state("binary_sensor.indoor_lights_auto_on","off") -%}False{%- else -%}True{%- endif -%}
+             {%- endif -%}  
           {%- else -%}    
             False
           {%- endif -%}  
@@ -255,9 +258,15 @@ binary_sensor:
   - platform: template
     sensors:
       fireplace_off_sensor:
-        value_template: '{{ states.sensor.living_room_temperature.state|float >=  states.input_number.fireplace_high_setpoint.state | float or
-                            states.sensor.main_floor_temperature.state|float  >=  states.input_number.fireplace_high_setpoint.state | float }} '
         friendly_name: "Fireplace Off Sensor"
+        value_template: >-
+          {%- if is_state("switch.fireplace","on") and
+               (states.sensor.living_room_temperature.state|float >=  states.input_number.fireplace_high_setpoint.state | float or
+               states.sensor.main_floor_temperature.state|float  >=  states.input_number.fireplace_high_setpoint.state | float) -%}
+            True
+          {%- else -%}
+            False 
+          {%- endif -%}
 
 
 ###################
@@ -611,20 +620,24 @@ sensor:
         {%- endif -%}
       unit_of_measurement: 'Lux'
 
-#- platform: statistics
-#  name: 'WAN Traffic IN'
-#  entity_id: sensor.internet_speed_in
+- platform: statistics
+  name: average_lux_stats
+  entity_id: sensor.average_lux
+  max_age:
+    minutes: 10
 
-#- platform: statistics
-#  name: 'WAN Traffic OUT'
-#  entity_id: sensor.internet_speed_out
+- platform: statistics
+  name: living_room_lux_stats
+  entity_id: sensor.living_room_lux
+  max_age:
+    minutes: 10
 
-# Disabled - Causes errors if less than two points in 5 minutes
-#- platform: statistics
-#  name: 'Living Room Lux Stats'
-#  entity_id: sensor.living_room_lux
-#  max_age:
-#    minutes: 5
+- platform: statistics
+  name: dark_sky_cloud_coverage_stats
+  entity_id: sensor.dark_sky_cloud_coverage 
+  max_age:
+    minutes: 60
+
 
 - platform: systemmonitor
   resources:
@@ -686,11 +699,11 @@ input_boolean:
     name: set_mode_away
 # Automation Control switches
   lux_light_control:
-    name: lux_light_control
+    name: 'Lights Auto Control'
     initial: on
 # Fireplace Control switch
   fireplace_automation:
-    name: fireplace_automation
+    name: 'Fireplace Automation'
     initial: off
 # Homekit Presence
   presence_homekit:
@@ -749,37 +762,12 @@ input_number:
     min: 0
     max: 70 
     step: .5
-#  lux_low_setpoint:
-#    name: lux low setpoint
-#    initial: 60
-#    min: 0
-#    max: 300
-#    step: 10
-#  lux_high_setpoint:
-#    name: lux high setpoint
-#    initial: 60
-#    min: 0
-#    max: 300
-#    step: 10
   lux_setpoint:
     name: lux setpoint
     initial: 20
     min: 0
     max: 100
     step: 5
-
-  cloud_cover_setpoint:
-    name: cloud cover setpoint
-    initial: 75
-    min: 0
-    max: 100
-    step: 5
-  fireplace_low_setpoint:
-    name: fireplace low setpoint
-    initial: 66
-    min: 60
-    max: 70
-    step: 1
   fireplace_high_setpoint:
     name: fireplace high setpoint
     initial: 72

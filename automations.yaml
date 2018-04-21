@@ -515,34 +515,6 @@
 #    Fireplace             #
 #                          #
 ############################
-
-- id: fireplace_home_on
-  alias: "Fireplace on when home and cold"
-  trigger:
-    platform: state
-    entity_id: input_select.automation_mode
-    to: "Home"
-    from: "Away"
-  condition:
-    condition: and
-    conditions:
-      - condition: template
-        value_template: "{{ states.input_select.automation_mode.state != 'No Automation'}}"
-      - condition: template
-        value_template: "{{ states.climate.main_floor.attributes.operation_mode == 'heat'}}"
-      - condition: state
-        entity_id: input_boolean.fireplace_automation
-        state: "on"
-      - condition: and
-        conditions:
-          - condition: template
-            value_template: "{{ states.sensor.living_room_temperature.state|float <=  states.input_number.fireplace_low_setpoint.state | float }}"
-          - condition: template
-            value_template: "{{states.sensor.main_floor_temperature.state|float <=  states.input_number.fireplace_low_setpoint.state | float }}"
-  action:
-    - service: switch.turn_on
-      data:
-        entity_id: switch.fireplace
   
 - id: fireplace_hot_off
   alias: "Fireplace off when hot"
@@ -555,6 +527,9 @@
     conditions:
       - condition: template
         value_template: "{{ states.input_select.automation_mode.state != 'No Automation'}}"
+      - condition: state
+        entity_id: input_boolean.fireplace_automation 
+        state: 'on'
       - condition: state
         entity_id: switch.fireplace
         state: "on"
@@ -604,38 +579,19 @@
 #                          #
 ############################
 
-#- id: lights_home_on
-#  alias: Lights on when home - on
-#  trigger:
-#    - platform: state
-#      entity_id: input_select.automation_mode
-#      to: 'Home'
-#  condition:
-#    condition: or
-#    conditions:
-#      - condition: state
-#        entity_id: binary_sensor.lights_auto_on
-#        state: 'on'
-#      - condition: sun
-#        after: sunset
-#        after_offset: '-00:30:00'
-#      - condition: sun
-#        before: sunrise
-#        before_offset: '-00:30:00'
-#  action:
-#    - service: script.lights_main_on
-#    - service: light.turn_on
-#      data:
-#        entity_id: light.kitchen_island_lights
-#        brightness: 75
-
 - id: lights_auto_on from binary sensor
   alias: lights_auto_on from binary sensor
   trigger:
     - platform: state
       entity_id: binary_sensor.indoor_lights_auto_on
       to: 'on'
+  condition:
+    condition: state
+    entity_id: input_boolean.lux_light_control
+    state: 'on'
   action:
+    - service: script.indoor_lights_auto_on_log
+    - delay: '00:00:01'
     - service: light.turn_on
       data:
         entity_id:
@@ -643,15 +599,20 @@
     - service: light.turn_on
       data:
         entity_id: light.kitchen_island_lights
-#        brightness: 75
-
 
 - id: lights_auto_off from binary sensor
   alias: lights_auto_off from binary sensor
   trigger:
     - platform: state
       entity_id: binary_sensor.indoor_lights_auto_on
+      to: 'off'
+  condition:
+    condition: state
+    entity_id: input_boolean.lux_light_control
+    state: 'on'
   action:
+    - service: script.indoor_lights_auto_on_log
+    - delay: '00:00:01'
     - service: script.lights_all_off
 
 
@@ -685,52 +646,6 @@
       data:
         entity_id: light.upstairs_hall_scone
         brightness: 50
-
-
-#- id: lights_lux_on
-#  alias: Lights on from lux level
-#  trigger:
-#    - platform: state
-#      entity_id: binary_sensor.low_lux
-#      to: 'on'
-#      for:
-#        minutes: 20
-#  condition:
-#    condition: and
-#    conditions:
-#      - condition: template
-#        value_template: "{{states.input_select.automation_mode.state != 'No Automation' }}"
-#      - condition: state
-#        entity_id: input_boolean.lux_light_control
-#        state: "on"
-#      - condition: state
-#        entity_id: input_select.automation_mode
-#        state: 'Home'
-#  action:
-#    service: script.lights_main_on
-
-
-#- id: lights_lux_off
-#  alias: Lights off from lux level
-#  trigger:
-#    platform: state
-#    entity_id: binary_sensor.high_lux
-#    to: 'on'
-#    for:
-#      minutes: 20
-#  condition:
-#    condition: and
-#    conditions:
-#      - condition: template
-#        value_template: "{{states.input_select.automation_mode.state != 'No Automation' }}"
-#      - condition: state
-#        entity_id: input_boolean.lux_light_control
-#        state: "on"
-#      - condition: sun
-#        before: sunset
-#        before_offset: '00:30:00'
-#  action:
-#    service: script.lights_all_off
 
 
 # Master Bath Lights
