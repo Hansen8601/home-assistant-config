@@ -590,8 +590,6 @@
     entity_id: input_boolean.lux_light_control
     state: 'on'
   action:
-    - service: script.indoor_lights_auto_on_log
-    - delay: '00:00:01'
     - service: light.turn_on
       data:
         entity_id:
@@ -611,8 +609,6 @@
     entity_id: input_boolean.lux_light_control
     state: 'on'
   action:
-    - service: script.indoor_lights_auto_on_log
-    - delay: '00:00:01'
     - service: script.lights_all_off
 
 

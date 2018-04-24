@@ -103,36 +103,6 @@ lights_all_off:
       entity_id: group.room_living,light.kitchen_cabinet_lights,light.kitchen_island_lights,light.upstairs_hall_scone
 
 
-indoor_lights_auto_on_log:
-  alias: 'indoor_lights_auto_on_log'
-  sequence:
-    - service: logbook.log
-      data:
-        name: 'Log Auto Lights Trigger Condition'
-        message: >
-          {%- if is_state("input_select.automation_mode","Home") -%}
-             {%- if as_timestamp(now()) - as_timestamp(states.binary_sensor.indoor_lights_auto_on.last_changed) > 600 or
-                    as_timestamp(now()) - as_timestamp(states.input_select.automation_mode.last_changed) < 600 or
-                    as_timestamp(now()) - as_timestamp(states.input_number.lux_setpoint.last_changed) < 10 %}
-                     {%- if (states.sun.sun.attributes.elevation | int < 10 ) -%}
-                       Sun Elevation {{states.sun.sun.attributes.elevation | int}} < 10
-                    {%- elif ( (states.sun.sun.attributes.elevation | int < 25) and (states.sensor.dark_sky_cloud_coverage_stats_mean.state | int > 70)) -%}
-                       Sun Elevation {{states.sun.sun.attributes.elevation | int}} < 25 and Cloud Cover {{states.sensor.dark_sky_cloud_coverage_stats_mean.state | int}} > 70
-                    {%- elif (states.sensor.dark_sky_cloud_coverage_stats_mean.state | int > 95) -%}
-                       Cloud Cover {{states.sensor.dark_sky_cloud_coverage_stats_mean.state | int}} > 95
-                    {%- elif (states.sensor.living_room_lux_stats_mean.state | int < states.input_number.lux_setpoint.state ) -%}
-                       Lux > Setpoint {{states.sensor.living_room_lux_stats_mean.state | int}} < {{states.input_number.lux_setpoint.state}}
-                    {%- else -%}
-                      'Not triggered'
-                    {%- endif -%}
-                {%- else -%}
-                      'Timer hold'
-                {%- endif -%}
-             {%- else -%}
-               'Not home'
-             {%- endif -%}
-
-
 restart_garage_io:
   alias: restart_garage_io
   sequence:
