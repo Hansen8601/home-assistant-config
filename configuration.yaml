@@ -233,17 +233,18 @@ binary_sensor:
         friendly_name: 'Indoor Lights Auto On'
         value_template: >-
           {%- if is_state("input_select.automation_mode","Home") -%}
-             {%- if as_timestamp(now()) - as_timestamp(states.binary_sensor.indoor_lights_auto_on.last_changed) > 600 or
-                    as_timestamp(now()) - as_timestamp(states.input_select.automation_mode.last_changed) < 600 or
+             {%- if as_timestamp(now()) - as_timestamp(states.binary_sensor.indoor_lights_auto_on.last_changed) > 900 or
+                    as_timestamp(now()) - as_timestamp(states.input_select.automation_mode.last_changed) < 900 or
                     as_timestamp(now()) - as_timestamp(states.input_number.lux_setpoint.last_changed) < 10 %}
                  {%- if (states.sun.sun.attributes.elevation | int < 10 ) -%}
                    True
                  {%- elif ( (states.sun.sun.attributes.elevation | int < 25) and (states.sensor.dark_sky_cloud_coverage_stats_mean.state | int > 70)) -%}
                    True
-                 {%- elif (states.sensor.dark_sky_cloud_coverage_stats_mean.state | int > 95) -%}
+                 {%- elif (states.sensor.dark_sky_cloud_coverage_stats_mean.state | int > 90) -%}
                    True
-                 #{%- elif (states.sensor.living_room_lux.state | int < states.input_number.lux_setpoint.state | int and states.sensor.kitchen_multisensor_lux.state | int < 15 ) -%}
                  {%- elif (states.sensor.living_room_lux_stats_mean.state | int < states.input_number.lux_setpoint.state | int ) -%}
+                   True
+                 {%- elif (states.sensor.kitchen_multisensor_lux.state | int < 10 ) -%}
                    True
                  {%- else -%} 
                    False
@@ -496,32 +497,6 @@ sensor:
     living_room_remote_activity:
       value_template: '{{ states.remote.living_room.attributes.current_activity }}'
       friendly_name: 'Living Room Remote Activity'
-
-- platform: template
-  sensors:
-    indoor_lights_auto_on_logic:
-      value_template: >-
-          {%- if is_state("input_select.automation_mode","Home") -%}
-             {%- if as_timestamp(now()) - as_timestamp(states.binary_sensor.indoor_lights_auto_on.last_changed) > 600 or
-                    as_timestamp(now()) - as_timestamp(states.input_select.automation_mode.last_changed) < 600 or
-                    as_timestamp(now()) - as_timestamp(states.input_number.lux_setpoint.last_changed) < 10 %}
-                     {%- if (states.sun.sun.attributes.elevation | int < 10 ) -%}
-                       Sun Elevation {{states.sun.sun.attributes.elevation | int}} < 10
-                    {%- elif ( (states.sun.sun.attributes.elevation | int < 25) and (states.sensor.dark_sky_cloud_coverage_stats_mean.state | int > 70)) -%}
-                       Sun Elevation {{states.sun.sun.attributes.elevation | int}} < 25 and Cloud Cover {{states.sensor.dark_sky_cloud_coverage_stats_mean.state | int}} > 70
-                    {%- elif (states.sensor.dark_sky_cloud_coverage_stats_mean.state | int > 95) -%}
-                       Cloud Cover {{states.sensor.dark_sky_cloud_coverage_stats_mean.state | int}} > 95
-                    {%- elif (states.sensor.living_room_lux_stats_mean.state | int < states.input_number.lux_setpoint.state | int ) -%}
-                       Lux > Setpoint {{states.sensor.living_room_lux_stats_mean.state | int}} < {{states.input_number.lux_setpoint.state}}
-                    {%- else -%}
-                      'Not triggered'
-                    {%- endif -%}
-                {%- else -%}
-                      'Timer hold'
-                {%- endif -%}
-             {%- else -%}
-               'Not home'
-             {%- endif -%}
 
 - platform: mqtt
   state_topic: "rpi/garage/input/servicedoor"
@@ -781,16 +756,16 @@ input_number:
     initial: 30
     min: 0
     max: 50 
-    step: .5
+    step: 1 
   denon_deck_volume:
     name: Denon Deck Volume
     initial: 40
     min: 0
     max: 70 
-    step: .5
+    step: 1
   lux_setpoint:
     name: lux setpoint
-    initial: 20
+    initial: 25
     min: 0
     max: 100
     step: 5

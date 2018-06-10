@@ -597,6 +597,12 @@
     - service: light.turn_on
       data:
         entity_id: light.kitchen_island_lights
+    - service: logbook.log
+      data:
+        name: "lights_auto_on: "
+        message: >
+          'Living Room Lux Mean:{{states.sensor.living_room_lux_stats_mean.state}} ,Kitchen Lux:  {{states.sensor.kitchen_multisensor_lux.state}} , SUn Elevation: {{states.sun.sun.attributes.elevation}} ,Dark Sky Cloud COverage: {{states.sensor.dark_sky_cloud_coverage_stats_mean.state}}'
+
 
 - id: lights_auto_off from binary sensor
   alias: lights_auto_off from binary sensor
@@ -610,6 +616,11 @@
     state: 'on'
   action:
     - service: script.lights_all_off
+    - service: logbook.log
+      data:
+        name: "lights_auto_on: "
+        message: >
+          'Living Room Lux Mean:{{states.sensor.living_room_lux_stats_mean.state}} ,Kitchen Lux:  {{states.sensor.kitchen_multisensor_lux.state}} , SUn Elevation: {{states.sun.sun.attributes.elevation}} ,Dark Sky Cloud COverage: {{states.sensor.dark_sky_cloud_coverage_stats_mean.state}}'
 
 
 - id: ambiience_lights_on
