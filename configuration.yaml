@@ -93,6 +93,17 @@ updater:
 config:
 
 
+# Homekit integration
+homekit:
+  filter:
+    include_entities:
+      - cover.garage_left
+      - cover.garage_right
+      - input_boolean.presence_homekit 
+      - input_boolean.set_mode_away 
+      - input_boolean.set_mode_home 
+      - input_boolean.set_mode_sleeping 
+
 # Used for camera display
 ffmpeg:
   ffmpeg_bin: /usr/bin/ffmpeg
@@ -296,6 +307,7 @@ cover:
   payload_available: "running"
   payload_not_available: "stopped"
   name: "garage right"
+  device_class: "garage"
   qos: 0 #Must be zero to work correctly
   retain: false 
   payload_open: "500"
@@ -311,6 +323,7 @@ cover:
   payload_available: "running"
   payload_not_available: "stopped"
   name: "garage left"
+  device_class: "garage"
   qos: 0 #must be zero to work correctly.
   retain: false
   payload_open: "500"
