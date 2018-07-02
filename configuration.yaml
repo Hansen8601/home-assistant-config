@@ -9,7 +9,7 @@ frontend:
 http:
   api_password: !secret api_password
   trusted_networks:
-   - 192.168.1.0/24
+    - 192.168.1.0/24
   ip_ban_enabled: True
   login_attempts_threshold: 5
 
@@ -116,6 +116,13 @@ ffmpeg:
   ffmpeg_bin: /usr/bin/ffmpeg
 
 
+camera:
+  - platform: amcrest
+#  - platform: ffmpeg
+#    input: !secret camera_front_url1
+#    name: 'Front Door 2'
+
+
 amcrest:
   - host: !secret camera_front_ip
     port: 80
@@ -124,9 +131,9 @@ amcrest:
     password: !secret amcrestpwd
     resolution: high
     stream_source: rtsp
-    sensors:
-      - motion_detector
-      - sdcard
+    #sensors:
+    #  - motion_detector
+    #  - sdcard
   - host: !secret camera_driveway_ip
     port: 80
     name: 'Driveway'
@@ -137,13 +144,6 @@ amcrest:
 #    sensors:
 #      - motion_detector
 #      - sdcard
-
-
-camera:
-  - platform: amcrest
-#  - platform: ffmpeg
-#    input: !secret camera_front_url1
-#    name: 'Front Door 2'
 
 
 device_tracker:
@@ -260,9 +260,11 @@ binary_sensor:
                    True
                  {%- elif (states.sensor.dark_sky_cloud_coverage_stats_mean.state | int > 90) -%}
                    True
-                 {%- elif (states.sensor.living_room_lux_stats_mean.state | int < states.input_number.lux_setpoint.state | int ) -%}
+                 {%- elif ((states.sensor.kitchen_multisensor_lux.state | int < states.input_number.lux_setpoint.state | int ) and (states.sensor.living_room_lux.state | int < states.input_number.lux_setpoint.state | int) and (states.sensor.dark_sky_cloud_coverage_stats_mean.state | int > 25) ) -%}
                    True
-                 {%- elif (states.sensor.kitchen_multisensor_lux.state | int < 10 ) -%}
+                 {%- elif (states.sensor.living_room_lux_stats_mean.state | int < 10 ) -%}
+                   True
+                 {%- elif (states.sensor.kitchen_lux_stats_mean.state | int < 10 ) -%}
                    True
                  {%- else -%} 
                    False
@@ -273,6 +275,7 @@ binary_sensor:
           {%- else -%}    
             False
           {%- endif -%}  
+
 
   - platform: template
     sensors:
@@ -645,13 +648,19 @@ sensor:
   name: average_lux_stats
   entity_id: sensor.average_lux
   max_age:
-    minutes: 10
+    minutes: 15
 
 - platform: statistics
   name: living_room_lux_stats
   entity_id: sensor.living_room_lux
   max_age:
-    minutes: 10
+    minutes: 15
+
+- platform: statistics
+  name: kitchen_lux_stats
+  entity_id: sensor.kitchen_multisensor_lux
+  max_age:
+    minutes: 15
 
 - platform: statistics
   name: dark_sky_cloud_coverage_stats

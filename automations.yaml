@@ -230,6 +230,7 @@
         entity_id:
         - group.room_living
         - group.room_kitchen
+        - light.master_bathroom_chandelier
     - service: remote.turn_off
       entity_id: remote.living_room
 
@@ -461,8 +462,8 @@
       away_mode: 'off' 
 
 
-- id: ecobee_mode_home_from_sleep_heat
-  alias: Ecobee Mode Home from Sleep Heat
+- id: ecobee_mode_home_from_sleep
+  alias: Ecobee Mode Home from Sleep
   trigger:
     platform: state
     entity_id: input_select.automation_mode
@@ -474,7 +475,7 @@
       - condition: template
         value_template: "{{states.input_select.automation_mode.state != 'No Automation'}}"
       - condition: template
-        value_template: "{{states.climate.main_floor.attributes.operation_mode == 'heat'}}"
+        value_template: "{{states.climate.main_floor.attributes.operation_mode == 'heat' or states.climate.main_floor.attributes.operation_mode == 'cool'}}"
       - condition: template
         value_template: "{{states.climate.main_floor.attributes.mode != 'Home'}}"
   action:
@@ -482,13 +483,9 @@
     data:
       entity_id: climate.main_floor
       hold_mode: 'home'
-#    service: climate.set_temperature
-#    data:
-#      entity_id: climate.main_floor
-#      temperature: 70
 
 
-- id: ecobee_mode_sleep_heat
+- id: ecobee_mode_sleep
   alias: Ecobee Mode Sleep Heat
   trigger:
     platform: state
@@ -500,7 +497,7 @@
       - condition: template
         value_template: "{{states.input_select.automation_mode.state != 'No Automation'}}"
       - condition: template
-        value_template: "{{states.climate.main_floor.attributes.operation_mode == 'heat'}}"
+        value_template: "{{states.climate.main_floor.attributes.operation_mode == 'heat' or states.climate.main_floor.attributes.operation_mode == 'cool'}}"
       - condition: template
         value_template: "{{states.climate.main_floor.attributes.mode != 'Sleep'}}"
   action:
@@ -601,7 +598,27 @@
       data:
         name: "lights_auto_on: "
         message: >
-          'Living Room Lux Mean:{{states.sensor.living_room_lux_stats_mean.state}} ,Kitchen Lux:  {{states.sensor.kitchen_multisensor_lux.state}} , SUn Elevation: {{states.sun.sun.attributes.elevation}} ,Dark Sky Cloud COverage: {{states.sensor.dark_sky_cloud_coverage_stats_mean.state}}'
+          'LRoom Lux:{{states.sensor.living_room_lux.state}},Kitchen Lux:{{states.sensor.kitchen_multisensor_lux.state}}'
+    - service: logbook.log
+      data:
+        name: "lights_auto_on: "
+        message: >
+          'LRoom Lux Mean:{{states.sensor.living_room_lux_stats_mean.state}},Kitchen Lux Mean:{{states.sensor.kitchen_lux_stats_mean.state}},Avg Lux Mean:{{states.sensor.average_room_lux_stats_mean.state}}'
+    - service: logbook.log
+      data:
+        name: "lights_auto_on: "
+        message: >
+          'SUn Elevation: {{states.sun.sun.attributes.elevation}} ,Dark Sky Cloud Coverage: {{states.sensor.dark_sky_cloud_coverage_stats_mean.state}}'
+    - service: logbook.log
+      data:
+        name: "lights_auto_on: "
+        message: >
+          'LRoom Lux:{{states.sensor.living_room_lux.state}},Kitchen Lux:{{states.sensor.kitchen_multisensor_lux.state}}Lux Mean:{{states.sensor.average_lux_stats_mean.state}}'
+    - service: logbook.log
+      data:
+        name: "lights_auto_on: "
+        message: >
+          'Sun Elevation: {{states.sun.sun.attributes.elevation}} ,Dark Sky Cloud Coverage: {{states.sensor.dark_sky_cloud_coverage_stats_mean.state}}'
 
 
 - id: lights_auto_off from binary sensor
@@ -618,9 +635,19 @@
     - service: script.lights_all_off
     - service: logbook.log
       data:
-        name: "lights_auto_on: "
+        name: "lights_auto_off: "
         message: >
-          'Living Room Lux Mean:{{states.sensor.living_room_lux_stats_mean.state}} ,Kitchen Lux:  {{states.sensor.kitchen_multisensor_lux.state}} , SUn Elevation: {{states.sun.sun.attributes.elevation}} ,Dark Sky Cloud COverage: {{states.sensor.dark_sky_cloud_coverage_stats_mean.state}}'
+          'LRoom Lux:{{states.sensor.living_room_lux.state}},Kitchen Lux:{{states.sensor.kitchen_multisensor_lux.state}}'
+    - service: logbook.log
+      data:
+        name: "lights_auto_off: "
+        message: >
+          'LRoom Lux Mean:{{states.sensor.living_room_lux_stats_mean.state}},Kitchen Lux Mean:{{states.sensor.kitchen_lux_stats_mean.state}},Avg Lux Mean:{{states.sensor.average_room_lux_stats_mean.state}}'
+    - service: logbook.log
+      data:
+        name: "lights_auto_off: "
+        message: >
+          'SUn Elevation: {{states.sun.sun.attributes.elevation}} ,Dark Sky Cloud Coverage: {{states.sensor.dark_sky_cloud_coverage_stats_mean.state}}'
 
 
 - id: ambiience_lights_on
