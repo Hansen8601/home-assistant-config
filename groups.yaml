@@ -240,15 +240,13 @@ indoor_lights_auto_debug:
   entities:
     - input_boolean.lux_light_control
     - binary_sensor.indoor_lights_auto_on
-    - sensor.indoor_lights_auto_on_logic
     - sun.sun
     - sensor.dark_sky_cloud_coverage
     - sensor.dark_sky_cloud_coverage_stats_mean
-    - sensor.kitchen_multisensor_lux
     - sensor.living_room_lux
-    - sensor.Living_room_lux_stats_mean
-    - sensor.average_lux
-    - sensor.average_lux_stats_mean
+    - sensor.Living_room_lux_max
+    - sensor.kitchen_multisensor_lux
+    - sensor.kitchen_lux_max
     - input_number.lux_setpoint
     
 
@@ -272,8 +270,7 @@ graphs_page:
   view: yes
   name: "Graphs"
   entities:
-    - history_graph.living_room_light_levels
-    - history_graph.kitchen_light_levels
+    - history_graph.light_levels
     - history_graph.average_light_levels
     - history_graph.temperatures
     - history_graph.presence

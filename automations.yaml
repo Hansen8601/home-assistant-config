@@ -596,29 +596,24 @@
         entity_id: light.kitchen_island_lights
     - service: logbook.log
       data:
-        name: "lights_auto_on: "
+        name: "lights_auto_on:"
         message: >
           'LRoom Lux:{{states.sensor.living_room_lux.state}},Kitchen Lux:{{states.sensor.kitchen_multisensor_lux.state}}'
+#    - service: logbook.log
+#      data:
+#        name: "lights_auto_on:"
+#        message: >
+#          'LRoom Lux Mean:{{states.sensor.living_room_lux_stats_mean.state}},Kitchen Lux Mean:{{states.sensor.kitchen_lux_stats_mean.state}},Avg Lux Mean:{{states.sensor.average_room_lux_stats_mean.state}}'
     - service: logbook.log
       data:
-        name: "lights_auto_on: "
+        name: "lights_auto_on:"
         message: >
-          'LRoom Lux Mean:{{states.sensor.living_room_lux_stats_mean.state}},Kitchen Lux Mean:{{states.sensor.kitchen_lux_stats_mean.state}},Avg Lux Mean:{{states.sensor.average_room_lux_stats_mean.state}}'
+          'LRoom Lux Max:{{states.sensor.living_room_lux_stats_mean.attributes["max_value"]}},Kitchen Lux Max:{{states.sensor.kitchen_lux_stats_mean.attributes["max_value"]}},Avg Lux Max:{{states.sensor.avg_lux_stats_mean.attributes["max_value"]}}'
     - service: logbook.log
       data:
-        name: "lights_auto_on: "
+        name: "lights_auto_on:"
         message: >
-          'SUn Elevation: {{states.sun.sun.attributes.elevation}} ,Dark Sky Cloud Coverage: {{states.sensor.dark_sky_cloud_coverage_stats_mean.state}}'
-    - service: logbook.log
-      data:
-        name: "lights_auto_on: "
-        message: >
-          'LRoom Lux:{{states.sensor.living_room_lux.state}},Kitchen Lux:{{states.sensor.kitchen_multisensor_lux.state}}Lux Mean:{{states.sensor.average_lux_stats_mean.state}}'
-    - service: logbook.log
-      data:
-        name: "lights_auto_on: "
-        message: >
-          'Sun Elevation: {{states.sun.sun.attributes.elevation}} ,Dark Sky Cloud Coverage: {{states.sensor.dark_sky_cloud_coverage_stats_mean.state}}'
+          'Sun Elevation:{{states.sun.sun.attributes.elevation}} ,Dark Sky Cloud Coverage: {{states.sensor.dark_sky_cloud_coverage_stats_mean.state}}'
 
 
 - id: lights_auto_off from binary sensor
@@ -635,17 +630,22 @@
     - service: script.lights_all_off
     - service: logbook.log
       data:
-        name: "lights_auto_off: "
+        name: "lights_auto_off:"
         message: >
           'LRoom Lux:{{states.sensor.living_room_lux.state}},Kitchen Lux:{{states.sensor.kitchen_multisensor_lux.state}}'
+#    - service: logbook.log
+#      data:
+#        name: "lights_auto_off:"
+#        message: >
+#          'LRoom Lux Mean:{{states.sensor.living_room_lux_stats_mean.state}},Kitchen Lux Mean:{{states.sensor.kitchen_lux_stats_mean.state}},Avg Lux Mean:{{states.sensor.average_room_lux_stats_mean.state}}'
     - service: logbook.log
       data:
-        name: "lights_auto_off: "
+        name: "lights_auto_off:"
         message: >
-          'LRoom Lux Mean:{{states.sensor.living_room_lux_stats_mean.state}},Kitchen Lux Mean:{{states.sensor.kitchen_lux_stats_mean.state}},Avg Lux Mean:{{states.sensor.average_room_lux_stats_mean.state}}'
+          'LRoom Lux Max:{{states.sensor.living_room_lux_stats_mean.attributes["max_value"]}},Kitchen Lux Max:{{states.sensor.kitchen_lux_stats_mean.attributes["max_value"]}},Avg Lux Max:{{states.sensor.avg_lux_stats_mean.attributes["max_value"]}}'
     - service: logbook.log
       data:
-        name: "lights_auto_off: "
+        name: "lights_auto_off:"
         message: >
           'SUn Elevation: {{states.sun.sun.attributes.elevation}} ,Dark Sky Cloud Coverage: {{states.sensor.dark_sky_cloud_coverage_stats_mean.state}}'
 

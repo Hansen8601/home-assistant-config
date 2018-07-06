@@ -41,9 +41,8 @@ recorder:
       - script.denon_deck_volume_down
       - script.denon_deck_volume_up
       - script.denon_deck_volume_set
-      - input_number.internet_traffic_delta_in
-      - input_number.internet_traffic_delta_out
     domains:
+      - weather
       - sun
       - script
       - media_player
@@ -198,13 +197,6 @@ apple_tv:
     start_off: true
 
 
-#panel_iframe:
-#  router:
-#    title: 'Cacti'
-#    icon: 'mdi:network'
-#    url: 'http://192.168.1.22:32770/cacti/graph_view.php?action=tree&node=tbranch-1&hgd=&hyper=true'
-
-
 remote:
   - platform: harmony
     name: living_room
@@ -253,18 +245,18 @@ binary_sensor:
           {%- if is_state("input_select.automation_mode","Home") -%}
              {%- if as_timestamp(now()) - as_timestamp(states.binary_sensor.indoor_lights_auto_on.last_changed) > 900 or
                     as_timestamp(now()) - as_timestamp(states.input_select.automation_mode.last_changed) < 900 or
-                    as_timestamp(now()) - as_timestamp(states.input_number.lux_setpoint.last_changed) < 10 %}
+                    as_timestamp(now()) - as_timestamp(states.input_number.lux_setpoint.last_changed) < 10 -%}
                  {%- if (states.sun.sun.attributes.elevation | int < 10 ) -%}
                    True
                  {%- elif ( (states.sun.sun.attributes.elevation | int < 25) and (states.sensor.dark_sky_cloud_coverage_stats_mean.state | int > 70)) -%}
                    True
                  {%- elif (states.sensor.dark_sky_cloud_coverage_stats_mean.state | int > 90) -%}
                    True
-                 {%- elif ((states.sensor.kitchen_multisensor_lux.state | int < states.input_number.lux_setpoint.state | int ) and (states.sensor.living_room_lux.state | int < states.input_number.lux_setpoint.state | int) and (states.sensor.dark_sky_cloud_coverage_stats_mean.state | int > 25) ) -%}
+                 {%- elif ((states.sensor.living_room_lux_stats_mean.attributes["max_value"] | int < states.input_number.lux_setpoint.state | int )
+                       and (states.sensor.living_room_lux_stats_mean.state != 'unknown')) -%}
                    True
-                 {%- elif (states.sensor.living_room_lux_stats_mean.state | int < 10 ) -%}
-                   True
-                 {%- elif (states.sensor.kitchen_lux_stats_mean.state | int < 10 ) -%}
+                 {%- elif ((states.sensor.kitchen_lux_stats_mean.attributes["max_value"] | int < 15)
+                       and (states.sensor.kitchen_lux_stats_mean.state != 'unknown')) -%}
                    True
                  {%- else -%} 
                    False
@@ -515,11 +507,6 @@ sensor:
     - wind_speed
     - wind_bearing
 
-- platform: template
-  sensors:
-    living_room_remote_activity:
-      value_template: '{{ states.remote.living_room.attributes.current_activity }}'
-      friendly_name: 'Living Room Remote Activity'
 
 - platform: mqtt
   state_topic: "rpi/garage/input/servicedoor"
@@ -599,43 +586,17 @@ sensor:
   unit_of_measurement: "%"
   value_template: '{{ value_json | float }}'
 
-# Disabling, not returning accurate results.
-# Seems to be an ASUS snmp issue.
-#- platform: snmp
-#  name: "snmp_wan_in"
-#  host: 192.168.1.1
-#  version: 2c
-#  accept_errors: true
-#  community: !secret snmp_community
-#  baseoid: 1.3.6.1.2.1.2.2.1.10.2
-#- platform: snmp
-#  name: "snmp_wan_out"
-#  host: 192.168.1.1
-#  version: 2c
-#  accept_errors: true
-#  community: !secret snmp_community
-#  baseoid: 1.3.6.1.2.1.2.2.1.16.2
 
-#- platform: template
-#  sensors: 
-#    internet_speed_in:
-#      friendly_name: 'Internet Speed In'
-#      value_template: '{{ ((states.input_number.internet_traffic_delta_in.state | float )) | round(2) }}'
-#      unit_of_measurement: 'Mbps'
-
-#- platform: template
-#  sensors:
-#    internet_speed_out:
-#      friendly_name: 'Internet Speed Out'
-#      value_template: '{{ ((states.input_number.internet_traffic_delta_out.state | float )) | round(2) }}'
-#      unit_of_measurement: 'Mbps'
-
-
-# Testing average Lux
 - platform: template
   sensors:
-    average_lux:
-      friendly_name: 'Average Lux'
+    living_room_remote_activity:
+      value_template: '{{ states.remote.living_room.attributes.current_activity }}'
+      friendly_name: 'Living Room Remote Activity'
+
+- platform: template
+  sensors:
+    avg_lux:
+      friendly_name: 'Avg Lux'
       value_template: >-
         {%- if (states.sensor.living_room_lux.state | int + states.sensor.kitchen_multisensor_lux.state | int  < 400 ) -%}
           {{(states.sensor.living_room_lux.state | int + states.sensor.kitchen_multisensor_lux.state | int) / 2 }}
@@ -644,8 +605,23 @@ sensor:
         {%- endif -%}
       unit_of_measurement: 'Lux'
 
+- platform: template
+  sensors:
+    living_room_lux_max:
+      friendly_name: 'Living Room Lux Max'
+      value_template: '{{ states.sensor.living_room_lux_stats_mean.attributes["max_value"] | int }}'
+      unit_of_measurement: 'Lux'
+
+- platform: template
+  sensors:
+    kitchen_lux_max:
+      friendly_name: 'Kitchen Lux Max'
+      value_template: '{{ states.sensor.kitchen_lux_stats_mean.attributes["max_value"] | int }}'
+      unit_of_measurement: 'Lux'
+
+  
 - platform: statistics
-  name: average_lux_stats
+  name: avg_lux_stats
   entity_id: sensor.average_lux
   max_age:
     minutes: 15
@@ -829,21 +805,18 @@ timer:
 
 history_graph:
   lux1:
-    name: Living Room Light Levels
+    name: Light Levels
     entities:
       - sensor.living_room_lux
+      - sensor.living_room_lux_max
+      - sensor.kitchen_multisensor_lux
+      - sensor.kitchen_lux_max
     hours_to_show: 24
     refresh: 120
   lux2:
-    name: Kitchen Light Levels
-    entities:
-      - sensor.kitchen_multisensor_lux
-    hours_to_show: 24
-    refresh: 120
-  lux3:
     name: Average light Levels
     entities:
-      - sensor.average_lux
+      - sensor.avg_lux
     hours_to_show: 24
     refresh: 120
   temperatures:
