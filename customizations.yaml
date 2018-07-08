@@ -43,7 +43,9 @@ group.room_living:
 group.room_living_fireplace:
   friendly_name: Living Room Fireplace
 group.room_master_bathroom:
-  friendly_name: Master Bath
+  friendly_name: Master Bathroom
+group.room_master_bedroom:
+  friendly_name: Master Bedroom
 group.outside_lights:
   friendly_name: Outside Lights
 group.room_kitchen:

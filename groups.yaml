@@ -39,6 +39,7 @@ rooms_page:
   entities:
     - group.room_kitchen
     - group.room_living
+    - group.room_master_bedroom
     - group.room_master_bathroom
     - group.room_guest_bathroom
     - group.outside_lights
@@ -52,6 +53,7 @@ room_living:
     - light.ge_living_room_1
     - light.ge_living_room_2
     - light.ge_living_room_3
+    - light.living_room_fan
     - sensor.living_room_lux
     - switch.fireplace
     - input_boolean.fireplace_automation
@@ -63,6 +65,9 @@ room_kitchen:
     - light.kitchen_cabinet_lights
     - light.kitchen_island_lights
     - sensor.kitchen_multisensor_lux
+
+room_master_bedroom:
+    - light.master_bedroom_fan
 
 room_master_bathroom:
   view: no

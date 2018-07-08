@@ -334,6 +334,12 @@ cover:
   state_closed: "closed"
   #optimistic: false
 
+###################
+#                 #
+# Fan             #
+#                 #
+###################
+
 
 ###################
 #                 #
@@ -489,6 +495,32 @@ light:
   payload_off: "off"
   optimistic: false
   retain: true
+- platform: mqtt
+  name: "Master Bedroom Fan"
+  state_topic: "smartthings/Master Bedroom Fan/switch"
+  command_topic: "smartthings/Master Bedroom Fan/switch"
+  brightness_state_topic: "smartthings/Master Bedroom Fan/level"
+  brightness_command_topic: "smartthings/Master Bedroom Fan/level"
+  brightness_scale: 255
+  brightness_value_template: '{{ value }}'
+  qos: 1
+  payload_on: "on"
+  payload_off: "off"
+  optimistic: false
+  retain: true
+- platform: mqtt
+  name: "Living Room Fan"
+  state_topic: "smartthings/Living Room Fan/switch"
+  command_topic: "smartthings/Living Room Fan/switch"
+  brightness_state_topic: "smartthings/Living Room Fan/level"
+  brightness_command_topic: "smartthings/Living Room Fan/level"
+  brightness_scale: 255
+  brightness_value_template: '{{ value }}'
+  qos: 1
+  payload_on: "on"
+  payload_off: "off"
+  optimistic: false
+  retain: true
 
 
 ###################
@@ -618,6 +650,14 @@ sensor:
       friendly_name: 'Kitchen Lux Max'
       value_template: '{{ states.sensor.kitchen_lux_stats_mean.attributes["max_value"] | int }}'
       unit_of_measurement: 'Lux'
+
+# Was used in a trigger; using value template in trigger now.
+#- platform: template
+#  sensors:
+#    kitchen_lux_max:
+#      friendly_name: 'Main Floor Temperature'
+#      value_template: '{{states.climate.main_floor.attributes["current_temperature"] | int }}'
+#      unit_of_measurement: 'degrees'
 
   
 - platform: statistics

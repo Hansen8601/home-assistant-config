@@ -253,135 +253,10 @@
         - group.room_living
         - group.room_kitchen
         #- group.room_guest_bathroom leaving out because Dylan's not in home/away detection
+        - group.master_bedroom
         - group.room_master_bathroom
     - service: remote.turn_off
       entity_id: remote.living_room
-
-
-############################
-#                          #
-#    Bathroom Fans         #
-#                          #
-############################
-
-# Timer 1 - main timer
-# Timer 2 - backup timer
-
-# Guest Bath
-#
-- id: guest_bathroom_fan_timer_start
-  alias: guest_bathroom_fan_timer_start
-  trigger:
-    platform: state
-    entity_id: light.guest_bathroom_lights
-    to: "off"
-  condition:
-    condition: state
-    entity_id: switch.guest_bathroom_fan
-    state: "on"
-  action:
-    - service: timer.start
-      entity_id: timer.guest_bathroom_fan_timer1
-    - service: timer.cancel
-      entity_id: timer.guest_bathroom_fan_timer2
-
-- id: guest_bathroom_fan_timer_backup_start
-  alias: guest_bathroom_fan_timer_backup_start
-  trigger:
-    platform: state
-    entity_id: switch.guest_bathroom_fan
-    to: "on"
-  action:
-    service: timer.start
-    entity_id: timer.guest_bathroom_fan_timer2
-
-- id: guest_bathroom_fan_off
-  alias: guest_bathroom_fan_off
-  trigger:
-    platform: state
-    entity_id: switch.guest_bathroom_fan
-    to: "off"
-  action:
-    service: timer.cancel
-    entity_id: timer.guest_bathroom_fan_timer1, timer.guest_bathroom_fan_timer2
-
-- id: guest_bathroom_fan_timer_done
-  alias: guest_bathroom_fan_timer_done
-  trigger:
-    - platform: event
-      event_type: timer.finished
-      event_data:
-        entity_id: timer.guest_bathroom_fan_timer1
-    - platform: event
-      event_type: timer.finished
-      event_data:
-        entity_id: timer.guest_bathroom_fan_timer2
-  condition:
-    condition: state
-    entity_id: switch.guest_bathroom_fan
-    state: "on"
-  action:
-    service: switch.turn_off
-    entity_id: switch.guest_bathroom_fan
-
-# Master Bath
-- id: master_bathroom_fan_timer_start
-  alias: master_bathroom_fan_timer_start
-  trigger:
-    - platform: state
-      entity_id: light.master_bathroom_shower
-      to: "off"
-    - platform: state
-      entity_id: light.master_bathroom_dimmer
-      to: "off"
-  condition:
-    condition: state
-    entity_id: switch.master_bathroom_fan
-    state: "on"
-  action:
-    - service: timer.start
-      entity_id: timer.master_bathroom_fan_timer1
-    - service: timer.cancel
-      entity_id: timer.master_bathroom_fan_timer2
-
-- id: master_bathroom_fan_timer_backup_start
-  alias: master_bathroom_fan_timer_backup_start
-  trigger:
-    platform: state
-    entity_id: switch.master_bathroom_fan
-    to: "on"
-  action:
-    service: timer.start
-    entity_id: timer.master_bathroom_fan_timer2
-
-- id: master_bathroom_fan_off
-  alias: master_bathroom_fan_off
-  trigger:
-    platform: state
-    entity_id: switch.master_bathroom_fan
-    to: "off"
-  action:
-    service: timer.cancel
-    entity_id: timer.master_bathroom_fan_timer1, timer.master_bathroom_fan_timer2
-
-- id: master_bathroom_fan_timer_done
-  alias: master_bathroom_fan_timer_done
-  trigger:
-    - platform: event
-      event_type: timer.finished
-      event_data:
-        entity_id: timer.master_bathroom_fan_timer1
-    - platform: event
-      event_type: timer.finished
-      event_data:
-        entity_id: timer.master_bathroom_fan_timer2
-  condition:
-    condition: state
-    entity_id: switch.master_bathroom_fan
-    state: "on"
-  action:
-    service: switch.turn_off
-    entity_id: switch.master_bathroom_fan
 
 
 ############################
@@ -505,6 +380,295 @@
     data:
       entity_id: climate.main_floor
       hold_mode: 'sleep'
+
+
+############################
+#                          #
+#   Fans                   #
+#                          #
+############################
+
+# Timer 1 - main timer
+# Timer 2 - backup timer
+
+# Guest Bath
+#
+- id: guest_bathroom_fan_timer_start
+  alias: guest_bathroom_fan_timer_start
+  trigger:
+    platform: state
+    entity_id: light.guest_bathroom_lights
+    to: "off"
+  condition:
+    condition: state
+    entity_id: switch.guest_bathroom_fan
+    state: "on"
+  action:
+    - service: timer.start
+      entity_id: timer.guest_bathroom_fan_timer1
+    - service: timer.cancel
+      entity_id: timer.guest_bathroom_fan_timer2
+
+- id: guest_bathroom_fan_timer_backup_start
+  alias: guest_bathroom_fan_timer_backup_start
+  trigger:
+    platform: state
+    entity_id: switch.guest_bathroom_fan
+    to: "on"
+  action:
+    service: timer.start
+    entity_id: timer.guest_bathroom_fan_timer2
+
+- id: guest_bathroom_fan_off
+  alias: guest_bathroom_fan_off
+  trigger:
+    platform: state
+    entity_id: switch.guest_bathroom_fan
+    to: "off"
+  action:
+    service: timer.cancel
+    entity_id: timer.guest_bathroom_fan_timer1, timer.guest_bathroom_fan_timer2
+
+- id: guest_bathroom_fan_timer_done
+  alias: guest_bathroom_fan_timer_done
+  trigger:
+    - platform: event
+      event_type: timer.finished
+      event_data:
+        entity_id: timer.guest_bathroom_fan_timer1
+    - platform: event
+      event_type: timer.finished
+      event_data:
+        entity_id: timer.guest_bathroom_fan_timer2
+  condition:
+    condition: state
+    entity_id: switch.guest_bathroom_fan
+    state: "on"
+  action:
+    service: switch.turn_off
+    entity_id: switch.guest_bathroom_fan
+
+# Master Bath
+- id: master_bathroom_fan_timer_start
+  alias: master_bathroom_fan_timer_start
+  trigger:
+    - platform: state
+      entity_id: light.master_bathroom_shower
+      to: "off"
+    - platform: state
+      entity_id: light.master_bathroom_dimmer
+      to: "off"
+  condition:
+    condition: state
+    entity_id: switch.master_bathroom_fan
+    state: "on"
+  action:
+    - service: timer.start
+      entity_id: timer.master_bathroom_fan_timer1
+    - service: timer.cancel
+      entity_id: timer.master_bathroom_fan_timer2
+
+- id: master_bathroom_fan_timer_backup_start
+  alias: master_bathroom_fan_timer_backup_start
+  trigger:
+    platform: state
+    entity_id: switch.master_bathroom_fan
+    to: "on"
+  action:
+    service: timer.start
+    entity_id: timer.master_bathroom_fan_timer2
+
+- id: master_bathroom_fan_off
+  alias: master_bathroom_fan_off
+  trigger:
+    platform: state
+    entity_id: switch.master_bathroom_fan
+    to: "off"
+  action:
+    service: timer.cancel
+    entity_id: timer.master_bathroom_fan_timer1, timer.master_bathroom_fan_timer2
+
+- id: master_bathroom_fan_timer_done
+  alias: master_bathroom_fan_timer_done
+  trigger:
+    - platform: event
+      event_type: timer.finished
+      event_data:
+        entity_id: timer.master_bathroom_fan_timer1
+    - platform: event
+      event_type: timer.finished
+      event_data:
+        entity_id: timer.master_bathroom_fan_timer2
+  condition:
+    condition: state
+    entity_id: switch.master_bathroom_fan
+    state: "on"
+  action:
+    service: switch.turn_off
+    entity_id: switch.master_bathroom_fan
+
+
+# Bedroom Fan
+- id: sleeping_fan_control
+  alias: Sleeping Fan Control
+  trigger:
+    platform: state
+    entity_id: input_select.automation_mode
+    to: 'Sleeping'
+  condition:
+    condition: and
+    conditions:
+      - condition: template
+        value_template: "{{states.input_select.automation_mode.state != 'No Automation'}}"
+      - condition: template
+        value_template: "{{states.sensor.main_floor_temperature.state | int > 72}}"
+      - condition: state
+        entity_id: switch.master_bedroom_fan
+        state: "off"
+  action:
+    - service: light.turn_on
+      entity_id: light.master_bedroom_fan
+      data_template: 
+        # 255 = max; Switch is a 3 speed controller.        
+        brightness: >
+          {%- if states.climate.main_floor.attributes["current_temperature"] >= 77 -%}
+          255
+          {%- elif states.climate.main_floor.attributes["current_temperature"] >= 76 -%}
+          168 
+          {%- elif states.climate.main_floor.attributes["current_temperature"] >= 72 -%}
+          84
+          {%- endif -%}
+
+
+# Bedroom  Fan off from room temperature. 
+- id: home_fan_control_temperature
+  alias: Home Fan Control Tempearture 
+  trigger:
+    - platform: numeric_state
+      entity_id: climate.main_floor
+      value_template: "{{ state.attributes.current_temperature }}"
+      below: 77
+    - platform: numeric_state
+      entity_id: climate.main_floor
+      value_template: "{{ state.attributes.current_temperature }}"
+      below: 73
+  condition:
+    condition: and
+    conditions:
+      - condition: template
+        value_template: "{{states.input_select.automation_mode.state == 'Sleeping'}}"
+  action:
+    - service: light.turn_on
+      entity_id: light.living_room_fan
+      data_template: 
+        # 255 = max; Switch is a 3 speed controller.        
+        brightness: >
+          {%- if states.climate.main_floor.attributes["current_temperature"] < 73 -%}
+          84
+          {%- else -%}
+          168
+          {%- endif -%}
+
+
+# Lving Room Fan on from automation mode
+- id: home_fan_control
+  alias: Home Fan Control
+  trigger:
+    platform: state
+    entity_id: input_select.automation_mode
+    to: 'Home'
+  condition:
+    condition: and
+    conditions:
+      - condition: template
+        value_template: "{{states.input_select.automation_mode.state != 'No Automation'}}"
+      - condition: template
+        value_template: "{{states.sensor.main_floor_temperature.state | int > 72}}"
+      - condition: state
+        entity_id: switch.living_room_fan
+        state: "off"
+  action:
+    - service: light.turn_on
+      entity_id: light.living_room_fan
+      data_template: 
+        brightness: >
+          {%- if states.climate.main_floor.attributes["current_temperature"] >= 78 -%}
+          255
+          {%- elif states.climate.main_floor.attributes["current_temperature"] >= 76 -%}
+          168
+          {%- else -%}
+          84
+          {%- endif -%}
+
+
+# Lving Room Fan on from room temperature. 
+- id: home_fan_control_temperature
+  alias: Home Fan Control Tempearture 
+  trigger:
+    - platform: numeric_state
+      entity_id: climate.main_floor
+      value_template: "{{ state.attributes.current_temperature }}"
+      above: 73
+    - platform: numeric_state
+      entity_id: climate.main_floor
+      value_template: "{{ state.attributes.current_temperature }}"
+      above: 75
+    - platform: numeric_state
+      entity_id: climate.main_floor
+      value_template: "{{ state.attributes.current_temperature }}"
+      above: 77
+  condition:
+    condition: and
+    conditions:
+      - condition: template
+        value_template: "{{states.input_select.automation_mode.state == 'Home'}}"
+  action:
+    - service: light.turn_on
+      entity_id: light.living_room_fan
+      data_template: 
+        brightness: >
+          {%- if states.climate.main_floor.attributes["current_temperature"] > 77 -%}
+          255
+          {%- elif states.climate.main_floor.attributes["current_temperature"] > 75 -%}
+          168
+          {%- elif states.climate.main_floor.attributes["current_temperature"] > 73 -%}
+          84
+          {%- endif -%}
+
+
+# Lving Room Fan lower from room temperature. 
+- id: home_fan_control_temperature
+  alias: Home Fan Control Tempearture 
+  trigger:
+    - platform: numeric_state
+      entity_id: climate.main_floor
+      value_template: "{{ state.attributes.current_temperature }}"
+      below: 73
+    - platform: numeric_state
+      entity_id: climate.main_floor
+      value_template: "{{ state.attributes.current_temperature }}"
+      below: 75
+    - platform: numeric_state
+      entity_id: climate.main_floor
+      value_template: "{{ state.attributes.current_temperature }}"
+      below: 77
+  condition:
+    condition: and
+    conditions:
+      - condition: template
+        value_template: "{{states.input_select.automation_mode.state == 'Home'}}"
+  action:
+    - service: light.turn_on
+      entity_id: light.living_room_fan
+      data_template: 
+        brightness: >
+          {%- if states.climate.main_floor.attributes["current_temperature"] < 77 -%}
+          168
+          {%- elif states.climate.main_floor.attributes["current_temperature"] < 75 -%}
+          84
+          {%- elif states.climate.main_floor.attributes["current_temperature"] < 73 -%}
+          0
+          {%- endif -%}
 
 
 ############################
