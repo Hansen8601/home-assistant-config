@@ -35,7 +35,7 @@ recorder:
       - automation.denon__set_slider_to_volume
       - automation.activity_with_remote__set_automation_to_sleeping
       - automation.activity_with_remote__set_mode_to_home
-      - automation.set_harmony_input_select_to_remote_activity
+        #- automation.set_harmony_input_select_to_remote_activity
       - automation.monitor_in_traffic
       - automation.monitor_out_traffic
       - script.denon_deck_volume_down
@@ -78,6 +78,16 @@ logger:
   default: warn
 
 
+influxdb:
+  host: 192.168.1.22
+  exclude:
+    domains:
+      - script
+      - media_player
+      - remote
+      - group
+      - timer
+
 # Track the sun
 sun:
   elevation: 278
@@ -92,7 +102,7 @@ updater:
 
 
 # Discover some devices automatically
-#discovery:
+discovery:
 
 
 # Show configuration panel
@@ -340,6 +350,40 @@ cover:
 #                 #
 ###################
 
+fan:
+  - platform: mqtt
+    name: "Living Room Fan"
+    state_topic: "smartthings/Living Room Fan/switch"
+    command_topic: "smartthings/Living Room Fan/switch"
+    speed_state_topic: "smartthings/Living Room Fan/level"
+    speed_command_topic: "smartthings/Living Room Fan/level"
+    qos: 0
+    payload_on: "on"
+    payload_off: "off"
+    payload_low_speed: "30"
+    payload_medium_speed: "60"
+    payload_high_speed: "90"
+    speeds:
+      - low
+      - medium
+      - high
+  - platform: mqtt
+    name: "Master Bedroom Fan"
+    state_topic: "smartthings/Master Bedroom Fan/switch"
+    command_topic: "smartthings/Master Bedroom Fan/switch"
+    speed_state_topic: "smartthings/Master Bedroom Fan/level"
+    speed_command_topic: "smartthings/Master Bedroom Fan/level"
+    qos: 0
+    payload_on: "on"
+    payload_off: "off"
+    payload_low_speed: "30"
+    payload_medium_speed: "60"
+    payload_high_speed: "90"
+    speeds:
+      - low
+      - medium
+      - high
+
 
 ###################
 #                 #
@@ -495,32 +539,32 @@ light:
   payload_off: "off"
   optimistic: false
   retain: true
-- platform: mqtt
-  name: "Master Bedroom Fan"
-  state_topic: "smartthings/Master Bedroom Fan/switch"
-  command_topic: "smartthings/Master Bedroom Fan/switch"
-  brightness_state_topic: "smartthings/Master Bedroom Fan/level"
-  brightness_command_topic: "smartthings/Master Bedroom Fan/level"
-  brightness_scale: 255
-  brightness_value_template: '{{ value }}'
-  qos: 1
-  payload_on: "on"
-  payload_off: "off"
-  optimistic: false
-  retain: true
-- platform: mqtt
-  name: "Living Room Fan"
-  state_topic: "smartthings/Living Room Fan/switch"
-  command_topic: "smartthings/Living Room Fan/switch"
-  brightness_state_topic: "smartthings/Living Room Fan/level"
-  brightness_command_topic: "smartthings/Living Room Fan/level"
-  brightness_scale: 255
-  brightness_value_template: '{{ value }}'
-  qos: 1
-  payload_on: "on"
-  payload_off: "off"
-  optimistic: false
-  retain: true
+#- platform: mqtt
+#  name: "Master Bedroom Fan"
+#  state_topic: "smartthings/Master Bedroom Fan/switch"
+#  command_topic: "smartthings/Master Bedroom Fan/switch"
+#  brightness_state_topic: "smartthings/Master Bedroom Fan/level"
+#  brightness_command_topic: "smartthings/Master Bedroom Fan/level"
+#  brightness_scale: 255
+#  brightness_value_template: '{{ value }}'
+#  qos: 1
+#  payload_on: "on"
+#  payload_off: "off"
+#  optimistic: false
+#  retain: true
+#- platform: mqtt
+#  name: "Living Room Fan"
+#  state_topic: "smartthings/Living Room Fan/switch"
+#  command_topic: "smartthings/Living Room Fan/switch"
+#  brightness_state_topic: "smartthings/Living Room Fan/level"
+#  brightness_command_topic: "smartthings/Living Room Fan/level"
+#  brightness_scale: 255
+#  brightness_value_template: '{{ value }}'
+#  qos: 1
+#  payload_on: "on"
+#  payload_off: "off"
+#  optimistic: false
+#  retain: true
 
 
 ###################

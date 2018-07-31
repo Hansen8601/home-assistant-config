@@ -231,6 +231,8 @@
         - group.room_living
         - group.room_kitchen
         - light.master_bathroom_chandelier
+    - service: fan.turn_off
+      entity_id: fan.living_room_fan
     - service: remote.turn_off
       entity_id: remote.living_room
 
@@ -255,6 +257,8 @@
         #- group.room_guest_bathroom leaving out because Dylan's not in home/away detection
         - group.master_bedroom
         - group.room_master_bathroom
+    - service: fan.turn_off
+      entity_id: fan.living_room_fan
     - service: remote.turn_off
       entity_id: remote.living_room
 
@@ -508,9 +512,9 @@
     entity_id: switch.master_bathroom_fan
 
 
-# Bedroom Fan
-- id: sleeping_fan_control
-  alias: Sleeping Fan Control
+# Bedroom Fan on from sleeping
+- id: bedroom_fan_sleeping
+  alias: Bedroom Fan Control Sleeping
   trigger:
     platform: state
     entity_id: input_select.automation_mode
@@ -521,28 +525,27 @@
       - condition: template
         value_template: "{{states.input_select.automation_mode.state != 'No Automation'}}"
       - condition: template
-        value_template: "{{states.sensor.main_floor_temperature.state | int > 72}}"
+        value_template: "{{states.sensor.main_floor_temperature.state | int > 68}}"
       - condition: state
-        entity_id: switch.master_bedroom_fan
+        entity_id: fan.master_bedroom_fan
         state: "off"
   action:
-    - service: light.turn_on
-      entity_id: light.master_bedroom_fan
+    - service: fan.turn_on
+      entity_id: fan.master_bedroom_fan
       data_template: 
-        # 255 = max; Switch is a 3 speed controller.        
-        brightness: >
-          {%- if states.climate.main_floor.attributes["current_temperature"] >= 77 -%}
-          255
-          {%- elif states.climate.main_floor.attributes["current_temperature"] >= 76 -%}
-          168 
-          {%- elif states.climate.main_floor.attributes["current_temperature"] >= 72 -%}
-          84
+        speed: >
+          {%- if states.climate.main_floor.attributes["current_temperature"] > 77 -%}
+          high
+          {%- elif states.climate.main_floor.attributes["current_temperature"] > 71 -%}
+          medium 
+          {%- elif states.climate.main_floor.attributes["current_temperature"] > 68 -%}
+          low 
           {%- endif -%}
 
 
-# Bedroom  Fan off from room temperature. 
-- id: home_fan_control_temperature
-  alias: Home Fan Control Tempearture 
+# Bedroom Fan lower from room temperature. 
+- id: bedroom_fan_temperature
+  alias: Bedroom Fan Control by Temperature
   trigger:
     - platform: numeric_state
       entity_id: climate.main_floor
@@ -551,28 +554,51 @@
     - platform: numeric_state
       entity_id: climate.main_floor
       value_template: "{{ state.attributes.current_temperature }}"
-      below: 73
+      below: 71
   condition:
     condition: and
     conditions:
       - condition: template
         value_template: "{{states.input_select.automation_mode.state == 'Sleeping'}}"
+      - condition: state
+        entity_id: fan.master_bedroom_fan
+        state: "on"
   action:
-    - service: light.turn_on
-      entity_id: light.living_room_fan
+    - service: fan.set_speed
+      entity_id: fan.master_bedroom_fan
       data_template: 
-        # 255 = max; Switch is a 3 speed controller.        
-        brightness: >
-          {%- if states.climate.main_floor.attributes["current_temperature"] < 73 -%}
-          84
+        speed: >
+          {%- if states.climate.main_floor.attributes["current_temperature"] < 71 -%}
+          low 
           {%- else -%}
-          168
+          medium
           {%- endif -%}
 
 
+# Bedroom Fan off from room temperature. 
+- id: bedroom_fan_temperature
+  alias: Bedroom Fan Control by Temperature
+  trigger:
+    - platform: numeric_state
+      entity_id: climate.main_floor
+      value_template: "{{ state.attributes.current_temperature }}"
+      below: 68
+  condition:
+    condition: and
+    conditions:
+      - condition: template
+        value_template: "{{states.input_select.automation_mode.state == 'Sleeping'}}"
+      - condition: state
+        entity_id: fan.master_bedroom_fan
+        state: "on"
+  action:
+    - service: fan.turn_off
+      entity_id: fan.master_bedroom_fan
+
+
 # Lving Room Fan on from automation mode
-- id: home_fan_control
-  alias: Home Fan Control
+- id: living_room_fan_home
+  alias: Living Room Fan Home
   trigger:
     platform: state
     entity_id: input_select.automation_mode
@@ -585,25 +611,25 @@
       - condition: template
         value_template: "{{states.sensor.main_floor_temperature.state | int > 72}}"
       - condition: state
-        entity_id: switch.living_room_fan
+        entity_id: fan.living_room_fan
         state: "off"
   action:
-    - service: light.turn_on
-      entity_id: light.living_room_fan
+    - service: fan.turn_on
+      entity_id: fan.living_room_fan
       data_template: 
-        brightness: >
-          {%- if states.climate.main_floor.attributes["current_temperature"] >= 78 -%}
-          255
-          {%- elif states.climate.main_floor.attributes["current_temperature"] >= 76 -%}
-          168
+        speed: >
+          {%- if states.climate.main_floor.attributes["current_temperature"] > 77 -%}
+          high
+          {%- elif states.climate.main_floor.attributes["current_temperature"] > 75 -%}
+          medium
           {%- else -%}
-          84
+          low
           {%- endif -%}
 
 
 # Lving Room Fan on from room temperature. 
-- id: home_fan_control_temperature
-  alias: Home Fan Control Tempearture 
+- id: living_room_fan_on_temperature
+  alias: Living Room Fan on  by Tempearture 
   trigger:
     - platform: numeric_state
       entity_id: climate.main_floor
@@ -623,22 +649,22 @@
       - condition: template
         value_template: "{{states.input_select.automation_mode.state == 'Home'}}"
   action:
-    - service: light.turn_on
-      entity_id: light.living_room_fan
+    - service: fan.turn_on
+      entity_id: fan.living_room_fan
       data_template: 
-        brightness: >
+        speed: >
           {%- if states.climate.main_floor.attributes["current_temperature"] > 77 -%}
-          255
+          medium
           {%- elif states.climate.main_floor.attributes["current_temperature"] > 75 -%}
-          168
+          low
           {%- elif states.climate.main_floor.attributes["current_temperature"] > 73 -%}
-          84
+          low
           {%- endif -%}
 
 
 # Lving Room Fan lower from room temperature. 
-- id: home_fan_control_temperature
-  alias: Home Fan Control Tempearture 
+- id: living_room_fan_off_temperature
+  alias: Living Room Fan off by Temperature
   trigger:
     - platform: numeric_state
       entity_id: climate.main_floor
@@ -658,16 +684,16 @@
       - condition: template
         value_template: "{{states.input_select.automation_mode.state == 'Home'}}"
   action:
-    - service: light.turn_on
+    - service: fan.turn_on
       entity_id: light.living_room_fan
       data_template: 
-        brightness: >
-          {%- if states.climate.main_floor.attributes["current_temperature"] < 77 -%}
-          168
+        speed: >
+          {%- if states.climate.main_floor.attributes["current_temperature"] < 73 -%}
+          low
           {%- elif states.climate.main_floor.attributes["current_temperature"] < 75 -%}
-          84
-          {%- elif states.climate.main_floor.attributes["current_temperature"] < 73 -%}
-          0
+          low
+          {%- elif states.climate.main_floor.attributes["current_temperature"] < 77 -%}
+          medium
           {%- endif -%}
 
 

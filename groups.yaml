@@ -53,7 +53,7 @@ room_living:
     - light.ge_living_room_1
     - light.ge_living_room_2
     - light.ge_living_room_3
-    - light.living_room_fan
+    - fan.living_room_fan
     - sensor.living_room_lux
     - switch.fireplace
     - input_boolean.fireplace_automation
@@ -67,7 +67,7 @@ room_kitchen:
     - sensor.kitchen_multisensor_lux
 
 room_master_bedroom:
-    - light.master_bedroom_fan
+    - fan.master_bedroom_fan
 
 room_master_bathroom:
   view: no
