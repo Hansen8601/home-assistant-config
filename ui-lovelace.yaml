@@ -4,43 +4,526 @@
 
 title: Home
 views:
-  - title: default_view
+  - title: Home
+    id: plan
     icon: mdi:home
+    panel: true
     cards:
+      - type: picture-elements
+        image: /local/home-ground-floor.png
+        elements:
+          - type: state-icon
+            tap_action: toggle
+            entity: light.kitchen_island_lights 
+            style: 
+              top: 38%
+              left: 39%
+          - type: state-icon
+            tap_action: toggle
+            entity: light.kitchen_cabinet_lights 
+            style: 
+              top: 48%
+              left: 39%
+          - type: state-icon
+            tap_action: toggle
+            entity: light.ge_living_room_1
+            style: 
+              top: 35%
+              left: 61%
+          - type: state-icon
+            tap_action: toggle
+            entity: light.ge_living_room_2
+            style: 
+              top: 28%
+              left: 61%
+          - type: state-icon
+            tap_action: toggle
+            entity: light.ge_living_room_3
+            style: 
+              top: 19%
+              left: 58%
+          - type: state-icon
+            tap_action: toggle
+            entity: fan.living_room_fan
+            style: 
+              top: 30%
+              left: 50%
+          - type: state-icon
+            tap_action: toggle
+            entity: light.guest_bathroom_lights 
+            style: 
+              top: 40%
+              left: 70%
+          - type: state-icon
+            tap_action: toggle
+            entity: switch.guest_bathroom_fan
+            style: 
+              top: 40%
+              left: 74%
+          - type: state-icon
+            tap_action: toggle
+            entity: fan.master_bedroom_fan
+            style: 
+              top: 27%
+              left: 70%
+          - type: state-icon
+            tap_action: toggle
+            entity: light.master_bathroom_dimmer
+            style: 
+              top: 30%
+              left: 78.5%
+          - type: state-icon
+            tap_action: toggle
+            entity: switch.master_bathroom_fan
+            style: 
+              top: 30%
+              left: 84%
+          - type: state-icon
+            tap_action: toggle
+            entity: light.master_bathroom_shower
+            style: 
+              top: 30%
+              left: 86%
+          - type: state-icon
+            tap_action: toggle
+            entity: light.master_bathroom_chandelier
+            style: 
+              top: 34%
+              left: 81%
+          - type: state-icon
+            tap_action: toggle
+            entity: light.upstairs_hall_scone
+            style: 
+              top: 48%
+              left: 70%
+          - type: state-icon
+            tap_action: toggle
+            entity: light.entry_walkway_dimmer_switch
+            style: 
+              top: 55%
+              left: 57%
+          - type: state-icon
+            tap_action: toggle
+            entity: light.garage_outside_lights
+            style: 
+              top: 95%
+              left: 51.5%
+          - type: state-icon
+            tap_action: toggle
+            entity: light.garage_outside_lights
+            style: 
+              top: 95%
+              left: 30%
+          - type: state-icon
+            tap_action: toggle
+            entity: light.garage_outside_lights
+            style: 
+              top: 92%
+              left: 26.5%
+          - type: state-icon
+            tap_action: toggle
+            entity: light.garage_outside_lights
+            style: 
+              top: 92%
+              left: 10.5%
+          - type: state-icon
+            tap_action: more-info
+            entity: switch.fireplace
+            style:
+              top: 18.5%
+              left: 50%
+
+          - type: icon
+            icon: mdi:power
+            entity: script.harmony_power_off
+            tap_action: toggle
+            style:  
+              top: 24%
+              left: 46%
+          - type: icon
+            icon: mdi:music
+            entity: script.harmony_music_cable
+            tap_action: toggle
+            style:
+              top: 24%
+              left: 49%
+          - type: icon
+            icon: mdi:television-classic
+            entity: script.harmony_watch_tv
+            tap_action: toggle
+            style:
+              top: 24%
+              left: 52%
+          - type: icon
+            icon: mdi:apple
+            entity: script.harmony_apple_tv
+            tap_action: toggle
+            style:
+              top: 24%
+              left: 55%
+          - type: icon
+            icon: mdi:music
+            entity: script.harmony_music_cable_deck
+            tap_action: toggle
+            style:
+              top: 11%
+              left: 36%
+          - type: icon
+            icon: mdi:apple
+            entity: script.harmony_apple_tv_deck
+            tap_action: toggle
+            style:
+              top: 11%
+              left: 40%
+          - type: state-badge
+            entity: cover.garage_left
+            style: 
+              top: 78%
+              left: 19%
+          - type: state-badge
+            entity: cover.garage_right
+            style:
+              top: 78%
+              left: 41%
+              #          - type: image
+              #entity: device_tracker.phil
+              #style:
+              # top: 10%
+              # left: 10%
+
+
+  - title: Audio-video
+    icon: mdi:audio-video
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: entities
+            title: 'Volume / Activity'
+            show_header_toggle: true
+            entities:
+                    #- input_select.living_room_remote
+              - entity: input_number.denon_volume
+                name: Living Room
+              - entity: input_number.denon_deck_volume
+                name: Deck
+              - entity: input_select.living_room_remote
+
+          - type: glance
+            title: 'Living Room Activity'
+            show_state: false
+            column_width: calc(100% / 4)
+            entities:
+              - entity: script.harmony_power_off
+                name: 'Power' 
+                tap_action: toggle
+                icon: mdi:power
+              - entity: script.harmony_music_cable
+                name: 'Music Choice'
+                tap_action: toggle
+                icon: mdi:music
+              - entity: script.harmony_watch_tv
+                name: 'Cable'
+                tap_action: toggle
+                icon: mdi:television-classic
+              - entity: script.harmony_apple_tv
+                name: 'Apple TV'
+                tap_action: toggle
+                icon: mdi:apple
+
+          - type: glance
+            title: 'Deck Activity'
+            show_state: false
+            column_width: calc(100% / 4)
+            entities:
+              - entity: script.harmony_power_off
+                name: 'Power' 
+                tap_action: toggle
+                icon: mdi:power
+              - entity: script.harmony_music_cable_deck
+                name: 'Music Choice'
+                tap_action: toggle
+                icon: mdi:music
+              - entity: script.harmony_apple_tv_deck
+                name: 'Apple TV'
+                tap_action: toggle
+                icon: mdi:apple
+
+          - type: entities
+            entities:
+              - type: call-service
+                icon: mdi:music
+                name: 'Hit List'
+                action_name: '901'
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.living_room
+                  device: 35717540
+                  command:
+                    - '9'
+                    - '0'
+                    - '1' 
+              - type: call-service
+                icon: mdi:music
+                name: 'Classic Rock Hits'
+                action_name: '920'
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.living_room
+                  device: 35717540
+                  command:
+                    - '9'
+                    - '2'
+                    - '0' 
+              - type: call-service
+                icon: mdi:music
+                name: 'Soft Rock'
+                action_name: '921'
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.living_room
+                  device: 35717540
+                  command:
+                    - '9'
+                    - '2'
+                    - '1' 
+              - type: call-service
+                icon: mdi:music
+                name: 'Pop & Country'
+                action_name: '932'
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.living_room
+                  device: 35717540
+                  command:
+                    - '9'
+                    - '3'
+                    - '2' 
+              - type: call-service
+                icon: mdi:music
+                name: "Today's Country"
+                action_name: '933'
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.living_room
+                  device: 35717540
+                  command:
+                    - '9'
+                    - '3'
+                    - '3' 
+              - type: call-service
+                icon: mdi:music
+                name: 'Country Hits'
+                action_name: '934'
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.living_room
+                  device: 35717540
+                  command:
+                    - '9'
+                    - '3'
+                    - '4' 
+              - type: call-service
+                icon: mdi:music
+                name: 'Smooth Jazz'
+                action_name: '943'
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.living_room
+                  device: 35717540
+                  command:
+                    - '9'
+                    - '4'
+                    - '3' 
+             
+      - type: vertical-stack
+        cards:
+          - type: picture-elements
+            image: /local/remote-numbers.png
+            elements:
+              - type: service-button
+                title: ''
+                style:
+                  top: 25%
+                  left: 16%
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.living_room
+                  device: 35717540
+                  command: '0'
+              - type: service-button
+                title: ''
+                style:
+                  top: 25%
+                  left: 35%
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.living_room
+                  device: 35717540
+                  command: '1'
+              - type: service-button
+                title: ''
+                style:
+                  top: 25%
+                  left: 54%
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.living_room
+                  device: 35717540
+                  command: '2'
+              - type: service-button
+                title: ''
+                style:
+                  top: 25%
+                  left: 72%
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.living_room
+                  device: 35717540
+                  command: '3'
+              - type: service-button
+                title: ''
+                style:
+                  top: 25%
+                  left: 91%
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.living_room
+                  device: 35717540
+                  command: '4'
+              - type: service-button
+                title: ''
+                style:
+                  top: 75%
+                  left: 16%
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.living_room
+                  device: 35717540
+                  command: '5'
+              - type: service-button
+                title: ''
+                style:
+                  top: 75%
+                  left: 35%
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.living_room
+                  device: 35717540
+                  command: '6'
+              - type: service-button
+                title: ''
+                style:
+                  top: 75%
+                  left: 54%
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.living_room
+                  device: 35717540
+                  command: '7'
+              - type: service-button
+                title: ''
+                style:
+                  top: 75%
+                  left: 72%
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.living_room
+                  device: 35717540
+                  command: '8'
+              - type: service-button
+                title: ''
+                style:
+                  top: 75%
+                  left: 91%
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.living_room
+                  device: 35717540
+                  command: '9'
+
+          - type: picture-elements
+            image: /local/apple-remote.png
+            elements:
+              - type: service-button
+                title: ''
+                style:
+                  top: 23%
+                  left: 42%
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.apple_tv
+                  command: up
+              - type: service-button
+                title: ''
+                style:
+                  top: 80%
+                  left: 42%
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.apple_tv
+                  command: down
+              - type: service-button
+                title: ''
+                style:
+                  top: 50%
+                  left: 20%
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.apple_tv
+                  command: left 
+              - type: service-button
+                title: ''
+                style:
+                  top: 50%
+                  left: 65%
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.apple_tv
+                  command: right
+              - type: service-button
+                title: ''
+                style:
+                  top: 85%
+                  left: 90%
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.apple_tv
+                  command: menu
+              - type: service-button
+                title: ''
+                style:
+                  top: 50%
+                  left: 40%
+                service: remote.send_command
+                service_data:
+                  entity_id: remote.apple_tv
+                  command: select
+
       - type: entities
-        title: Automation Mode
-        show_header_toggle: true
+        title: Living Room Receiver
+        show_header_toggle: false
         entities:
-          - input_select.automation_mode
-      - type: entities
-        title: Harmony Remote
-        show_header_toggle: true
-        entities:
-          - input_select.living_room_remote
-          - input_number.denon_volume
-          - input_number.denon_deck_volume
-      - type: entities
-        title: family
-        show_header_toggle: true
-        entities:
-          - input_boolean.presence_homekit
-          - device_tracker.phil
-          - device_tracker.nikki
-          - device_tracker.dylan
-      - type: picture-entity
-        title: Front Door
-        entity: camera.front_door
-        camera_image: camera.front_door
-        show_info: true
-        tap_action: dialog
-      - type: picture-entity
-        title: Driveway
-        entity: camera.driveway
-        camera_image: camera.driveway
-        show_info: true
-        tap_action: dialog
+          - script.denon_deck_volume_50
+          - script.denon_deck_volume_55
+          - script.denon_deck_volume_60
+      - type: vertical-stack
+        cards:
+          - type: media-control
+            entity: media_player.denon_avrx3000
+          - type: media-control
+            entity: media_player.apple_tv
+          - type: media-control
+            entity: media_player.apple_tv_basement
+          - type: media-control
+            entity: media_player.apple_tv_workout_room
+
+
   - title: Rooms
     cards:
+      - type: glance
+        entities:
+          - device_tracker.phil
+          - device_tracker.nikki
       - type: entities
         title: Kitchen
         show_header_toggle: true
@@ -58,8 +541,6 @@ views:
           - fan.living_room_fan
           - sensor.living_room_lux
           - switch.fireplace
-          - input_boolean.fireplace_automation
-          - input_number.fireplace_high_setpoint
       - type: entities
         title: Master Bedroom
         show_header_toggle: true
@@ -97,76 +578,107 @@ views:
           - cover.garage_left
           - cover.garage_right
           - sensor.garage_service_door
-  - title: Media
-    cards:
-      - type: entities
-        title: Living Room Harmony Remote
-        show_header_toggle: true
-        entities:
-          - input_select.living_room_remote
-          - remote.living_room
-      - type: entities
-        title: Living Room Receiver
-        show_header_toggle: false
-        entities:
-          - input_number.denon_volume
-          - input_number.denon_deck_volume
-          - script.denon_deck_volume_50
-          - script.denon_deck_volume_55
-          - script.denon_deck_volume_60
-      - type: media-control
-        entity: media_player.denon_avrx3000
-      - type: media-control
-        entity: media_player.apple_tv
-      - type: media-control
-        entity: media_player.apple_tv_basement
-      - type: media-control
-        entity: media_player.apple_tv_workout_room
+      - type: vertical-stack
+        cards:
+          - type: picture-entity
+            title: Front Door
+            entity: camera.front_door
+            camera_image: camera.front_door
+            show_info: true
+            tap_action: dialog
+          - type: picture-entity
+            title: Driveway
+            entity: camera.driveway
+            camera_image: camera.driveway
+            show_info: true
+            tap_action: dialog
+          - type: entity-filter
+            entities:
+              - entity: light.master_bathroom_dimmer
+              - entity: light.master_bathroom_shower
+              - entity: light.master_bathroom_chandelier
+              - entity: switch.master_bathroom_fan
+              - entity: fan.master_bedroom
+              - entity: light.guest_bathroom_lights
+              - entity: switch.guest_bathroom_fan
+              - entity: light.upstairs_hall_scone
+              - entity: light.garage_outside_lights
+            state_filter:
+              - "on"
+            card:
+              type: glance
+              show_state: false
+        
+
   - title: Climate
     cards:
-      - type: entities
-        title: Main Floor Climate
-        show_header_toggle: true
-        entities:
-          - binary_sensor.main_floor_occupancy
-          - climate.main_floor
-          - sensor.main_floor_temperature
-          - sensor.main_floor_humidity
-      - type: entities
-        title: Basement Climate
-        show_header_toggle: true
-        entities:
-          - binary_sensor.basement_occupancy
-          - climate.basement
-          - sensor.basement_temperature
-          - sensor.basement_humidity
-      - type: entities
-        title: Living Room Climate
-        show_header_toggle: true
-        entities:
-          - sensor.living_room_temperature
-          - sensor.living_room_humidity
-          - sensor.living_room_lux
-          - sensor.kitchen_multisensor_temperature
-          - sensor.kitchen_multisensor_humidity
-          - sensor.kitchen_multisensor_lux
-          - switch.fireplace
-      - type: entities
-        title: Dark Sky Weather
-        show_header_toggle: true
-        entities:
-          - sensor.dark_sky_temperature
-          - sensor.dark_sky_cloud_coverage
-          - sensor.dark_sky_wind_speed
-          - sensor.dark_sky_wind_bearing
-          - sun.sun
+      - type: vertical-stack
+        cards:
+          - type: iframe
+            url: https://embed.windy.com/embed2.html
+          - type: entities
+            title: Dark Sky Weather
+            show_header_toggle: true
+            entities:
+              - sensor.dark_sky_temperature
+              - sensor.dark_sky_cloud_coverage
+              - sensor.dark_sky_wind_speed
+              - sensor.dark_sky_wind_bearing
+              - sun.sun
+      - type: vertical-stack
+        cards:
+          - type: entities
+            title: Main Floor Climate
+            show_header_toggle: true
+            entities:
+              - binary_sensor.main_floor_occupancy
+              - climate.main_floor
+              - sensor.main_floor_temperature
+              - sensor.main_floor_humidity
+          - type: entities
+            title: Basement Climate
+            show_header_toggle: true
+            entities:
+              - binary_sensor.basement_occupancy
+              - climate.basement
+              - sensor.basement_temperature
+              - sensor.basement_humidity
+          - type: entities
+            title: Living Room Climate
+            show_header_toggle: true
+            entities:
+              - sensor.living_room_temperature
+              - sensor.living_room_humidity
+              - sensor.living_room_lux
+              - sensor.kitchen_multisensor_temperature
+              - sensor.kitchen_multisensor_humidity
+              - sensor.kitchen_multisensor_lux
+              - switch.fireplace
+    
+        
   - title: Debug
     cards:
+      - type: entities
+        title: Control Modes
+        show_header_toggle: false
+        entities:
+          - input_select.automation_mode
+          - input_boolean.lux_light_control
+          - input_number.lux_setpoint
+          - input_boolean.fireplace_automation
+          - input_number.fireplace_high_setpoint
+          - input_boolean.set_mode_sleeping
+          - input_boolean.set_mode_home
+          - input_boolean.set_mode_away
+      - type: entities
+        title: family
+        show_header_toggle: false
+        entities:
+          - input_boolean.presence_homekit
       - type: entities
         title: Indoor Lights Auto Debug
         show_header_toggle: true
         entities:
-          - input_boolean.lux_light_control
           - binary_sensor.indoor_lights_auto_on
           - sun.sun
           - sensor.dark_sky_cloud_coverage
@@ -175,7 +687,6 @@ views:
           - sensor.living_room_lux_max
           - sensor.kitchen_multisensor_lux
           - sensor.kitchen_lux_max
-          - input_number.lux_setpoint
       - type: entities
         title: Guest Bathroom Debug
         show_header_toggle: false
@@ -190,112 +701,48 @@ views:
           - light.master_bathroom_dimmer
           - light.master_bathroom_shower
       - type: entities
-        title: Homekit Debug
-        show_header_toggle: false
-        entities:
-          - input_boolean.set_mode_sleeping
-          - input_boolean.set_mode_home
-          - input_boolean.set_mode_away
-      - type: entities
         title: Scripts Debug
         show_header_toggle: false
         entities:
-          - script.ecobee_mode_home
-          - script.ecobee_mode_sleep
+          - script.apple_tv_restart
+            #- automation.harmony_input_change
+          - automation.send_harmony_comand_when_input_select_changes
           - script.twillio_test
           - script.denon_deck_volume_up
           - script.denon_deck_volume_down
-          - script.denon_deck_volume_set
-          - script.restart_garage_io
-          - automation.send_harmony_comand_when_input_select_changes
-      - type: picture-elements
-        image: /local/apple-remote.png
-        elements:
-          - type: service-button
-            title: 'up'
-            style:
-              top: 23%
-              left: 42%
-            service: remote.send_command
-            service_data:
-              entity_id: remote.apple_tv
-              command: up
-          - type: service-button
-            title: 'down'
-            style:
-              top: 80%
-              left: 42%
-            service: remote.send_command
-            service_data:
-              entity_id: remote.apple_tv
-              command: down
-          - type: service-button
-            title: 'left'
-            style:
-              top: 50%
-              left: 20%
-            service: remote.send_command
-            service_data:
-              entity_id: remote.apple_tv
-              command: left 
-          - type: service-button
-            title: 'right'
-            style:
-              top: 50%
-              left: 65%
-            service: remote.send_command
-            service_data:
-              entity_id: remote.apple_tv
-              command: right
-          - type: service-button
-            title: 'menu'
-            style:
-              top: 85%
-              left: 90%
-            service: remote.send_command
-            service_data:
-              entity_id: remote.apple_tv
-              command: menu
-          - type: service-button
-            title: 'select'
-            style:
-              top: 50%
-              left: 40%
-            service: remote.send_command
-            service_data:
-              entity_id: remote.apple_tv
-              command: select
 
-  - title: Graphs
+  - title: Portainer
+    panel: true
     cards:
-      - type: history-graph
-        title: Light Levels
-        hours_to_show: 24
-        refresh_interval: 120
-        entities:
-          - sensor.living_room_lux
-          - sensor.living_room_lux_max
-          - sensor.kitchen_multisensor_lux
-          - sensor.kitchen_lux_max
-      - type: history-graph
-        title: Average light Levels
-        hours_to_show: 24
-        refresh_interval: 120
-        entities:
-          - sensor.avg_lux
-      - type: history-graph
-        title: Temperatures
-        hours_to_show: 24
-        refresh_interval: 120
-        entities:
-          - sensor.basement_temperature
-          - sensor.living_room_temperature
-          - sensor.main_floor_temperature
-      - type: history-graph
-        title: Presence
-        hours_to_show: 24
-        refresh_interval: 0
-        entities:
-          - input_boolean.presence_homekit
-          - device_tracker.nikki
-          - device_tracker.phil
+      - type: iframe
+        url:  http://192.168.1.22:9000/#/dashboard
+
+  - title: Chronograf
+    panel: true
+    cards:
+      - type: iframe
+        url: http://192.168.1.22:8888/sources/0/dashboards/1?present=true 
+        aspect_ratio: 200%
+
+
+  - title: Notes
+    cards:
+    - type: weblink
+      url: http://materialdesignicons.com/
+      name: Material Deisign Icons
+
+    - type: markdown
+      content: >
+         ## Material Design Icons
+
+         https://materialdesignicons.com/   
+
+         ## Lovelace Docs
+         
+         https://www.home-assistant.io/lovelace/ 
+
+         ## Awesome-HA
+         https://www.awesome-ha.com/
+
+         ## Amazon Alexa Developer Console
+         https://developer.amazon.com/alexa/console

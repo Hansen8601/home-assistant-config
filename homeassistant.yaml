@@ -9,3 +9,9 @@ elevation: 278
 unit_system: imperial
 time_zone: America/Chicago
 customize: !include customizations.yaml
+
+auth_providers:
+  - type: homeassistant
+  - type: legacy_api_password
+    #- type: trusted_networks
+    # - api_password: !secret api_password

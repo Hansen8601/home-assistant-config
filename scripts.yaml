@@ -1,6 +1,36 @@
 # Scripts
 
 
+##################
+# Apple TV       #
+##################
+
+apple_tv_restart:
+  sequence:
+  - service: remote.send_command
+    data:
+      entity_id: remote.apple_tv
+      command: [top_menu]
+  - delay: '00:00:01'
+  - service: remote.send_command
+    data:
+      entity_id: remote.apple_tv
+      command: [menu]
+  - delay: '00:00:01'
+  - service: remote.send_command
+    data:
+      entity_id: remote.apple_tv
+      command: [right,right,right,right,down,down,down,select]
+  - delay: '00:00:01'
+  - service: remote.send_command
+    data:
+      enity_id: remote.apple_tv
+      command: [down,down,down,down,down,down,down]
+      #,select,down,down,down,down,down]
+
+##################
+# Dennon Scripts #
+##################
 denon_deck_volume_50:
   alias: denon_deck_volume_50
   sequence:
@@ -66,6 +96,7 @@ denon_deck_volume_up:
   sequence:
   - service: rest_command.denon_deck_volume_up
 
+
 ecobee_mode_sleep:
   alias: ecobee mode sleep
   sequence:
@@ -74,6 +105,7 @@ ecobee_mode_sleep:
       entity_id: climate.main_floor
       hold_mode: 'sleep'
 
+
 ecobee_mode_home:
   alias: ecobee mode home
   sequence:
@@ -81,6 +113,56 @@ ecobee_mode_home:
     data:
       entity_id: climate.main_floor
       hold_mode: 'home'
+
+
+###################
+# Harmony Scripts #
+###################
+
+harmony_power_off:
+  sequence:
+  - service: remote.turn_off
+    data: 
+      entity_id: remote.living_room
+
+harmony_apple_tv:
+  sequence:
+  - service: remote.turn_on
+    data:
+      entity_id: remote.living_room
+      activity: 'Apple TV'
+
+harmony_apple_tv_deck:      
+  sequence:
+  - service: remote.turn_on
+    data:
+      entity_id: remote.living_room
+      activity: 'Apple TV - Deck'
+
+harmony_watch_tv:      
+  sequence:
+  - service: remote.turn_on
+    data:
+      entity_id: remote.living_room
+      activity: 'Watch TV'
+
+harmony_music_cable:      
+  sequence:
+  - service: remote.turn_on
+    data:
+      entity_id: remote.living_room
+      activity: 'Music - Cable'
+
+harmony_music_cable_deck:      
+  sequence:
+  - service: remote.turn_on
+    data:
+      entity_id: remote.living_room
+      activity: 'Music - Cable - Deck'
+
+###################
+# Lights          #
+###################
 
 lights_main_on:
   alias: lights_main_on
@@ -102,11 +184,6 @@ lights_all_off:
     data:
       entity_id: group.room_living,light.kitchen_cabinet_lights,light.kitchen_island_lights,light.upstairs_hall_scone
 
-
-restart_garage_io:
-  alias: restart_garage_io
-  sequence:
-  - service: shell_command.restart_garage_io
 
 twillio_test:
   alias: twillio_test

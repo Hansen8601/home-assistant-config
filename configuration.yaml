@@ -3,13 +3,13 @@
 # Used to switch between development & production system
 homeassistant: !include homeassistant.yaml
 
+auth:
+
 frontend:
   javascript_version: latest
 
 http:
   api_password: !secret api_password
-  trusted_networks:
-    - 192.168.1.0/24
   ip_ban_enabled: True
   login_attempts_threshold: 5
 
@@ -36,8 +36,6 @@ recorder:
       - automation.activity_with_remote__set_automation_to_sleeping
       - automation.activity_with_remote__set_mode_to_home
         #- automation.set_harmony_input_select_to_remote_activity
-      - automation.monitor_in_traffic
-      - automation.monitor_out_traffic
       - script.denon_deck_volume_down
       - script.denon_deck_volume_up
       - script.denon_deck_volume_set
@@ -87,6 +85,18 @@ influxdb:
       - remote
       - group
       - timer
+
+alexa:
+
+intent_script:
+  ActivateSceneIntent:
+    action:
+      service: scene.turn_on
+      data_template:
+        entity_id: scene.{{ Scene | replace(" ", "_") }}
+    speech:  
+      type: plain  
+      text: !include alexa_confirm.yaml
 
 # Track the sun
 sun:
@@ -264,9 +274,6 @@ binary_sensor:
                    True
                  {%- elif ((states.sensor.living_room_lux_stats_mean.attributes["max_value"] | int < states.input_number.lux_setpoint.state | int )
                        and (states.sensor.living_room_lux_stats_mean.state != 'unknown')) -%}
-                   True
-                 {%- elif ((states.sensor.kitchen_lux_stats_mean.attributes["max_value"] | int < 15)
-                       and (states.sensor.kitchen_lux_stats_mean.state != 'unknown')) -%}
                    True
                  {%- else -%} 
                    False
@@ -845,13 +852,13 @@ input_number:
     initial: 30
     min: 0
     max: 50 
-    step: 1 
+    step: 2 
   denon_deck_volume:
     name: Denon Deck Volume
     initial: 40
     min: 0
     max: 70 
-    step: 1
+    step: 2
   lux_setpoint:
     name: lux setpoint
     initial: 25
@@ -864,6 +871,23 @@ input_number:
     min: 70
     max: 80
     step: 1
+
+###################
+#                 #
+# Scene           #
+#                 #
+###################
+
+scene:
+  - name: sleeping
+    entities:
+      input_boolean.set_mode_sleeping: on
+  - name: home
+    entities:
+      input_boolean.set_mode_home: on
+  - name: away
+    entities:
+      input_boolean.set_mode_away: on
 
 ###################
 #                 #
@@ -881,43 +905,6 @@ timer:
   master_bathroom_fan_timer2:
     duration: '00:45:00'
 
-###################
-#                 #
-# History Graph   #
-#                 #
-###################
-
-history_graph:
-  lux1:
-    name: Light Levels
-    entities:
-      - sensor.living_room_lux
-      - sensor.living_room_lux_max
-      - sensor.kitchen_multisensor_lux
-      - sensor.kitchen_lux_max
-    hours_to_show: 24
-    refresh: 120
-  lux2:
-    name: Average light Levels
-    entities:
-      - sensor.avg_lux
-    hours_to_show: 24
-    refresh: 120
-  temperatures:
-    name: Temperatures
-    entities:
-       - sensor.basement_temperature
-#      - sensor.basement_temperature_2
-       - sensor.living_room_temperature
-       - sensor.main_floor_temperature
-    hours_to_show: 24
-    refresh: 120
-  presence:
-    name: Presence
-    entities:
-      - input_boolean.presence_homekit
-      - device_tracker.nikki
-      - device_tracker.phil
  
 group: !include groups.yaml
 

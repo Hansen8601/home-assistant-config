@@ -781,6 +781,7 @@
       data:
         entity_id:
         - group.room_living
+        brightness: "200"
     - service: light.turn_on
       data:
         entity_id: light.kitchen_island_lights
