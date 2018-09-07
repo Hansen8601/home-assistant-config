@@ -307,46 +307,34 @@ binary_sensor:
 ###################
 
 cover:
-#- platform: rpi_gpio
-#  covers:
-#    - relay_pin: 23
-#      state_pin: 12
-#      name: 'garage left'
-
-#- platform: rpi_gpio
-#  covers:
-#    - relay_pin: 24
-#      state_pin: 13
-#      name: 'garage right'
-
 - platform: mqtt
-  state_topic: "rpi/garage/input/garagedoormain"
-  command_topic: "rpi/garage/output/garagedoormain/set_on_ms"
-  availability_topic: "rpi/garage/status"
-  payload_available: "running"
-  payload_not_available: "stopped"
+  state_topic: "esp8266/garageIO/switch1"
+  command_topic: "esp8266/garageIO/switch1/set"
+  #availability_topic: "rpi/garage/status"
+  #payload_available: "running"
+  #payload_not_available: "stopped"
   name: "garage right"
   device_class: "garage"
   qos: 0 #Must be zero to work correctly
   retain: false 
-  payload_open: "500"
-  payload_close: "500"
+  payload_open: "open"
+  payload_close: "close"
   state_open: "open"
   state_closed: "closed"
   #optimistic: false
 
 - platform: mqtt
-  state_topic: "rpi/garage/input/garagedoorshop"
-  command_topic: "rpi/garage/output/garagedoorshop/set_on_ms"
-  availability_topic: "rpi/garage/status"
-  payload_available: "running"
-  payload_not_available: "stopped"
+  state_topic: "esp8266/garageIO/switch2"
+  command_topic: "esp8266/garageIO/switch2/set"
+  #availability_topic: "rpi/garage/status"
+  #payload_available: "running"
+  #payload_not_available: "stopped"
   name: "garage left"
   device_class: "garage"
   qos: 0 #must be zero to work correctly.
   retain: false
-  payload_open: "500"
-  payload_close: "500"
+  payload_open: "open"
+  payload_close: "close"
   state_open: "open"
   state_closed: "closed"
   #optimistic: false
@@ -590,28 +578,21 @@ sensor:
     - wind_speed
     - wind_bearing
 
-
 - platform: mqtt
-  state_topic: "rpi/garage/input/servicedoor"
+  state_topic: "esp8266/garageIO/switch3"
   name: "garage service door"
 
-#- platform: mqtt
-#  state_topic: "esp8266/garageIO/temperature"
-#  name: "living_room_av_temperature"
-#  unit_of_measurement: "°F"
-#  value_template: '{{ value_json | float }}'
+- platform: mqtt
+  state_topic: "esp8266/garageIO/temperature"
+  name: "living_room_av_temperature"
+  unit_of_measurement: "°F"
+  value_template: '{{ value_json | float }}'
 
-#- platform: mqtt
-#  state_topic: "esp8266/garageIO/humidity"
-#  name: 'living_room_av_humidity'
-#  unit_of_measurement: '%'
-#  value_template: '{{ value_json | float }}'
-
-#- platform: mqtt
-#  state_topic: "esp8266/garageIO/humidity"
-#  name: 'garage_service_door_test'
-#  unit_of_measurement: '%'
-#  value_template: '{{ value_json | float }}'
+- platform: mqtt
+  state_topic: "esp8266/garageIO/humidity"
+  name: 'living_room_av_humidity'
+  unit_of_measurement: '%'
+  value_template: '{{ value_json | float }}'
 
 - platform: mqtt
   state_topic: "smartthings/Aeon Multisensor 6/illuminance"
@@ -669,7 +650,6 @@ sensor:
   unit_of_measurement: "%"
   value_template: '{{ value_json | float }}'
 
-
 - platform: template
   sensors:
     living_room_remote_activity:
@@ -701,15 +681,6 @@ sensor:
       friendly_name: 'Kitchen Lux Max'
       value_template: '{{ states.sensor.kitchen_lux_stats_mean.attributes["max_value"] | int }}'
       unit_of_measurement: 'Lux'
-
-# Was used in a trigger; using value template in trigger now.
-#- platform: template
-#  sensors:
-#    kitchen_lux_max:
-#      friendly_name: 'Main Floor Temperature'
-#      value_template: '{{states.climate.main_floor.attributes["current_temperature"] | int }}'
-#      unit_of_measurement: 'degrees'
-
   
 - platform: statistics
   name: avg_lux_stats
@@ -735,7 +706,6 @@ sensor:
   max_age:
     minutes: 60
 
-
 - platform: systemmonitor
   resources:
     - type: memory_use_percent
@@ -759,6 +729,7 @@ switch:
   retain: false
   payload_on: "ON"
   payload_off: "OFF"
+
 - platform: mqtt
   name: "Guest Bathroom Fan"
   state_topic: "smartthings/Guest Bathroom Fan/switch"
@@ -768,6 +739,7 @@ switch:
   payload_on: "on"
   payload_off: "off"
   optimistic: false
+
 - platform: mqtt
   name: "Master Bathroom Fan"
   state_topic: "smartthings/Master bathroom fan/switch"
@@ -806,6 +778,11 @@ input_boolean:
   presence_homekit:
     name: presence_homekit
     initial: on
+# Text Alerts enabled
+  text_alerts:
+    name: text_alerts
+    initial: on
+
 
 ###################
 #                 #

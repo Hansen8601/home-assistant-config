@@ -4,6 +4,63 @@
 
 title: Home
 views:
+  - title: Summary
+    id: summary
+    cards:
+      - type: glance
+        title: Set Automation Mode
+        show_state: false
+        entities:
+          - entity: input_select.automation_mode
+            name: Home
+            icon: mdi:home
+            tap_action: call-service
+            service: input_select.select_option
+            service_data:
+              entity_id: input_select.automation_mode
+              option: Home 
+          - entity: input_select.automation_mode
+            name: Sleeping
+            icon: mdi:power-sleep
+            tap_action: call-service
+            service: input_select.select_option
+            service_data:
+              entity_id: input_select.automation_mode
+              option: Sleeping
+          - entity: input_select.automation_mode
+            name: Away
+            icon: mdi:home-lock
+            tap_action: call-service
+            service: input_select.select_option
+            service_data:
+              entity_id: input_select.automation_mode
+              option: Away 
+          - entity: input_select.automation_mode
+            name: None
+            icon: mdi:timer-off
+            tap_action: call-service
+            service: input_select.select_option
+            service_data:
+              entity_id: input_select.automation_mode
+              option: 'No Automation'
+          - entity: input_number.lux_setpoint
+            name: Setpoint
+            icon: mdi:theme-light-dark
+            #tap_action: call-service
+            #service: input_select.select_option
+            #service_data:
+            #  entity_id: input_select.automation_mode
+            #  option: Home 
+      - type: entities
+        title: 'Volume'
+        show_header_toggle: true
+        entities:
+                #- input_select.living_room_remote
+          - entity: input_number.denon_volume
+            name: Living Room
+          - entity: input_number.denon_deck_volume
+            name: Deck
+        
   - title: Home
     id: plan
     icon: mdi:home
@@ -185,6 +242,11 @@ views:
             style:
               top: 78%
               left: 41%
+          - type: state-badge
+            entity: sensor.garage_service_door
+            style: 
+              top: 47%
+              left: 26%
               #          - type: image
               #entity: device_tracker.phil
               #style:
@@ -664,17 +726,13 @@ views:
         entities:
           - input_select.automation_mode
           - input_boolean.lux_light_control
+          - input_boolean.text_alerts
           - input_number.lux_setpoint
           - input_boolean.fireplace_automation
           - input_number.fireplace_high_setpoint
           - input_boolean.set_mode_sleeping
           - input_boolean.set_mode_home
           - input_boolean.set_mode_away
-      - type: entities
-        title: family
-        show_header_toggle: false
-        entities:
-          - input_boolean.presence_homekit
       - type: entities
         title: Indoor Lights Auto Debug
         show_header_toggle: true
@@ -727,9 +785,10 @@ views:
 
   - title: Notes
     cards:
-    - type: weblink
-      url: http://materialdesignicons.com/
-      name: Material Deisign Icons
+            #    - type: weblink
+            #      name: Material Deisign Icons
+            #      icon: mdi:home
+            #      url: http://materialdesignicons.com/
 
     - type: markdown
       content: >
@@ -742,7 +801,9 @@ views:
          https://www.home-assistant.io/lovelace/ 
 
          ## Awesome-HA
+         
          https://www.awesome-ha.com/
 
          ## Amazon Alexa Developer Console
+
          https://developer.amazon.com/alexa/console
