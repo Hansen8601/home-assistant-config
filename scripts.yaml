@@ -28,6 +28,7 @@ apple_tv_restart:
       command: [down,down,down,down,down,down,down]
       #,select,down,down,down,down,down]
 
+
 ##################
 # Dennon Scripts #
 ##################
@@ -160,6 +161,7 @@ harmony_music_cable_deck:
       entity_id: remote.living_room
       activity: 'Music - Cable - Deck'
 
+
 ###################
 # Lights          #
 ###################
@@ -167,14 +169,30 @@ harmony_music_cable_deck:
 lights_main_on:
   alias: lights_main_on
   sequence:
-  - event: LOGBOOK_ENTRY
-    event_data:
-      name: EVENT
-      message: Living room lights on script
   - service: light.turn_on
-    data:
-      entity_id: group.room_living
-      brightness: 125
+    data_template:
+      entity_id: light.ge_living_room_1,light.ge_living_room_2,light.ge_living_room_3
+      brightness: >
+        {% if now().hour < 8 or now().hour > 22 %}
+          100
+        {% else %}
+          200
+        {% endif %}
+  - service: light.turn_on
+    data_template:
+      entity_id: light.kitchen_island_lights
+      brightness: >
+        {% if states.light.kitchen_island_lights.state == 'on' %}
+          {{states.light.kitchen_island_lights.attributes.brightness}}
+        {% else %}
+          {% if now().hour < 8 or now().hour > 22 %}
+            100
+          {% else %}
+            200
+          {% endif %}
+        {% endif %}
+
+        
   
 
 lights_all_off:
@@ -197,3 +215,24 @@ twillio_test:
       message: "Testing twilio SMS"
       target:
         - !secret myphone
+
+###################
+# Lux Logging     #
+###################
+
+log_lux_levels:
+  alias: log_lux_levels
+  sequence:
+  - service: logbook.log
+    data_template:
+      name: '{{log_name}}'
+      message: >
+        {%- if (states.sun.sun.attributes.elevation | int < 10 ) -%}
+          'Sun Elevation: {{states.sun.sun.attributes.elevation}} < 10'
+        {%- elif (states.sensor.dark_sky_cloud_coverage_stats_mean.state | int > 85) -%}
+          'Cloud Cover: {{states.sensor.dark_sky_cloud_coverage_stats_mean.state}} > 85' 
+        {%- elif (states.sensor.avg_lux_stats_mean.attributes["max_value"] | int < states.input_number.lux_setpoint.state | int
+              and states.sensor.avg_lux_stats_mean.attributes["max_value"] != 'unknown'
+              and (states.sensor.kitchen_multisensor_lux < 10 or as_timestamp(now()) - as_timestamp(states.sensor.kitchen_multisensor_lux.last_changed) > 3600)) -%}
+          'Avg Lux Max {{states.sensor.avg_lux_stats_mean.attributes["max_value"]}} < {{states.input_number.lux_setpoint.state}} and Kitchen Lux < 10'
+        {%- endif -%}

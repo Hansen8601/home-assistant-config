@@ -88,6 +88,8 @@ influxdb:
 
 alexa:
 
+ios:
+
 intent_script:
   ActivateSceneIntent:
     action:
@@ -195,7 +197,7 @@ media_player:
   - platform: denonavr
     host: !secret dennon_ip
     name: Denon AVRX3000
-  - platform: plex
+    #  - platform: plex
 
 
 ecobee:
@@ -268,12 +270,11 @@ binary_sensor:
                     as_timestamp(now()) - as_timestamp(states.input_number.lux_setpoint.last_changed) < 10 -%}
                  {%- if (states.sun.sun.attributes.elevation | int < 10 ) -%}
                    True
-                 {%- elif ( (states.sun.sun.attributes.elevation | int < 25) and (states.sensor.dark_sky_cloud_coverage_stats_mean.state | int > 70)) -%}
+                 {%- elif (states.sensor.dark_sky_cloud_coverage_stats_mean.state | int > 85) -%}
                    True
-                 {%- elif (states.sensor.dark_sky_cloud_coverage_stats_mean.state | int > 90) -%}
-                   True
-                 {%- elif ((states.sensor.living_room_lux_stats_mean.attributes["max_value"] | int < states.input_number.lux_setpoint.state | int )
-                       and (states.sensor.living_room_lux_stats_mean.state != 'unknown')) -%}
+                 {%- elif (states.sensor.avg_lux_stats_mean.attributes["max_value"] | int < states.input_number.lux_setpoint.state | int  
+                        and states.sensor.avg_lux_stats_mean.attributes["max_value"] != 'unknown'
+                        and (states.sensor.kitchen_multisensor_lux < 10 or as_timestamp(now()) - as_timestamp(states.sensor.kitchen_multisensor_lux.last_changed) > 3600))-%}
                    True
                  {%- else -%} 
                    False
@@ -534,32 +535,6 @@ light:
   payload_off: "off"
   optimistic: false
   retain: true
-#- platform: mqtt
-#  name: "Master Bedroom Fan"
-#  state_topic: "smartthings/Master Bedroom Fan/switch"
-#  command_topic: "smartthings/Master Bedroom Fan/switch"
-#  brightness_state_topic: "smartthings/Master Bedroom Fan/level"
-#  brightness_command_topic: "smartthings/Master Bedroom Fan/level"
-#  brightness_scale: 255
-#  brightness_value_template: '{{ value }}'
-#  qos: 1
-#  payload_on: "on"
-#  payload_off: "off"
-#  optimistic: false
-#  retain: true
-#- platform: mqtt
-#  name: "Living Room Fan"
-#  state_topic: "smartthings/Living Room Fan/switch"
-#  command_topic: "smartthings/Living Room Fan/switch"
-#  brightness_state_topic: "smartthings/Living Room Fan/level"
-#  brightness_command_topic: "smartthings/Living Room Fan/level"
-#  brightness_scale: 255
-#  brightness_value_template: '{{ value }}'
-#  qos: 1
-#  payload_on: "on"
-#  payload_off: "off"
-#  optimistic: false
-#  retain: true
 
 
 ###################
@@ -661,42 +636,41 @@ sensor:
     avg_lux:
       friendly_name: 'Avg Lux'
       value_template: >-
-        {%- if (states.sensor.living_room_lux.state | int + states.sensor.kitchen_multisensor_lux.state | int  < 400 ) -%}
-          {{(states.sensor.living_room_lux.state | int + states.sensor.kitchen_multisensor_lux.state | int) / 2 }}
+        {%- if as_timestamp(now()) - as_timestamp(states.sensor.kitchen_multisensor_lux.last_changed) < 5000 -%}
+          {%- if (states.sensor.living_room_lux.state | int + 
+                  states.sensor.kitchen_multisensor_lux.state | int  < 400 ) -%}
+               {{(states.sensor.living_room_lux.state | int + states.sensor.kitchen_multisensor_lux.state | int) / 2 }}
+          {%- else -%}
+             200
+          {%- endif -%}
         {%- else -%}
-          200
+          {{states.sensor.living_room_lux.state | int }}
         {%- endif -%}
       unit_of_measurement: 'Lux'
 
-- platform: template
-  sensors:
-    living_room_lux_max:
-      friendly_name: 'Living Room Lux Max'
-      value_template: '{{ states.sensor.living_room_lux_stats_mean.attributes["max_value"] | int }}'
-      unit_of_measurement: 'Lux'
+      #- platform: template
+      #sensors:
+      #living_room_lux_max:
+      #friendly_name: 'Living Room Lux Max'
+      #value_template: '{{ states.sensor.living_room_lux_stats_mean.attributes["max_value"] | int }}'
+      #unit_of_measurement: 'Lux'
 
-- platform: template
-  sensors:
-    kitchen_lux_max:
-      friendly_name: 'Kitchen Lux Max'
-      value_template: '{{ states.sensor.kitchen_lux_stats_mean.attributes["max_value"] | int }}'
-      unit_of_measurement: 'Lux'
+      #- platform: template
+      #  sensors:
+      #    kitchen_lux_max:
+      #      friendly_name: 'Kitchen Lux Max'
+      #      value_template: '{{ states.sensor.kitchen_lux_stats_mean.attributes["max_value"] | int }}'
+      #      unit_of_measurement: 'Lux'
   
 - platform: statistics
   name: avg_lux_stats
-  entity_id: sensor.average_lux
+  entity_id: sensor.avg_lux
   max_age:
     minutes: 15
 
 - platform: statistics
   name: living_room_lux_stats
   entity_id: sensor.living_room_lux
-  max_age:
-    minutes: 15
-
-- platform: statistics
-  name: kitchen_lux_stats
-  entity_id: sensor.kitchen_multisensor_lux
   max_age:
     minutes: 15
 
