@@ -799,6 +799,7 @@ views:
           - script.denon_deck_volume_down
           - script.log_lux_levels
           - script.lights_main_on
+          - script.lights_main_on_dim
 
   - title: Portainer
     panel: true
