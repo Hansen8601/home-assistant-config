@@ -100,6 +100,12 @@ intent_script:
       type: plain  
       text: !include alexa_confirm.yaml
 
+lutron_caseta:
+  host: 192.168.1.85
+  keyfile: caseta.key
+  certfile: caseta.crt
+  ca_certs: caseta-bridge.crt
+
 # Track the sun
 sun:
   elevation: 278
@@ -127,7 +133,8 @@ homekit:
     include_entities:
       - cover.garage_left
       - cover.garage_right
-      - input_boolean.presence_homekit 
+      - input_boolean.phil_homekit_present
+      - input_boolean.nikki_homekit_present
       - input_boolean.set_mode_away 
       - input_boolean.set_mode_home 
       - input_boolean.set_mode_sleeping 
@@ -172,7 +179,6 @@ device_tracker:
   devices:
     Phil: smartthings/Phil's iPhone/presence
     Nikki: smartthings/Nikki's iPhone/presence
-    Dylan: smartthings/Dylan's iPhone/presence
 
 
 #mqtt broker
@@ -274,7 +280,7 @@ binary_sensor:
                    True
                  {%- elif (states.sensor.avg_lux_stats_mean.attributes["max_value"] | int < states.input_number.lux_setpoint.state | int  
                         and states.sensor.avg_lux_stats_mean.attributes["max_value"] != 'unknown'
-                        and (states.sensor.kitchen_multisensor_lux < 10 or as_timestamp(now()) - as_timestamp(states.sensor.kitchen_multisensor_lux.last_changed) > 3600))-%}
+                        and (states.sensor.kitchen_multisensor_lux < 12 or as_timestamp(now()) - as_timestamp(states.sensor.kitchen_multisensor_lux.last_changed) > 3600))-%}
                    True
                  {%- else -%} 
                    False
@@ -749,8 +755,11 @@ input_boolean:
     name: 'Fireplace Automation'
     initial: off
 # Homekit Presence
-  presence_homekit:
-    name: presence_homekit
+  phil_homekit_present:
+    name: phil homekit
+    initial: on
+  nikki_homekit_present:
+    name: nikki homekit
     initial: on
 # Text Alerts enabled
   text_alerts:

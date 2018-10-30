@@ -603,6 +603,7 @@ views:
       - type: glance
         entities:
           - device_tracker.phil
+          - input_boolean.phil_homekit_present
           - device_tracker.nikki
       - type: entities
         title: Kitchen

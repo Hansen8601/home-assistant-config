@@ -554,8 +554,8 @@
 
 
 # Bedroom Fan lower from room temperature. 
-- id: bedroom_fan_temperature
-  alias: Bedroom Fan Control by Temperature
+- id: bedroom_fan_lower_temperature
+  alias: Bedroom Fan Lower by Temperature
   trigger:
     - platform: numeric_state
       entity_id: climate.main_floor
@@ -586,14 +586,14 @@
 
 
 # Bedroom Fan off from room temperature. 
-- id: bedroom_fan_temperature
-  alias: Bedroom Fan Control by Temperature
+- id: bedroom_fan_off_temperature
+  alias: Bedroom Fan Off by Temperature
   trigger:
     - platform: numeric_state
       entity_id: climate.main_floor
       #value_template: "{{ states.climate.main_floor.attributes.current_temperature }}"
       value_template: "{{ states.climate.main_floor.attributes.current_temperature }}"
-      below: 68
+      below: 66
   condition:
     condition: and
     conditions:
@@ -754,7 +754,7 @@
         fan_min_on_time: 60
 
 - id: furnace_fan_off_when_fireplace_off
-  alias: "Furnace fan on when fireplace on"
+  alias: "Furnace fan off when fireplace off"
   trigger:
     platform: state
     entity_id: switch.fireplace

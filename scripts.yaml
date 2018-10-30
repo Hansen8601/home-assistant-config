@@ -188,7 +188,7 @@ lights_main_on:
           {% if now().hour < 8 or now().hour > 22 %}
             100
           {% else %}
-            175
+            150
           {% endif %}
         {% endif %}
 
