@@ -10,6 +10,7 @@ title: Home
 views:
   - title: Summary
     id: summary
+    icon: mdi:home
     cards:
       - type: entities
         title: 'Lights'
@@ -75,7 +76,7 @@ views:
         
   - title: Home
     id: plan
-    icon: mdi:home
+    icon: mdi:home-outline
     panel: true
     cards:
       - type: picture-elements
