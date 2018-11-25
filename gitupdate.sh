@@ -1,20 +1,15 @@
 #!/bin/bash
 
-cd /home/phil/.homeassistant
-source /home/phil/hass-test/bin/activate
-hass --script check_config
+cd /opt/home-assistant
 
-git add .
-git status
+sudo git add .
+sudo git status
 echo -n "Enter the Description for the Change: " [Minor Update]
 read CHANGE_MSG
-git commit -m "${CHANGE_MSG}"
-git push origin master
+sudo git commit -m "${CHANGE_MSG}"
+sudo git push origin master
 
 echo "...";
 echo "...";
-#read -p "Press [Enter] to start live server update";
-#ssh pi@192.168.1.24 "cd /home/homeassistant/.homeassistant; git pull;sudo systemctl restart home-assistant@homeassistant.service;tail -f /var/log/syslog;"
-ssh phil@192.168.1.22 "cd /opt/docker-compose-projects/home-assistant/home-assistant/home-assistant-config;sudo git pull;"
 
 exit

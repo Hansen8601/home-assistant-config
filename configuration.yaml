@@ -117,7 +117,8 @@ sun:
 
 # Checks for available updates
 updater:
-
+  card_urls:
+    - https://raw.githubusercontent.com/kalkih/mini-media-player/master/tracker.json
 
 # Discover some devices automatically
 discovery:

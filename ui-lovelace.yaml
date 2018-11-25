@@ -5,6 +5,9 @@
 resources:
   - url: /local/entity-attributes-card.js?v=2
     type: js
+  - url: /local/mini-media-player-bundle.js?v=0.9.4
+    type: module
+
 
 title: Home
 views:
@@ -64,6 +67,22 @@ views:
             #service_data:
             #  entity_id: input_select.automation_mode
             #  option: Home 
+      - type: entity-filter
+        entities:
+          - entity: light.master_bathroom_dimmer
+          - entity: light.master_bathroom_shower
+          - entity: light.master_bathroom_chandelier
+          - entity: switch.master_bathroom_fan
+          - entity: fan.master_bedroom
+          - entity: light.guest_bathroom_lights
+          - entity: switch.guest_bathroom_fan
+          - entity: light.upstairs_hall_scone
+          - entity: light.garage_outside_lights
+        state_filter:
+          - "on"
+        card:
+          type: glance
+          show_state: false
       - type: entities
         title: 'Volume'
         show_header_toggle: true
@@ -265,6 +284,22 @@ views:
               #style:
               # top: 10%
               # left: 10%
+              
+
+  - title: Basement
+    id: plan2
+    icon: mdi:home-outline
+    panel: true
+    cards:
+      - type: picture-elements
+        image: /local/home-basement.png
+        elements:
+          - type: state-icon
+            tap_action: toggle
+            entity: light.kitchen_island_lights
+            style:
+              top: 38%
+              left: 39%
 
 
   - title: Audio-video
@@ -604,8 +639,11 @@ views:
       - type: glance
         entities:
           - device_tracker.phil
+          - device_tracker.phils_7
           - input_boolean.phil_homekit_present
           - device_tracker.nikki
+          - device_tracker.nikkis_iphone
+        
       - type: entities
         title: Kitchen
         show_header_toggle: true
@@ -643,6 +681,14 @@ views:
           - light.guest_bathroom_lights
           - switch.guest_bathroom_fan
       - type: entities
+        title: Basement
+        show_header_toggle: true
+        entities:
+          - light.bar_cove_lights
+          - light.bar_sink_light
+          - light.basement_sitting_area_can_lights
+          - light.downstairs_hallway_hall_lights
+      - type: entities
         title: Outside Lights
         show_header_toggle: true
         entities:
@@ -660,6 +706,10 @@ views:
           - cover.garage_left
           - cover.garage_right
           - sensor.garage_service_door
+
+        
+  - title: Cameras
+    cards:
       - type: vertical-stack
         cards:
           - type: picture-entity
@@ -674,23 +724,6 @@ views:
             camera_image: camera.driveway
             show_info: true
             tap_action: dialog
-          - type: entity-filter
-            entities:
-              - entity: light.master_bathroom_dimmer
-              - entity: light.master_bathroom_shower
-              - entity: light.master_bathroom_chandelier
-              - entity: switch.master_bathroom_fan
-              - entity: fan.master_bedroom
-              - entity: light.guest_bathroom_lights
-              - entity: switch.guest_bathroom_fan
-              - entity: light.upstairs_hall_scone
-              - entity: light.garage_outside_lights
-            state_filter:
-              - "on"
-            card:
-              type: glance
-              show_state: false
-        
 
   - title: Climate
     cards:
@@ -802,6 +835,12 @@ views:
           - script.log_lux_levels
           - script.lights_main_on
           - script.lights_main_on_dim
+      - type: entities
+        title: Automations
+        show_header_toggle: false
+        entities:
+          - automation.activity_with_remote_set_automation_to_sleeping
+          - automation.activity_with_remote_set_automation_to_home
 
   - title: Portainer
     panel: true

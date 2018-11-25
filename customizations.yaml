@@ -27,8 +27,6 @@ device_tracker.phil:
   friendly_name: Phil
 device_tracker.nikki:
   friendly_name: Nikki
-device_tracker.dylan:
-  friendly_name: Dylan
 
 #Groups
 #Think these should all be name entries on the groups page.

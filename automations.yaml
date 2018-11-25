@@ -914,11 +914,11 @@
         # 100 set = 38% to smarthings
         # 131 set = 50% to smarthings
         # 263 set = 100% to smarthings
-        brightness: 50
+        brightness: 10 # was 50, changed to 10 for christmas
     - service: light.turn_on
       data:
         entity_id: light.garage_outside_lights
-        brightness: 70
+        brightness: 10 # was 70, changed to 10 for christmas
 
 
 ############################

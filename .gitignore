@@ -19,5 +19,9 @@ known_devices.yaml
 HarmonyHub.AuthorizationToken
 ecobee.conf
 configuration.yaml.test
+/deps
+*.crt
+*.key
+*.bak
 .*
 !/.gitignore
