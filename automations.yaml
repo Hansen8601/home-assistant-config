@@ -116,7 +116,7 @@
       - condition: template
         value_template: "{{trigger.to_state.attributes.current_activity == 'PowerOff' }}"
       - condition: template
-        value_template: "{{states.device_tracker.nikki.state == 'present' or states.device_tracker.phil.state == 'present' }}"
+        value_template: "{{states.binary_sensor.presence_nikki.state == 'on' or states.binary_sensor.presence_phil.state == 'on' }}"
       - condition: time
         after: '20:00:00'
   action:
@@ -125,7 +125,7 @@
       entity_id: input_select.automation_mode
       option: 'Sleeping'
 
-
+# Make commands from Siri work
 - id: automation_mode_home_from_homekit
   alias: Automation mode to home from homekit
   trigger:
@@ -168,7 +168,6 @@
     - service: input_boolean.turn_off
       data: 
         entity_id: input_boolean.set_mode_sleeping
-
 
 
 - id: automation_mode_away_from_homekit
@@ -284,7 +283,8 @@
   alias: Device tracker change
   trigger:
     platform: state
-    entity_id: device_tracker.phil,device_tracker.nikki
+    #entity_id: device_tracker.phil,device_tracker.nikki
+    entity_id: binary_sensor.presence_phil,binary_sensor.presence_nikki
   condition:
     condition: or
     conditions:
@@ -299,7 +299,7 @@
     data_template:
       entity_id: input_select.automation_mode
       option: >
-        {%if states.device_tracker.phil.state == 'present' or states.device_tracker.nikki.state == 'present' %}Home{% else %}Away{% endif %}
+        {%if states.binary_sensor.presence_phil.state == 'on' or states.binary_sensor.presence_nikki.state == 'on' %}Home{% else %}Away{% endif %}
 
 
 ############################
@@ -906,19 +906,19 @@
     platform : sun
     event: sunset
   action:
-    - service: light.turn_on
-      data:
-        entity_id: light.entry_walkway_dimmer_switch
+#    - service: light.turn_on
+#     data:
+#       entity_id: light.entry_walkway_dimmer_switch
         # Value sent to mqtt is .38 of value set here.
         # For 0 - 100, use 0 - 263 here
         # 100 set = 38% to smarthings
         # 131 set = 50% to smarthings
         # 263 set = 100% to smarthings
-        brightness: 10 # was 50, changed to 10 for christmas
+#       brightness: 20 # was 50, changed to 10 for christmas
     - service: light.turn_on
       data:
         entity_id: light.garage_outside_lights
-        brightness: 10 # was 70, changed to 10 for christmas
+        brightness: 50 # was 70, changed to 20 for christmas
 
 
 ############################

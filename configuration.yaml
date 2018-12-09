@@ -178,7 +178,7 @@ amcrest:
 device_tracker:
   platform: mqtt
   devices:
-    Phil: smartthings/Phil's iPhone/presence
+    Phil: smartthings/Phil Hansen's iPhone/presence
     Nikki: smartthings/Nikki's iPhone/presence
 
 
@@ -306,6 +306,48 @@ binary_sensor:
           {%- else -%}
             False 
           {%- endif -%}
+
+  - platform: bayesian
+    name: 'presence_phil'
+    prior: 0.5
+    probability_threshold: 0.90
+    observations:
+      - entity_id: 'device_tracker.phil'
+        prob_given_true: 0.50
+        #prob_given_false: 0.90
+        platform: 'state'
+        to_state: 'present'
+      - entity_id: 'device_tracker.phils_7'
+        prob_given_true: 0.90
+        #prob_given_false: 0.90
+        platform: 'state'
+        to_state: 'home'
+      - entity_id: 'input_boolean.phil_homekit_present'
+        prob_given_true: 0.90
+        #prob_given_false: 0.90
+        platform: 'state'
+        to_state: 'on'
+
+  - platform: bayesian
+    name: 'presence_nikki'
+    prior: 0.5
+    probability_threshold: 0.90
+    observations:
+      - entity_id: 'device_tracker.nikki'
+        prob_given_true: 0.70
+        #prob_given_false: 0.70
+        platform: 'state'
+        to_state: 'present'
+      - entity_id: 'device_tracker.nikkis_iphone'
+        prob_given_true: 0.90
+        #prob_given_false: 0.90
+        platform: 'state'
+        to_state: 'home'
+      - entity_id: 'input_boolean.nikki_homekit_present'
+        prob_given_true: 0.90
+        #prob_given_false: 0.90
+        platform: 'state'
+        to_state: 'on'
 
 
 ###################

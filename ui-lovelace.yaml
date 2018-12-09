@@ -296,10 +296,28 @@ views:
         elements:
           - type: state-icon
             tap_action: toggle
-            entity: light.kitchen_island_lights
+            entity: light.bar_cove_lights
             style:
-              top: 38%
-              left: 39%
+              top: 20%
+              left: 10%
+          - type: state-icon
+            tap_action: toggle
+            entity: light.bar_sink_light
+            style:
+              top: 20%
+              left: 20%
+          - type: state-icon
+            tap_action: toggle
+            entity: light.basement_sitting_area_can_lights
+            style:
+              top: 20%
+              left: 30%
+          - type: state-icon
+            tap_action: toggle
+            entity: light.downstairs_hallway_hall_lights
+            style:
+              top: 20%
+              left: 40%
 
 
   - title: Audio-video
@@ -638,12 +656,19 @@ views:
     cards:
       - type: glance
         entities:
+          - binary_sensor.presence_phil
           - device_tracker.phil
           - device_tracker.phils_7
           - input_boolean.phil_homekit_present
+      - type: glance
+        entities:
+          - binary_sensor.presence_nikki
           - device_tracker.nikki
           - device_tracker.nikkis_iphone
-        
+          - input_boolean.nikki_homekit_present
+      - type: glance
+        entities:
+          - input_select.automation_mode
       - type: entities
         title: Kitchen
         show_header_toggle: true
