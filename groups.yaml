@@ -1,21 +1,6 @@
 # Groups YAML file
 
-# Default View
-default_view:
-  view: yes
-  icon: mdi:home
-  entities:
-    - group.modes
-    - group.media_short
-    - group.family
-    - camera.front_door
-    - camera.driveway
 
-modes:
-  view: no
-  name: 'Automation Mode'
-  entities:
-    - input_select.automation_mode
 
 media_short:
   view: no
@@ -100,6 +85,20 @@ outside_lights:
   entities:
     - light.entry_walkway_dimmer_switch
     - light.garage_outside_lights
+
+basement:
+  view: no
+  entities:
+   - light.bar_cove_lights
+   - light.bar_sink_light
+   - light.bar_cabinets
+   - light.basement_sitting_area_can_lights
+   - light.downstairs_hallway_hall_lights
+   - light.basement_game_area_main_lights
+   - light.stairs_main_lights
+   - light.basement_sitting_area_table_lamp
+   - light.basement_exercise_area_main_lights
+
 
 # Media View
 media_full:

@@ -298,26 +298,44 @@ views:
             tap_action: toggle
             entity: light.bar_cove_lights
             style:
-              top: 20%
-              left: 10%
+              top: 29%
+              left: 39%
           - type: state-icon
             tap_action: toggle
             entity: light.bar_sink_light
             style:
-              top: 20%
-              left: 20%
+              top: 42%
+              left: 42%
+          - type: state-icon
+            tap_action: toggle
+            entity: light.bar_cabinets
+            style:
+              top: 38%
+              left: 42%
           - type: state-icon
             tap_action: toggle
             entity: light.basement_sitting_area_can_lights
             style:
-              top: 20%
+              top: 50%
               left: 30%
           - type: state-icon
             tap_action: toggle
             entity: light.downstairs_hallway_hall_lights
             style:
-              top: 20%
-              left: 40%
+              top: 50%
+              left: 60%
+          - type: state-icon
+            tap_action: toggle
+            entity: light.stairs_main_lights
+            style:
+              top: 41%
+              left: 69%
+          - type: state-icon
+            tap_action: toggle
+            entity: light.basement_game_area_main_lights
+            style:
+              top: 70%
+              left: 42%
 
 
   - title: Audio-video
@@ -711,8 +729,11 @@ views:
         entities:
           - light.bar_cove_lights
           - light.bar_sink_light
+          - light.bar_cabinets
           - light.basement_sitting_area_can_lights
           - light.downstairs_hallway_hall_lights
+          - light.basement_game_area_main_lights
+          - light.stairs_main_lights
       - type: entities
         title: Outside Lights
         show_header_toggle: true

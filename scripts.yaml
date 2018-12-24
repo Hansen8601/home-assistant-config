@@ -205,9 +205,9 @@ lights_main_on_dim:
       entity_id: light.kitchen_island_lights
       brightness: >
             100
-  
 
-lights_all_off:
+
+lights_upstairs_off:
   alias: lights_all_off
   sequence:
   - service: light.turn_off

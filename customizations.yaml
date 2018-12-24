@@ -28,37 +28,6 @@ device_tracker.phil:
 device_tracker.nikki:
   friendly_name: Nikki
 
-#Groups
-#Think these should all be name entries on the groups page.
-group.ecobee_main:
-  friendly_name: Main Floor Climate
-group.ecobee_basement:
-  friendly_name: Basement Climate
-group.living_room_climate:
-  friendly_name: Living Room Climate
-group.room_living:
-  friendly_name: Living Room
-group.room_living_fireplace:
-  friendly_name: Living Room Fireplace
-group.room_master_bathroom:
-  friendly_name: Master Bathroom
-group.room_master_bedroom:
-  friendly_name: Master Bedroom
-group.outside_lights:
-  friendly_name: Outside Lights
-group.room_kitchen:
-  friendly_name: Kitchen
-group.climate_page:
-  friendly_name: Climate
-group.rooms_page:
-  friendly_name: Rooms
-group.media_short:
-  friendly_name: Harmony Remote
-group.media_full:
-  friendly_name: Media
-group.darksky_info:
-  friendly_name: Dark Sky Weather
-
 # input_booleans.yaml
 input_boolean.set_mode_sleeping:
   homebridge_visible: true
@@ -145,6 +114,20 @@ light.Kitchen_Island_Lights:
 light.Upstairs_Hall_Scone:
   friendly_name: Upstairs Hall Scone
   homebridge_name: Upstairs Hall Scone
+light.bar_cove_lights:
+  friendly_name: Bar Cove
+light.bar_sink_light:
+  friendly_name: Bar Sink
+light.bar_cabinets:
+  friendly_name: Bar Cabinet
+light.basement_sitting_area_can_lights:
+  friendly_name: Basement Lounge
+light.downstairs_hallway_hall_lights:
+  friendly_name: Basement Hall
+light.basement_game_area_main_lights:
+  friendly_name: Basement Desk
+light.stairs_main_lights:
+  friendly_name: Basement Stairs
 
 remote.living_room:
   friendly_name: Living Room Remote

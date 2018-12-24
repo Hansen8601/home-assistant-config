@@ -325,11 +325,14 @@
       - condition: template
         value_template: "{{states.climate.main_floor.attributes.away_mode == 'off'}}"
   action:
-    service: climate.set_away_mode
-    data:
-      entity_id: climate.main_floor
-      away_mode: 'on' 
-
+    - service: climate.set_away_mode
+      data:
+        entity_id: climate.main_floor
+        away_mode: 'on' 
+    - service: climate.set_away_mode
+      data:
+        entity_id: climate_basement
+        away_mode: 'on'
 
 - id: ecobee_mode_home
   alias: Ecobee Mode Home
@@ -345,11 +348,14 @@
       - condition: template
         value_template: "{{states.climate.main_floor.attributes.away_mode == 'on'}}"
   action:
-    service: climate.set_away_mode
-    data:
-      entity_id: climate.main_floor
-      away_mode: 'off' 
-
+    - service: climate.set_away_mode
+      data:
+        entity_id: climate.main_floor
+        away_mode: 'off' 
+    - service: climate.set_away_mode
+      data:
+        entity_id: climate.basement
+        away_mode: 'off'
 
 - id: ecobee_mode_home_from_sleep
   alias: Ecobee Mode Home from Sleep
@@ -368,11 +374,14 @@
       - condition: template
         value_template: "{{states.climate.main_floor.attributes.mode != 'Home'}}"
   action:
-    service: climate.set_hold_mode
-    data:
-      entity_id: climate.main_floor
-      hold_mode: 'home'
-
+    - service: climate.set_hold_mode
+      data:
+        entity_id: climate.main_floor
+        hold_mode: 'home'
+    - service: climate.set_hold_mode
+      data:
+        entity_id: climate.basement
+        hold_mode: 'home'  
 
 - id: ecobee_mode_sleep
   alias: Ecobee Mode Sleep Heat
@@ -390,10 +399,14 @@
       - condition: template
         value_template: "{{states.climate.main_floor.attributes.mode != 'Sleep'}}"
   action:
-    service: climate.set_hold_mode
-    data:
-      entity_id: climate.main_floor
-      hold_mode: 'sleep'
+    - service: climate.set_hold_mode
+      data:
+        entity_id: climate.main_floor
+        hold_mode: 'sleep'
+    - service: climate.set_hold_mode
+      data:
+        entity_id: climate.basement
+        hold_mode: 'sleep'
 
 
 ############################
@@ -827,11 +840,31 @@
       - condition: template  
         value_template: "{{ states.input_select.automation_mode.state != 'No Automation'}}"
   action:
-    - service: script.lights_all_off
+    - service: script.lights_upstairs_off
     - service: script.log_lux_levels
       data:
         log_name: "lights_auto_off"
 
+- id: basement_lights_off_from_mode
+  alias: basement_lights_off_from_mode
+  trigger:
+    - platform: state
+      entity_id: input_select.automation_mode
+      to: 'Sleeping'
+    - platform: state
+      entity_id: input_select.automation_mode
+      to: 'Away'
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: input_boolean.lux_light_control
+        state: 'on'
+      - condition: template  
+        value_template: "{{ states.input_select.automation_mode.state != 'No Automation'}}"
+  action:
+    - service: scene.turn_on
+      entity_id: scene.basement_lights_off
 
 - id: ambiience_lights_on
   alias: Ambience Lights - on
@@ -863,6 +896,10 @@
       data:
         entity_id: light.upstairs_hall_scone
         brightness: 50
+    - service: light.turn_on
+      data:
+        entity_id: light.stairs_main_lights
+        brightness: 50
 
 
 # Master Bath Lights
@@ -876,6 +913,17 @@
     service: light.turn_on
     data:
       entity_id: light.master_bathroom_shower
+
+
+- id: basement_lights_mode_from_tv
+  alias: basement_lights_mode_from_tv
+  trigger:
+    - platform: state
+      entity_id: media_player.samsung_tv_remote
+      to: 'on'
+  action:
+    - service: scene.turn_on
+      entity_id: scene.movie_lighting
 
 
 ############################
@@ -980,6 +1028,8 @@
     entity_id: input_number.denon_deck_volume
   action:
     service: rest_command.denon_deck_volume_set
+
+
 
 ############################
 #                          #
