@@ -1,0 +1,5 @@
+sensor.fireplace_switch: {}
+light.basement_sitting_area_table_lamp:
+  friendly_name: Basement Lounge Lamp
+light.bar_bar_pendants:
+  friendly_name: Bar Pendants

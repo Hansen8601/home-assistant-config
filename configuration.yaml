@@ -675,16 +675,18 @@ sensor:
   value_template: '{{ value_json | float }}'
 
 - platform: mqtt
-  state_topic: 'smarthings/MultiSensor 6 Kitchen/battery'
+  state_topic: 'smartthings/MultiSensor 6 Kitchen/battery'
   name: 'kitchen_multisensor_battery'
   unit_of_measurement: "%"
   value_template: '{{ value_json | float }}'
 
 - platform: mqtt
-  state_topic: 'smarthings/Basement Motion Sensor/motion'
+  state_topic: 'smartthings/Basement Motion Sensor/motion'
   name: 'basement_motion'
-  unit_of_measurement: "%"
-  value_template: '{{ value_json | float }}'
+  value_template: '{{ value_json }}'
+  payload_on: 'active'
+  payload_off: 'inactive'
+  retain: true
 
 - platform: template
   sensors:

@@ -1,1 +1,126 @@
-sensor.fireplace_switch: {}
+binary_sensor.main_floor_occupancy:
+  friendly_name: Main Floor Occupancy
+cover.dennon:
+  friendly_name: TV Volume
+  entity_picture: mdi:monitor
+cover.dennon_deck:
+  friendly_name: Deck Volume
+  entity_picture: mdi:radio
+cover.garage_right:
+  friendly_name: Garage Main
+  icon: mdi:garage
+  homebridge_visible: true
+  homebridge_name: Garage Main
+  homebridge_cover_type: garage_door
+cover.garage_left:
+  friendly_name: Garage Shop
+  icon: mdi:garage
+  homebridge_visible: true
+  homebridge_name: Garage Shop
+  homebridge_cover_type: garage_door
+device_tracker.phil:
+  friendly_name: Phil
+device_tracker.nikki:
+  friendly_name: Nikki
+input_boolean.set_mode_sleeping:
+  homebridge_visible: true
+  homebridge_name: Set Sleep
+input_boolean.set_mode_home:
+  homebridge_visible: true
+  homebridge_name: Set Home
+input_boolean.set_mode_away:
+  homebridge_visible: true
+  homebridge_name: Set Away
+input_boolean.presence_homekit:
+  homebridge_visible: true
+  homebridge_name: Presence for HASS
+  icon: mdi:home-map-marker
+  friendly_name: Homekit Presence
+input_number.denon_deck_volume:
+  friendly_name: Deck Volume
+input_number.denon_volume:
+  friendly_name: Main Volume
+media_player.denon_avrx3000:
+  friendy_name: Denon AVR
+sensor.living_room_humidity:
+  friendly_name: Living Room Humidity
+sensor.living_room_temperature:
+  friendly_name: Living Room Temperature
+sensor.living_room_lux:
+  friendly_name: Living Room LUX
+sensor.kitchen_multisensor_humidity:
+  friendly_name: Kitchen Humidity
+sensor.kitchen_multisensor_temperature:
+  friendly_name: Kitchen Temperature
+sensor.kitchen_multisensor_lux:
+  friendly_name: Kitchen LUX
+sensor.dark_sky_cloud_coverage:
+  friendly_name: Dark sky cloud coverage
+sensor.dark_sky_temperature:
+  friendly_name: Dark sky temperature
+sensor.garage_service_door:
+  friendly_name: Garage Service Door
+  homebridge_name: Garage Service Door
+  icon: mdi:glassdoor
+sensor.living_room_av_temperature:
+  friendly_name: Living Room AV Temperature
+sensor.living_room_av_humidity:
+  friendly_name: Living Room AV Humidity
+light.Entry_Walkway_Dimmer_Switch:
+  friendly_name: Outside Lamp Post
+  homebridge_name: Outside Lamp Post
+light.Garage_Outside_Lights:
+  friendly_name: Outside Garage Lights
+  homebridge_name: Outside Garage Lights
+light.guest_bathroom_lights:
+  friendly_name: Guest Bathroom Lights
+light.ge_living_room_1:
+  friendly_name: Living Room Credenza1
+  homebridge_name: Living Room Credenza1
+light.GE_Living_Room_2:
+  friendly_name: Living Room Credenza2
+  homebridge_name: Living Room Credenza2
+light.GE_Living_Room_3:
+  friendly_name: Living Room End Table
+  homebridge_name: Living Room End Table
+light.master_bathroom_chandelier:
+  friendly_name: Master Bath Chandelier
+  homebridge_name: Master Bath Chandelier
+light.master_bathroom_shower:
+  friendly_name: Master Bath Shower
+light.master_bathroom_dimmer:
+  friendly_name: Master Bath Dimmer
+light.Kitchen_Cabinet_Lights:
+  friendly_name: Kitchen Cabinet Lights
+  homebridge_name: Kitchen Cabinet Lights
+light.Kitchen_Island_Lights:
+  friendly_name: Kitchen Island Lights
+  homebridge_name: Kitchen Island Lights
+light.Upstairs_Hall_Scone:
+  friendly_name: Upstairs Hall Scone
+  homebridge_name: Upstairs Hall Scone
+light.bar_cove_lights:
+  friendly_name: Bar Cove
+light.bar_sink_light:
+  friendly_name: Bar Sink
+light.bar_cabinets:
+  friendly_name: Bar Cabinet
+light.basement_sitting_area_can_lights:
+  friendly_name: Basement Lounge
+light.downstairs_hallway_hall_lights:
+  friendly_name: Basement Hall
+light.basement_game_area_main_lights:
+  friendly_name: Basement Desk
+light.stairs_main_lights:
+  friendly_name: Basement Stairs
+remote.living_room:
+  friendly_name: Living Room Remote
+switch.fireplace:
+  friendly_name: Fireplace
+  icon: mdi:fire
+switch.guest_bathroom_fan:
+  friendly_name: Guest Bathroom Fan
+light.bar_bar_pendants:
+  friendly_name: Bar Pendant Lights
+light.basement_exercise_area_main_lights:
+  friendly_name: Basement Exercise Room Lights
