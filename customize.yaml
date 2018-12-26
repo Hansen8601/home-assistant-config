@@ -106,7 +106,7 @@ light.bar_sink_light:
 light.bar_cabinets:
   friendly_name: Bar Cabinet
 light.basement_sitting_area_can_lights:
-  friendly_name: Basement Lounge
+  friendly_name: Basement Lounge Can Lights
 light.downstairs_hallway_hall_lights:
   friendly_name: Basement Hall
 light.basement_game_area_main_lights:
@@ -124,3 +124,7 @@ light.bar_bar_pendants:
   friendly_name: Bar Pendant Lights
 light.basement_exercise_area_main_lights:
   friendly_name: Basement Exercise Room Lights
+light.basement_sitting_area_table_lamp:
+  friendly_name: Basement Lounge Lamp
+sensor.basement_motion:
+  friendly_name: Basement Stairs Motion

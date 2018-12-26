@@ -965,6 +965,23 @@
       entity_id: scene.movie_lighting
 
 
+# Basement stairs motion on
+- id: basement_stairs_motion_on
+  alias: basement stairs motion on
+  trigger:
+    platform: state
+    entity_id: binary_sensor.basement_motion
+    to: 'on'
+  condition:
+    condition: state
+    entity_id: light.stairs_main_lights
+    state: 'off'
+  action:
+    service: light.turn_on
+    data:
+      entity_id: light.stairs_main_lights
+
+
 ############################
 #                          #
 #    Lights - Outside      #
