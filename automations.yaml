@@ -409,6 +409,45 @@
         hold_mode: 'sleep'
 
 
+- id: ecobee_basement_exercise_hold_on
+  alias: Ecobee Basement Exercise Hold
+  trigger:
+    platform: state
+    entity_id: light.basement_exercise_area_main_lights
+    to: 'on'
+  condition:
+    condition: and
+    conditions:
+      - condition: template
+        value_template: "{{states.input_select.automation_mode.state != 'No Automation'}}"
+      - condition: template
+        value_template: "{{states.climate.basement.attributes.operation_mode == 'heat' or states.climate.basement.attributes.operation_mode == 'cool'}}"
+  action:
+    - service: climate.set_hold_mode
+      data:
+        entity_id: climate.basement
+        hold_mode: 'sleep'
+
+- id: ecobee_basement_exercise_hold_off
+  alias: Ecobee Basement Exercise Hold
+  trigger:
+    platform: state
+    entity_id: light.basement_exercise_area_main_lights
+    to: 'off'
+  condition:
+    condition: and
+    conditions:
+      - condition: template
+        value_template: "{{states.input_select.automation_mode.state != 'No Automation'}}"
+      - condition: template
+        value_template: "{{states.climate.basement.attributes.operation_mode == 'heat' or states.climate.basement.attributes.operation_mode == 'cool'}}"
+  action:
+    - service: climate.set_hold_mode
+      data:
+        entity_id: climate.basement
+        hold_mode: 'home'
+
+
 ############################
 #                          #
 #   Fans                   #
