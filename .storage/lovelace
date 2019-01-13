@@ -1,0 +1,1700 @@
+{
+    "data": {
+        "config": {
+            "resources": [
+                {
+                    "type": "js",
+                    "url": "/local/entity-attributes-card.js?v=2"
+                },
+                {
+                    "type": "module",
+                    "url": "/local/mini-media-player-bundle.js?v=0.9.4"
+                }
+            ],
+            "title": "Home",
+            "views": [
+                {
+                    "cards": [
+                        {
+                            "cards": [
+                                {
+                                    "entities": [
+                                        "input_select.automation_mode"
+                                    ],
+                                    "type": "glance"
+                                },
+                                {
+                                    "card": {
+                                        "entity": "input_select.automation_mode",
+                                        "hold_action": {
+                                            "action": "none"
+                                        },
+                                        "icon": "mdi:home",
+                                        "name": "Set Home",
+                                        "tap_action": {
+                                            "action": "call-service",
+                                            "service": "input_select.select_option",
+                                            "service_data": {
+                                                "entity_id": "input_select.automation_mode",
+                                                "option": "Home"
+                                            }
+                                        },
+                                        "type": "entity-button"
+                                    },
+                                    "conditions": [
+                                        {
+                                            "entity": "input_select.automation_mode",
+                                            "state": "Sleeping"
+                                        }
+                                    ],
+                                    "type": "conditional"
+                                },
+                                {
+                                    "card": {
+                                        "entity": "input_select.automation_mode",
+                                        "hold_action": {
+                                            "action": "none"
+                                        },
+                                        "icon": "mdi:home-outline",
+                                        "name": "Set Away",
+                                        "tap_action": {
+                                            "action": "call-service",
+                                            "service": "input_select.select_option",
+                                            "service_data": {
+                                                "entity_id": "input_select.automation_mode",
+                                                "option": "Away"
+                                            }
+                                        },
+                                        "type": "entity-button"
+                                    },
+                                    "conditions": [
+                                        {
+                                            "entity": "input_select.automation_mode",
+                                            "state": "Home"
+                                        }
+                                    ],
+                                    "type": "conditional"
+                                },
+                                {
+                                    "card": {
+                                        "entity": "input_select.automation_mode",
+                                        "hold_action": {
+                                            "action": "none"
+                                        },
+                                        "icon": "mdi:power-sleep",
+                                        "name": "Set Sleeping",
+                                        "tap_action": {
+                                            "action": "call-service",
+                                            "service": "input_select.select_option",
+                                            "service_data": {
+                                                "entity_id": "input_select.automation_mode",
+                                                "option": "Sleeping"
+                                            }
+                                        },
+                                        "type": "entity-button"
+                                    },
+                                    "conditions": [
+                                        {
+                                            "entity": "input_select.automation_mode",
+                                            "state": "Home"
+                                        }
+                                    ],
+                                    "type": "conditional"
+                                },
+                                {
+                                    "card": {
+                                        "entity": "input_select.automation_mode",
+                                        "hold_action": {
+                                            "action": "none"
+                                        },
+                                        "icon": "mdi:home",
+                                        "name": "Set Home",
+                                        "tap_action": {
+                                            "action": "call-service",
+                                            "service": "input_select.select_option",
+                                            "service_data": {
+                                                "entity_id": "input_select.automation_mode",
+                                                "option": "Home"
+                                            }
+                                        },
+                                        "type": "entity-button"
+                                    },
+                                    "conditions": [
+                                        {
+                                            "entity": "input_select.automation_mode",
+                                            "state": "Away"
+                                        }
+                                    ],
+                                    "type": "conditional"
+                                }
+                            ],
+                            "type": "vertical-stack"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "group.room_living",
+                                    "name": "Living Room Lights"
+                                },
+                                {
+                                    "entity": "light.kitchen_island_lights",
+                                    "name": "Kitchen Island Light"
+                                }
+                            ],
+                            "show_header_toggle": true,
+                            "title": "Lights",
+                            "type": "entities"
+                        },
+                        {
+                            "cards": [
+                                {
+                                    "card": [
+                                        {
+                                            "entity": "input_select.automation_mode",
+                                            "hold_action": {
+                                                "action": "none"
+                                            },
+                                            "icon": "mdi:home",
+                                            "name": "Home",
+                                            "tap_action": {
+                                                "action": "call-service",
+                                                "service": "input_select.select_option",
+                                                "service_data": {
+                                                    "entity_id": "input_select.automation_mode",
+                                                    "option": "Home"
+                                                }
+                                            },
+                                            "type": "entity-button"
+                                        }
+                                    ],
+                                    "conditions": [
+                                        {
+                                            "entity": "input.select.automation_mode",
+                                            "state": "Home"
+                                        }
+                                    ],
+                                    "type": "conditional"
+                                }
+                            ],
+                            "type": "vertical-stack"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "scene.movie_lighting"
+                                },
+                                {
+                                    "entity": "scene.entertaining"
+                                },
+                                {
+                                    "entity": "scene.bar_time"
+                                },
+                                {
+                                    "entity": "scene.basement_lights_off"
+                                }
+                            ],
+                            "show_header_toggle": false,
+                            "title": "Basement Scenes",
+                            "type": "entities"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "input_number.denon_volume",
+                                    "name": "Living Room"
+                                },
+                                {
+                                    "entity": "input_number.denon_deck_volume",
+                                    "name": "Deck"
+                                }
+                            ],
+                            "show_header_toggle": true,
+                            "title": "Volume",
+                            "type": "entities"
+                        }
+                    ],
+                    "id": "summary",
+                    "title": "Summary"
+                },
+                {
+                    "cards": [
+                        {
+                            "elements": [
+                                {
+                                    "entity": "light.kitchen_island_lights",
+                                    "style": {
+                                        "left": "39%",
+                                        "top": "38%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.kitchen_cabinet_lights",
+                                    "style": {
+                                        "left": "39%",
+                                        "top": "48%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.ge_living_room_1",
+                                    "style": {
+                                        "left": "61%",
+                                        "top": "35%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.ge_living_room_2",
+                                    "style": {
+                                        "left": "61%",
+                                        "top": "28%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.ge_living_room_3",
+                                    "style": {
+                                        "left": "58%",
+                                        "top": "19%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "fan.living_room_fan",
+                                    "style": {
+                                        "left": "50%",
+                                        "top": "30%"
+                                    },
+                                    "tap_action": {
+                                        "action": "more-info"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.guest_bathroom_lights",
+                                    "style": {
+                                        "left": "70%",
+                                        "top": "40%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "switch.guest_bathroom_fan",
+                                    "style": {
+                                        "left": "74%",
+                                        "top": "40%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "fan.master_bedroom_fan",
+                                    "style": {
+                                        "left": "70%",
+                                        "top": "27%"
+                                    },
+                                    "tap_action": {
+                                        "action": "more-info"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.master_bathroom_dimmer",
+                                    "style": {
+                                        "left": "78.5%",
+                                        "top": "30%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "switch.master_bathroom_fan",
+                                    "style": {
+                                        "left": "84%",
+                                        "top": "30%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.master_bathroom_shower",
+                                    "style": {
+                                        "left": "86%",
+                                        "top": "30%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.master_bathroom_chandelier",
+                                    "style": {
+                                        "left": "81%",
+                                        "top": "34%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.upstairs_hall_scone",
+                                    "style": {
+                                        "left": "70%",
+                                        "top": "48%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.entry_walkway_dimmer_switch",
+                                    "style": {
+                                        "left": "57%",
+                                        "top": "55%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.garage_outside_lights",
+                                    "style": {
+                                        "left": "51.5%",
+                                        "top": "95%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.garage_outside_lights",
+                                    "style": {
+                                        "left": "30%",
+                                        "top": "95%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.garage_outside_lights",
+                                    "style": {
+                                        "left": "26.5%",
+                                        "top": "92%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.garage_outside_lights",
+                                    "style": {
+                                        "left": "10.5%",
+                                        "top": "92%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "switch.fireplace",
+                                    "style": {
+                                        "left": "50%",
+                                        "top": "18.5%"
+                                    },
+                                    "tap_action": {
+                                        "action": "more-info"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "script.harmony_power_off",
+                                    "icon": "mdi:power",
+                                    "style": {
+                                        "left": "46%",
+                                        "top": "24%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "icon"
+                                },
+                                {
+                                    "entity": "script.harmony_music_cable",
+                                    "icon": "mdi:music",
+                                    "style": {
+                                        "left": "49%",
+                                        "top": "24%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "icon"
+                                },
+                                {
+                                    "entity": "script.harmony_watch_tv",
+                                    "icon": "mdi:television-classic",
+                                    "style": {
+                                        "left": "52%",
+                                        "top": "24%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "icon"
+                                },
+                                {
+                                    "entity": "script.harmony_apple_tv",
+                                    "icon": "mdi:apple",
+                                    "style": {
+                                        "left": "55%",
+                                        "top": "24%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "icon"
+                                },
+                                {
+                                    "entity": "script.harmony_music_cable_deck",
+                                    "icon": "mdi:music",
+                                    "style": {
+                                        "left": "36%",
+                                        "top": "11%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "icon"
+                                },
+                                {
+                                    "entity": "script.harmony_apple_tv_deck",
+                                    "icon": "mdi:apple",
+                                    "style": {
+                                        "left": "40%",
+                                        "top": "11%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "icon"
+                                },
+                                {
+                                    "entity": "cover.garage_left",
+                                    "style": {
+                                        "left": "19%",
+                                        "top": "78%"
+                                    },
+                                    "type": "state-badge"
+                                },
+                                {
+                                    "entity": "cover.garage_right",
+                                    "style": {
+                                        "left": "41%",
+                                        "top": "78%"
+                                    },
+                                    "type": "state-badge"
+                                },
+                                {
+                                    "entity": "sensor.garage_service_door",
+                                    "style": {
+                                        "left": "26%",
+                                        "top": "47%"
+                                    },
+                                    "type": "state-badge"
+                                }
+                            ],
+                            "image": "/local/home-ground-floor.png",
+                            "type": "picture-elements"
+                        }
+                    ],
+                    "icon": "mdi:home-outline",
+                    "id": "plan",
+                    "panel": true,
+                    "title": "Home"
+                },
+                {
+                    "badges": [],
+                    "cards": [
+                        {
+                            "elements": [
+                                {
+                                    "entity": "light.bar_cove_lights",
+                                    "hold_action": "more-info",
+                                    "style": {
+                                        "left": "36%",
+                                        "top": "29%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.bar_cove_lights",
+                                    "hold_action": {
+                                        "action": "more-info"
+                                    },
+                                    "style": {
+                                        "left": "41%",
+                                        "top": "29%"
+                                    },
+                                    "tap_action": "toggle",
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.bar_cabinets",
+                                    "style": {
+                                        "left": "43%",
+                                        "top": "34%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.bar_sink_light",
+                                    "style": {
+                                        "left": "43%",
+                                        "top": "38%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.bar_cabinets",
+                                    "style": {
+                                        "left": "43%",
+                                        "top": "42%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.bar_bar_pendants",
+                                    "style": {
+                                        "left": "40%",
+                                        "top": "36%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.bar_bar_pendants",
+                                    "style": {
+                                        "left": "40%",
+                                        "top": "40%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.basement_sitting_area_can_lights",
+                                    "style": {
+                                        "left": "25%",
+                                        "top": "52%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.basement_sitting_area_can_lights",
+                                    "style": {
+                                        "left": "31%",
+                                        "top": "52%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.basement_sitting_area_can_lights",
+                                    "style": {
+                                        "left": "25%",
+                                        "top": "40%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.basement_sitting_area_can_lights",
+                                    "style": {
+                                        "left": "31%",
+                                        "top": "40%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.basement_sitting_area_table_lamp",
+                                    "style": {
+                                        "left": "30%",
+                                        "top": "45%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.downstairs_hallway_hall_lights",
+                                    "style": {
+                                        "left": "55%",
+                                        "top": "50%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.downstairs_hallway_hall_lights",
+                                    "style": {
+                                        "left": "60%",
+                                        "top": "50%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.downstairs_hallway_hall_lights",
+                                    "style": {
+                                        "left": "65%",
+                                        "top": "50%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.stairs_main_lights",
+                                    "style": {
+                                        "left": "69%",
+                                        "top": "41%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.basement_game_area_main_lights",
+                                    "style": {
+                                        "left": "42%",
+                                        "top": "70%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.basement_exercise_area_main_lights",
+                                    "style": {
+                                        "left": "30%",
+                                        "top": "70%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                }
+                            ],
+                            "image": "/local/home-basement.png",
+                            "type": "picture-elements"
+                        }
+                    ],
+                    "icon": "mdi:home-outline",
+                    "id": "plan2",
+                    "panel": true,
+                    "title": "Basement"
+                },
+                {
+                    "cards": [
+                        {
+                            "cards": [
+                                {
+                                    "entities": [
+                                        {
+                                            "entity": "input_number.denon_volume",
+                                            "name": "Living Room"
+                                        },
+                                        {
+                                            "entity": "input_number.denon_deck_volume",
+                                            "name": "Deck"
+                                        },
+                                        {
+                                            "entity": "input_select.living_room_remote"
+                                        }
+                                    ],
+                                    "show_header_toggle": true,
+                                    "title": "Volume / Activity",
+                                    "type": "entities"
+                                },
+                                {
+                                    "column_width": "calc(100% / 4)",
+                                    "entities": [
+                                        {
+                                            "entity": "script.harmony_power_off",
+                                            "icon": "mdi:power",
+                                            "name": "Power",
+                                            "tap_action": {
+                                                "action": "toggle"
+                                            }
+                                        },
+                                        {
+                                            "entity": "script.harmony_music_cable",
+                                            "icon": "mdi:music",
+                                            "name": "Music Choice",
+                                            "tap_action": {
+                                                "action": "toggle"
+                                            }
+                                        },
+                                        {
+                                            "entity": "script.harmony_watch_tv",
+                                            "icon": "mdi:television-classic",
+                                            "name": "Cable",
+                                            "tap_action": {
+                                                "action": "toggle"
+                                            }
+                                        },
+                                        {
+                                            "entity": "script.harmony_apple_tv",
+                                            "icon": "mdi:apple",
+                                            "name": "Apple TV",
+                                            "tap_action": {
+                                                "action": "toggle"
+                                            }
+                                        }
+                                    ],
+                                    "show_state": false,
+                                    "title": "Living Room Activity",
+                                    "type": "glance"
+                                },
+                                {
+                                    "column_width": "calc(100% / 4)",
+                                    "entities": [
+                                        {
+                                            "entity": "script.harmony_power_off",
+                                            "icon": "mdi:power",
+                                            "name": "Power",
+                                            "tap_action": {
+                                                "action": "toggle"
+                                            }
+                                        },
+                                        {
+                                            "entity": "script.harmony_music_cable_deck",
+                                            "icon": "mdi:music",
+                                            "name": "Music Choice",
+                                            "tap_action": {
+                                                "action": "toggle"
+                                            }
+                                        },
+                                        {
+                                            "entity": "script.harmony_apple_tv_deck",
+                                            "icon": "mdi:apple",
+                                            "name": "Apple TV",
+                                            "tap_action": {
+                                                "action": "toggle"
+                                            }
+                                        }
+                                    ],
+                                    "show_state": false,
+                                    "title": "Deck Activity",
+                                    "type": "glance"
+                                },
+                                {
+                                    "entities": [
+                                        {
+                                            "action_name": "901",
+                                            "icon": "mdi:music",
+                                            "name": "Hit List",
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": [
+                                                    "9",
+                                                    "0",
+                                                    "1"
+                                                ],
+                                                "device": 35717540,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "type": "call-service"
+                                        },
+                                        {
+                                            "action_name": "920",
+                                            "icon": "mdi:music",
+                                            "name": "Classic Rock Hits",
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": [
+                                                    "9",
+                                                    "2",
+                                                    "0"
+                                                ],
+                                                "device": 35717540,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "type": "call-service"
+                                        },
+                                        {
+                                            "action_name": "921",
+                                            "icon": "mdi:music",
+                                            "name": "Soft Rock",
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": [
+                                                    "9",
+                                                    "2",
+                                                    "1"
+                                                ],
+                                                "device": 35717540,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "type": "call-service"
+                                        },
+                                        {
+                                            "action_name": "932",
+                                            "icon": "mdi:music",
+                                            "name": "Pop & Country",
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": [
+                                                    "9",
+                                                    "3",
+                                                    "2"
+                                                ],
+                                                "device": 35717540,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "type": "call-service"
+                                        },
+                                        {
+                                            "action_name": "933",
+                                            "icon": "mdi:music",
+                                            "name": "Today's Country",
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": [
+                                                    "9",
+                                                    "3",
+                                                    "3"
+                                                ],
+                                                "device": 35717540,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "type": "call-service"
+                                        },
+                                        {
+                                            "action_name": "934",
+                                            "icon": "mdi:music",
+                                            "name": "Country Hits",
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": [
+                                                    "9",
+                                                    "3",
+                                                    "4"
+                                                ],
+                                                "device": 35717540,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "type": "call-service"
+                                        },
+                                        {
+                                            "action_name": "943",
+                                            "icon": "mdi:music",
+                                            "name": "Smooth Jazz",
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": [
+                                                    "9",
+                                                    "4",
+                                                    "3"
+                                                ],
+                                                "device": 35717540,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "type": "call-service"
+                                        }
+                                    ],
+                                    "type": "entities"
+                                }
+                            ],
+                            "type": "vertical-stack"
+                        },
+                        {
+                            "cards": [
+                                {
+                                    "elements": [
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "0",
+                                                "device": 35717540,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "style": {
+                                                "left": "16%",
+                                                "top": "25%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "1",
+                                                "device": 35717540,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "style": {
+                                                "left": "35%",
+                                                "top": "25%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "2",
+                                                "device": 35717540,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "style": {
+                                                "left": "54%",
+                                                "top": "25%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "3",
+                                                "device": 35717540,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "style": {
+                                                "left": "72%",
+                                                "top": "25%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "4",
+                                                "device": 35717540,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "style": {
+                                                "left": "91%",
+                                                "top": "25%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "5",
+                                                "device": 35717540,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "style": {
+                                                "left": "16%",
+                                                "top": "75%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "6",
+                                                "device": 35717540,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "style": {
+                                                "left": "35%",
+                                                "top": "75%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "7",
+                                                "device": 35717540,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "style": {
+                                                "left": "54%",
+                                                "top": "75%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "8",
+                                                "device": 35717540,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "style": {
+                                                "left": "72%",
+                                                "top": "75%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "9",
+                                                "device": 35717540,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "style": {
+                                                "left": "91%",
+                                                "top": "75%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        }
+                                    ],
+                                    "image": "/local/remote-numbers.png",
+                                    "type": "picture-elements"
+                                },
+                                {
+                                    "elements": [
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "up",
+                                                "entity_id": "remote.apple_tv"
+                                            },
+                                            "style": {
+                                                "left": "42%",
+                                                "top": "23%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "down",
+                                                "entity_id": "remote.apple_tv"
+                                            },
+                                            "style": {
+                                                "left": "42%",
+                                                "top": "80%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "left",
+                                                "entity_id": "remote.apple_tv"
+                                            },
+                                            "style": {
+                                                "left": "20%",
+                                                "top": "50%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "right",
+                                                "entity_id": "remote.apple_tv"
+                                            },
+                                            "style": {
+                                                "left": "65%",
+                                                "top": "50%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "menu",
+                                                "entity_id": "remote.apple_tv"
+                                            },
+                                            "style": {
+                                                "left": "90%",
+                                                "top": "85%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "select",
+                                                "entity_id": "remote.apple_tv"
+                                            },
+                                            "style": {
+                                                "left": "40%",
+                                                "top": "50%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        }
+                                    ],
+                                    "image": "/local/apple-remote.png",
+                                    "type": "picture-elements"
+                                }
+                            ],
+                            "type": "vertical-stack"
+                        },
+                        {
+                            "card": {
+                                "entities": [
+                                    "script.denon_deck_volume_50",
+                                    "script.denon_deck_volume_55",
+                                    "script.denon_deck_volume_60"
+                                ],
+                                "show_header_toggle": false,
+                                "title": "Living Room Receiver",
+                                "type": "entities"
+                            },
+                            "conditions": [
+                                {
+                                    "entity": "input_select.living_room_remote",
+                                    "state": "Apple TV - Deck"
+                                },
+                                {
+                                    "entity": "input_select.living_room_remote",
+                                    "state": "Music - cable -deck"
+                                }
+                            ],
+                            "type": "conditional"
+                        },
+                        {
+                            "cards": [
+                                {
+                                    "entity": "media_player.apple_tv",
+                                    "type": "media-control"
+                                },
+                                {
+                                    "entity": "media_player.basement",
+                                    "type": "media-control"
+                                },
+                                {
+                                    "entity": "media_player.apple_tv_workout_room_3",
+                                    "type": "media-control"
+                                },
+                                {
+                                    "entity": "media_player.samsung_tv_remote",
+                                    "type": "media-control"
+                                },
+                                {
+                                    "entity": "media_player.denon_avrx3000",
+                                    "type": "media-control"
+                                }
+                            ],
+                            "type": "vertical-stack"
+                        },
+                        {
+                            "entity": "media_player.samsung_tv_remote",
+                            "type": "media-control"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "sensor.plex"
+                                }
+                            ],
+                            "show_header_toggle": false,
+                            "title": "Plex",
+                            "type": "entities"
+                        }
+                    ],
+                    "icon": "mdi:audio-video",
+                    "title": "Audio-video"
+                },
+                {
+                    "cards": [
+                        {
+                            "entities": [
+                                "light.kitchen_cabinet_lights",
+                                "light.kitchen_island_lights",
+                                "sensor.kitchen_multisensor_lux"
+                            ],
+                            "show_header_toggle": true,
+                            "title": "Kitchen",
+                            "type": "entities"
+                        },
+                        {
+                            "entities": [
+                                "light.ge_living_room_1",
+                                "light.ge_living_room_2",
+                                "light.ge_living_room_3",
+                                "fan.living_room_fan",
+                                "sensor.living_room_lux",
+                                "switch.fireplace"
+                            ],
+                            "show_header_toggle": false,
+                            "title": "Living Room",
+                            "type": "entities"
+                        },
+                        {
+                            "entities": [
+                                "fan.master_bedroom_fan"
+                            ],
+                            "show_header_toggle": true,
+                            "title": "Master Bedroom",
+                            "type": "entities"
+                        },
+                        {
+                            "entities": [
+                                "light.master_bathroom_chandelier",
+                                "light.master_bathroom_dimmer",
+                                "light.master_bathroom_shower",
+                                "switch.master_bathroom_fan"
+                            ],
+                            "show_header_toggle": true,
+                            "title": "Master Bathroom",
+                            "type": "entities"
+                        },
+                        {
+                            "entities": [
+                                "light.guest_bathroom_lights",
+                                "switch.guest_bathroom_fan"
+                            ],
+                            "show_header_toggle": true,
+                            "title": "Guest Bathroom",
+                            "type": "entities"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "light.bar_cove_lights"
+                                },
+                                {
+                                    "entity": "light.bar_sink_light"
+                                },
+                                {
+                                    "entity": "light.bar_cabinets"
+                                },
+                                {
+                                    "entity": "light.bar_bar_pendants"
+                                },
+                                {
+                                    "entity": "light.basement_sitting_area_can_lights"
+                                },
+                                {
+                                    "entity": "light.basement_sitting_area_table_lamp"
+                                },
+                                {
+                                    "entity": "light.stairs_main_lights"
+                                },
+                                {
+                                    "entity": "light.downstairs_hallway_hall_lights"
+                                },
+                                {
+                                    "entity": "light.basement_exercise_area_main_lights"
+                                },
+                                {
+                                    "entity": "light.basement_game_area_main_lights"
+                                },
+                                {
+                                    "entity": "binary_sensor.stairs_motion"
+                                }
+                            ],
+                            "show_header_toggle": true,
+                            "title": "Basement",
+                            "type": "entities"
+                        },
+                        {
+                            "entities": [
+                                "light.entry_walkway_dimmer_switch",
+                                "light.garage_outside_lights"
+                            ],
+                            "show_header_toggle": true,
+                            "title": "Outside Lights",
+                            "type": "entities"
+                        },
+                        {
+                            "entities": [
+                                "light.upstairs_hall_scone"
+                            ],
+                            "show_header_toggle": false,
+                            "title": "Other Rooms",
+                            "type": "entities"
+                        },
+                        {
+                            "entities": [
+                                "cover.garage_left",
+                                "cover.garage_right",
+                                "sensor.garage_service_door"
+                            ],
+                            "show_header_toggle": true,
+                            "title": "Garage",
+                            "type": "entities"
+                        }
+                    ],
+                    "title": "Rooms"
+                },
+                {
+                    "cards": [
+                        {
+                            "cards": [
+                                {
+                                    "camera_image": "camera.front_door",
+                                    "entity": "camera.front_door",
+                                    "show_info": true,
+                                    "tap_action": {
+                                        "action": "dialog"
+                                    },
+                                    "title": "Front Door",
+                                    "type": "picture-entity"
+                                },
+                                {
+                                    "camera_image": "camera.driveway",
+                                    "entity": "camera.driveway",
+                                    "show_info": true,
+                                    "tap_action": {
+                                        "action": "dialog"
+                                    },
+                                    "title": "Driveway",
+                                    "type": "picture-entity"
+                                }
+                            ],
+                            "type": "vertical-stack"
+                        }
+                    ],
+                    "title": "Cameras"
+                },
+                {
+                    "cards": [
+                        {
+                            "cards": [
+                                {
+                                    "type": "iframe",
+                                    "url": "https://embed.windy.com/embed2.html"
+                                },
+                                {
+                                    "entities": [
+                                        "sensor.dark_sky_temperature",
+                                        "sensor.dark_sky_cloud_coverage",
+                                        "sensor.dark_sky_wind_speed",
+                                        "sensor.dark_sky_wind_bearing",
+                                        "sun.sun"
+                                    ],
+                                    "show_header_toggle": true,
+                                    "title": "Dark Sky Weather",
+                                    "type": "entities"
+                                }
+                            ],
+                            "type": "vertical-stack"
+                        },
+                        {
+                            "cards": [
+                                {
+                                    "entities": [
+                                        "binary_sensor.main_floor_occupancy",
+                                        "climate.main_floor",
+                                        "sensor.main_floor_temperature",
+                                        "sensor.main_floor_humidity"
+                                    ],
+                                    "show_header_toggle": true,
+                                    "title": "Main Floor Climate",
+                                    "type": "entities"
+                                },
+                                {
+                                    "entities": [
+                                        "binary_sensor.basement_occupancy",
+                                        "climate.basement",
+                                        "sensor.basement_temperature",
+                                        "sensor.basement_humidity"
+                                    ],
+                                    "show_header_toggle": true,
+                                    "title": "Basement Climate",
+                                    "type": "entities"
+                                },
+                                {
+                                    "entities": [
+                                        "sensor.living_room_temperature",
+                                        "sensor.living_room_humidity",
+                                        "sensor.living_room_lux",
+                                        "sensor.kitchen_multisensor_temperature",
+                                        "sensor.kitchen_multisensor_humidity",
+                                        "sensor.kitchen_multisensor_lux",
+                                        "switch.fireplace"
+                                    ],
+                                    "show_header_toggle": true,
+                                    "title": "Living Room Climate",
+                                    "type": "entities"
+                                }
+                            ],
+                            "type": "vertical-stack"
+                        }
+                    ],
+                    "title": "Climate"
+                },
+                {
+                    "cards": [
+                        {
+                            "cards": [
+                                {
+                                    "entities": [
+                                        {
+                                            "entity": "input_boolean.device_tracker_phil_home",
+                                            "name": "Combined Device Trackers for Phil",
+                                            "secondary_info": "last-changed"
+                                        },
+                                        {
+                                            "entity": "device_tracker.phil_smartthings",
+                                            "secondary_info": "last-changed"
+                                        },
+                                        {
+                                            "entity": "device_tracker.phils_7",
+                                            "secondary_info": "last-changed"
+                                        },
+                                        {
+                                            "entity": "input_boolean.phil_homekit_present",
+                                            "secondary_info": "last-changed"
+                                        },
+                                        {
+                                            "entity": "sensor.iphone_battery_level",
+                                            "secondary_info": "last-changed"
+                                        },
+                                        {
+                                            "entity": "sensor.iphone_battery_state",
+                                            "secondary_info": "last-changed"
+                                        }
+                                    ],
+                                    "show_header_toggle": false,
+                                    "title": "Presence Phil",
+                                    "type": "entities"
+                                },
+                                {
+                                    "entities": [
+                                        {
+                                            "entity": "input_boolean.device_tracker_nikki_home",
+                                            "name": "Combined Device Tracker - Nikki",
+                                            "secondary_info": "last-changed"
+                                        },
+                                        {
+                                            "entity": "device_tracker.nikki_smartthings",
+                                            "secondary_info": "last-changed"
+                                        },
+                                        {
+                                            "entity": "device_tracker.nikkis_iphone",
+                                            "secondary_info": "last-changed"
+                                        },
+                                        {
+                                            "entity": "input_boolean.nikki_homekit_present",
+                                            "secondary_info": "last-changed"
+                                        },
+                                        {
+                                            "entity": "sensor.nikkis_iphone_battery_level",
+                                            "secondary_info": "last-changed"
+                                        },
+                                        {
+                                            "entity": "sensor.nikkis_iphone_battery_state"
+                                        }
+                                    ],
+                                    "show_header_toggle": false,
+                                    "title": "Presence Nikki",
+                                    "type": "entities"
+                                },
+                                {
+                                    "entities": [
+                                        "device_tracker.nikkis_iphone",
+                                        "device_tracker.phils_7",
+                                        "zone.home"
+                                    ],
+                                    "type": "map"
+                                }
+                            ],
+                            "type": "vertical-stack"
+                        },
+                        {
+                            "entities": [
+                                "binary_sensor.indoor_lights_auto_on",
+                                "sun.sun",
+                                "sensor.dark_sky_cloud_coverage",
+                                "sensor.dark_sky_cloud_coverage_stats_mean",
+                                "sensor.living_room_lux",
+                                "sensor.kitchen_multisensor_lux",
+                                "sensor.avg_lux",
+                                {
+                                    "entity": "sensor.avg_lux_stats_mean",
+                                    "name": "Avg Lux Stats Mean"
+                                },
+                                {
+                                    "filter": {
+                                        "include": [
+                                            "sensor.avg_lux_stats_mean.max_value"
+                                        ]
+                                    },
+                                    "heading_name": "Avg Lux Attributes",
+                                    "heading_state": "States",
+                                    "type": "custom:entity-attributes-card"
+                                }
+                            ],
+                            "show_header_toggle": true,
+                            "title": "Indoor Lights Auto Debug",
+                            "type": "entities"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "input_select.automation_mode"
+                                },
+                                {
+                                    "entity": "input_boolean.lux_light_control"
+                                },
+                                {
+                                    "entity": "input_boolean.text_alerts"
+                                },
+                                {
+                                    "entity": "input_number.lux_setpoint"
+                                },
+                                {
+                                    "entity": "input_boolean.fireplace_automation"
+                                },
+                                {
+                                    "entity": "input_number.fireplace_high_setpoint"
+                                },
+                                {
+                                    "entity": "input_boolean.stairs_motion_test"
+                                }
+                            ],
+                            "show_header_toggle": false,
+                            "title": "Control Modes",
+                            "type": "entities"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "script.twillio_test"
+                                },
+                                {
+                                    "entity": "script.1546906415963"
+                                }
+                            ],
+                            "show_header_toggle": false,
+                            "title": "Scripts Debug",
+                            "type": "entities"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "automation.automation_mode_to_away_actions"
+                                },
+                                {
+                                    "entity": "automation.automation_mode_to_sleep_actions"
+                                },
+                                {
+                                    "entity": "input_select.automation_mode"
+                                }
+                            ],
+                            "title": "Automation Modes",
+                            "type": "entities"
+                        }
+                    ],
+                    "title": "Debug"
+                },
+                {
+                    "badges": [],
+                    "cards": [
+                        {
+                            "type": "iframe",
+                            "url": "http://192.168.1.22:9000/#/dashboard"
+                        }
+                    ],
+                    "panel": true,
+                    "title": "Portainer"
+                },
+                {
+                    "cards": [
+                        {
+                            "aspect_ratio": "200%",
+                            "type": "iframe",
+                            "url": "http://192.168.1.22:8888/sources/0/dashboards/1?present=true"
+                        }
+                    ],
+                    "panel": true,
+                    "title": "Chronograf"
+                },
+                {
+                    "cards": [
+                        {
+                            "content": "## Material Design Icons\nhttps://materialdesignicons.com/   \n## Lovelace Docs\nhttps://www.home-assistant.io/lovelace/ \n## Awesome-HA\nhttps://www.awesome-ha.com/\n## Amazon Alexa Developer Console\nhttps://developer.amazon.com/alexa/console\n",
+                            "type": "markdown"
+                        }
+                    ],
+                    "title": "Notes"
+                }
+            ]
+        }
+    },
+    "key": "lovelace",
+    "version": 1
+}

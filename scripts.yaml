@@ -1,250 +1,218 @@
-# Scripts
-
-
-##################
-# Apple TV       #
-##################
-
 apple_tv_restart:
   sequence:
   - service: remote.send_command
     data:
       entity_id: remote.apple_tv
-      command: [top_menu]
-  - delay: '00:00:01'
+      command:
+      - top_menu
+  - delay: 00:00:01
   - service: remote.send_command
     data:
       entity_id: remote.apple_tv
-      command: [menu]
-  - delay: '00:00:01'
+      command:
+      - menu
+  - delay: 00:00:01
   - service: remote.send_command
     data:
       entity_id: remote.apple_tv
-      command: [right,right,right,right,down,down,down,select]
-  - delay: '00:00:01'
+      command:
+      - right
+      - right
+      - right
+      - right
+      - down
+      - down
+      - down
+      - select
+  - delay: 00:00:01
   - service: remote.send_command
     data:
       enity_id: remote.apple_tv
-      command: [down,down,down,down,down,down,down]
-      #,select,down,down,down,down,down]
-
-
-##################
-# Dennon Scripts #
-##################
+      command:
+      - down
+      - down
+      - down
+      - down
+      - down
+      - down
+      - down
 denon_deck_volume_50:
   alias: denon_deck_volume_50
   sequence:
   - event: LOGBOOK_ENTRY
     event_data:
       name: EVENT
-      message: 'Deck Volume Set to 50'
+      message: Deck Volume Set to 50
   - service: rest_command.denon_deck_volume_50
-  - delay: '00:00:01'
+  - delay: 00:00:01
   - service: input_number.set_value
     data_template:
       entity_id: input_number.denon_deck_volume
-      value: >
-        {{ 50 }}
+      value: '{{ 50 }}
 
-
-denon_deck_volume_55:  
+        '
+denon_deck_volume_55:
   alias: denon_deck_volume_55
   sequence:
   - event: LOGBOOK_ENTRY
     event_data:
       name: EVENT
-      message: 'Deck Volume Set to 55'
+      message: Deck Volume Set to 55
   - service: rest_command.denon_deck_volume_55
-  - delay: '00:00:01'
+  - delay: 00:00:01
   - service: input_number.set_value
     data_template:
       entity_id: input_number.denon_deck_volume
-      value: >
-        {{ 55 }}
-  
+      value: '{{ 55 }}
 
+        '
 denon_deck_volume_60:
   alias: denon_deck_volume_60
   sequence:
   - event: LOGBOOK_ENTRY
     event_data:
       name: EVENT
-      message: 'Deck Volume Set to 60'
+      message: Deck Volume Set to 60
   - service: rest_command.denon_deck_volume_60
-  - delay: '00:00:01'
+  - delay: 00:00:01
   - service: input_number.set_value
     data_template:
       entity_id: input_number.denon_deck_volume
-      value: >
-        {{ 60 }}
-  
+      value: '{{ 60 }}
 
+        '
 denon_deck_volume_down:
   alias: denon_deck_volume_down
   sequence:
   - service: rest_command.denon_deck_volume_down
-  
-
 denon_deck_volume_set:
   alias: denon_deck_volume_set
   sequence:
   - service: rest_command.denon_deck_volume_set
-  
-
 denon_deck_volume_up:
   alias: denon_deck_volume_up
   sequence:
   - service: rest_command.denon_deck_volume_up
-
-
 ecobee_mode_sleep:
   alias: ecobee mode sleep
   sequence:
   - service: climate.set_hold_mode
     data:
       entity_id: climate.main_floor
-      hold_mode: 'sleep'
-
-
+      hold_mode: sleep
 ecobee_mode_home:
   alias: ecobee mode home
   sequence:
   - service: climate.set_hold_mode
     data:
       entity_id: climate.main_floor
-      hold_mode: 'home'
-
-
-###################
-# Harmony Scripts #
-###################
-
+      hold_mode: home
 harmony_power_off:
   sequence:
   - service: remote.turn_off
-    data: 
+    data:
       entity_id: remote.living_room
-
 harmony_apple_tv:
   sequence:
   - service: remote.turn_on
     data:
       entity_id: remote.living_room
-      activity: 'Apple TV'
-
-harmony_apple_tv_deck:      
+      activity: Apple TV
+harmony_apple_tv_deck:
   sequence:
   - service: remote.turn_on
     data:
       entity_id: remote.living_room
-      activity: 'Apple TV - Deck'
-
-harmony_watch_tv:      
+      activity: Apple TV - Deck
+harmony_watch_tv:
   sequence:
   - service: remote.turn_on
     data:
       entity_id: remote.living_room
-      activity: 'Watch TV'
-
-harmony_music_cable:      
+      activity: Watch TV
+harmony_music_cable:
   sequence:
   - service: remote.turn_on
     data:
       entity_id: remote.living_room
-      activity: 'Music - Cable'
-
-harmony_music_cable_deck:      
+      activity: Music - Cable
+harmony_music_cable_deck:
   sequence:
   - service: remote.turn_on
     data:
       entity_id: remote.living_room
-      activity: 'Music - Cable - Deck'
-
-
-###################
-# Lights          #
-###################
-
+      activity: Music - Cable - Deck
 lights_main_on:
   alias: lights_main_on
   sequence:
   - service: light.turn_on
     data_template:
       entity_id: light.ge_living_room_1,light.ge_living_room_2,light.ge_living_room_3
-      brightness: >
-        {% if now().hour < 8 or now().hour > 22 %}
-          100
-        {% else %}
-          200
-        {% endif %}
+      brightness: "{% if now().hour < 8 or now().hour > 22 %}\n  100\n{% else %}\n\
+        \  200\n{% endif %}\n"
   - service: light.turn_on
     data_template:
       entity_id: light.kitchen_island_lights
-      brightness: >
-        {% if states.light.kitchen_island_lights.state == 'on' %}
-          {{states.light.kitchen_island_lights.attributes.brightness}}
-        {% else %}
-          {% if now().hour < 8 or now().hour > 22 %}
-            100
-          {% else %}
-            150
-          {% endif %}
-        {% endif %}
-
+      brightness: "{% if states.light.kitchen_island_lights.state == 'on' %}\n  {{states.light.kitchen_island_lights.attributes.brightness}}\n\
+        {% else %}\n  {% if now().hour < 8 or now().hour > 22 %}\n    100\n  {% else\
+        \ %}\n    150\n  {% endif %}\n{% endif %}\n"
 lights_main_on_dim:
   alias: lights_main_on_dim
   sequence:
   - service: light.turn_on
     data_template:
       entity_id: light.ge_living_room_1,light.ge_living_room_2,light.ge_living_room_3
-      brightness: >
-          100
+      brightness: '100
+
+        '
   - service: light.turn_on
     data_template:
       entity_id: light.kitchen_island_lights
-      brightness: >
-            100
+      brightness: '100
 
-
+        '
 lights_upstairs_off:
   alias: lights_all_off
   sequence:
   - service: light.turn_off
     data:
       entity_id: group.room_living,light.kitchen_cabinet_lights,light.kitchen_island_lights,light.upstairs_hall_scone
-
-
 twillio_test:
   alias: twillio_test
   sequence:
   - event: LOGBOOK_ENTRY
     event_data:
       name: EVENT
-      message: 'Testing Twilio SMS script called'
+      message: Testing Twilio SMS script called
   - service: notify.twilio_sms
     data:
-      message: "Testing twilio SMS"
+      message: Testing twilio SMS
       target:
-        - !secret myphone
-
-###################
-# Lux Logging     #
-###################
-
+      - 6082352167
 log_lux_levels:
   alias: log_lux_levels
   sequence:
   - service: logbook.log
     data_template:
       name: '{{log_name}}'
-      message: >
-        {%- if (states.sun.sun.attributes.elevation | int < 10 ) -%}
-          'Sun Elevation: {{states.sun.sun.attributes.elevation}} < 10'
-        {%- elif (states.sensor.dark_sky_cloud_coverage_stats_mean.state | int > 85) -%}
-          'Cloud Cover: {{states.sensor.dark_sky_cloud_coverage_stats_mean.state}} > 85' 
-        {%- elif (states.sensor.avg_lux_stats_mean.attributes["max_value"] | int < states.input_number.lux_setpoint.state | int
-              and states.sensor.avg_lux_stats_mean.attributes["max_value"] != 'unknown'
-              and (states.sensor.kitchen_multisensor_lux < 10 or as_timestamp(now()) - as_timestamp(states.sensor.kitchen_multisensor_lux.last_changed) > 3600)) -%}
-          'Avg Lux Max {{states.sensor.avg_lux_stats_mean.attributes["max_value"]}} < {{states.input_number.lux_setpoint.state}} and Kitchen Lux < 10'
-        {%- endif -%}
+      message: "{%- if (states.sun.sun.attributes.elevation | int < 10 ) -%}\n  'Sun\
+        \ Elevation: {{states.sun.sun.attributes.elevation}} < 10'\n{%- elif (states.sensor.dark_sky_cloud_coverage_stats_mean.state\
+        \ | int > 85) -%}\n  'Cloud Cover: {{states.sensor.dark_sky_cloud_coverage_stats_mean.state}}\
+        \ > 85' \n{%- elif (states.sensor.avg_lux_stats_mean.attributes[\"max_value\"\
+        ] | int < states.input_number.lux_setpoint.state | int\n      and states.sensor.avg_lux_stats_mean.attributes[\"\
+        max_value\"] != 'unknown'\n      and (states.sensor.kitchen_multisensor_lux\
+        \ < 10 or as_timestamp(now()) - as_timestamp(states.sensor.kitchen_multisensor_lux.last_changed)\
+        \ > 3600)) -%}\n  'Avg Lux Max {{states.sensor.avg_lux_stats_mean.attributes[\"\
+        max_value\"]}} < {{states.input_number.lux_setpoint.state}} and Kitchen Lux\
+        \ < 10'\n{%- endif -%}\n"
+'1546906415963':
+  alias: lights_outside_on
+  sequence:
+  - data:
+      brightness: 50
+      entity_id: light.garage_outside_lights
+    service: light.turn_on
+  - data:
+      brightness: 50
+      entity_id: light.entry_walkway_dimmer_switch
+    service: light.turn_on

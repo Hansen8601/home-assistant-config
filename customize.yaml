@@ -1,5 +1,5 @@
 binary_sensor.main_floor_occupancy:
-  friendly_name: Main Floor Occupancy
+  friendly_name: Ecobee Main Floor Occupancy
 cover.dennon:
   friendly_name: TV Volume
   entity_picture: mdi:monitor
@@ -18,10 +18,6 @@ cover.garage_left:
   homebridge_visible: true
   homebridge_name: Garage Shop
   homebridge_cover_type: garage_door
-device_tracker.phil:
-  friendly_name: Phil
-device_tracker.nikki:
-  friendly_name: Nikki
 input_boolean.set_mode_sleeping:
   homebridge_visible: true
   homebridge_name: Set Sleep
@@ -31,11 +27,6 @@ input_boolean.set_mode_home:
 input_boolean.set_mode_away:
   homebridge_visible: true
   homebridge_name: Set Away
-input_boolean.presence_homekit:
-  homebridge_visible: true
-  homebridge_name: Presence for HASS
-  icon: mdi:home-map-marker
-  friendly_name: Homekit Presence
 input_number.denon_deck_volume:
   friendly_name: Deck Volume
 input_number.denon_volume:
@@ -128,3 +119,21 @@ light.basement_sitting_area_table_lamp:
   friendly_name: Basement Lounge Lamp
 sensor.basement_motion:
   friendly_name: Basement Stairs Motion
+climate.main_floor:
+  friendly_name: Ecobee Main Floor
+weather.main_floor:
+  friendly_name: Ecobee Main Floor
+sensor.main_floor_humidity:
+  friendly_name: Ecobee Main Floor Humidity
+sensor.main_floor_temperature:
+  friendly_name: Ecobee Main Floor Temperature
+binary_sensor.basement_occupancy:
+  friendly_name: Ecobee Basement Occupancy
+climate.basement:
+  friendly_name: Ecobee Basement
+sensor.basement_temperature_2:
+  friendly_name: Ecobee Basement Temperature
+sensor.basement_temperature:
+  friendly_name: Ecobee Basement Temperature
+sensor.basement_humidity:
+  friendly_name: Ecobee Basement Humidity

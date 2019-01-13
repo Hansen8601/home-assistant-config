@@ -56,10 +56,12 @@ logbook:
       - automation.denon_slider_volume_set
       - automation.denon_volume_set
       - automation.denon_deck_volume_set
-      
       - input_boolean.set_mode_home
       - input_boolean.set_mode_sleeping
       - input_boolean.set_mode_away
+      - input_boolean.nikki_homekit_present
+      - input_boolean.phil_homekit_present
+        #- binary_sensor.stairs_motion
 
 
 # Enables support for tracking state changes over time.
@@ -182,8 +184,10 @@ amcrest:
 device_tracker:
   platform: mqtt
   devices:
-    Phil: smartthings/Phil Hansen's iPhone/presence
-    Nikki: smartthings/Nikki's iPhone/presence
+    Phil_SmartThings: smartthings/Phil Hansen's iPhone/presence
+    Nikki_SmartThings: smartthings/Nikki's iPhone/presence
+    #Phil: hass/phil/presence
+    #Nikki: hass/nikki/presence
 
 
 #mqtt broker
@@ -218,15 +222,15 @@ ecobee:
 
 
 apple_tv:
-  - host: 192.168.1.127
+  - host: 192.168.1.126
     login_id: !secret apple_tv_login_id
-    name: "Apple TV Workout room"
+    name: "Apple TV Exercise"
     start_off: true
   - host: 192.168.1.86
     login_id: !secret apple_tv_login_id
-    name: "Apple TV"
+    name: "Apple TV Upstairs"
     start_off: true
-  - host: 192.168.1.95
+  - host: 192.168.1.109
     login_id: !secret apple_tv_login_id
     name: "Apple TV Basement"
     start_off: true
@@ -278,27 +282,26 @@ binary_sensor:
         friendly_name: 'Indoor Lights Auto On'
         value_template: >-
           {%- if is_state("input_select.automation_mode","Home") -%}
-             {%- if as_timestamp(now()) - as_timestamp(states.binary_sensor.indoor_lights_auto_on.last_changed) > 900 or
-                    as_timestamp(now()) - as_timestamp(states.input_select.automation_mode.last_changed) < 900 or
-                    as_timestamp(now()) - as_timestamp(states.input_number.lux_setpoint.last_changed) < 10 -%}
-                 {%- if (states.sun.sun.attributes.elevation | int < 10 ) -%}
-                   True
-                 {%- elif (states.sensor.dark_sky_cloud_coverage_stats_mean.state | int > 85) -%}
-                   True
-                 {%- elif (states.sensor.avg_lux_stats_mean.attributes["max_value"] | int < states.input_number.lux_setpoint.state | int  
-                        and states.sensor.avg_lux_stats_mean.attributes["max_value"] != 'unknown'
-                        and (states.sensor.kitchen_multisensor_lux < 12 or as_timestamp(now()) - as_timestamp(states.sensor.kitchen_multisensor_lux.last_changed) > 3600))-%}
-                   True
-                 {%- else -%} 
-                   False
-                 {%- endif -%}
-             {%- else -%}    
-               {%- if is_state("binary_sensor.indoor_lights_auto_on","off") -%}False{%- else -%}True{%- endif -%}
-             {%- endif -%}  
-          {%- else -%}    
+            {%- if (as_timestamp(now()) - (as_timestamp(states.binary_sensor.indoor_lights_auto_on.last_changed) | int) > 900 or
+                    as_timestamp(now()) - (as_timestamp(states.input_select.automation_mode.last_changed) | int) < 900 or
+                    as_timestamp(now()) - (as_timestamp(states.input_number.lux_setpoint.last_changed) | int) < 10) -%}
+              {%- if ((states.sun.sun.attributes.elevation | int) < 10 ) -%}
+                True
+              {%- elif ((states.sensor.dark_sky_cloud_coverage_stats_mean.state | int) > 85) -%}
+                True
+              {%- elif ((states.sensor.avg_lux_stats_mean.attributes["max_value"] | int) < (states.input_number.lux_setpoint.state | int)
+                         and (states.sensor.avg_lux_stats_mean.attributes["max_value"] | int) != 'unknown'
+                         and ((states.sensor.kitchen_multisensor_lux | int) < 12 or (as_timestamp(now()) |int) - (as_timestamp(states.sensor.kitchen_multisensor_lux.last_changed) | int) > 3600))-%}
+                 True
+              {%- else -%}
+                 False
+              {%- endif -%}
+            {%- else -%}
+              {%- if is_state("binary_sensor.indoor_lights_auto_on","off") -%}False{%- else -%}True{%- endif -%}
+            {%- endif -%}
+          {%- else -%}
             False
-          {%- endif -%}  
-
+          {%- endif -%}
 
   - platform: template
     sensors:
@@ -306,58 +309,16 @@ binary_sensor:
         friendly_name: "Fireplace Off Sensor"
         value_template: >-
           {%- if is_state("switch.fireplace","on") and
-               (states.sensor.living_room_temperature.state|float >=  states.input_number.fireplace_high_setpoint.state | float or
-               states.sensor.main_floor_temperature.state|float  >=  states.input_number.fireplace_high_setpoint.state | float) -%}
+               (states.sensor.living_room_temperature.state >=  states.input_number.fireplace_high_setpoint.state or
+               states.sensor.main_floor_temperature.state  >=  states.input_number.fireplace_high_setpoint.state) -%}
             True
           {%- else -%}
             False 
           {%- endif -%}
 
-  - platform: bayesian
-    name: 'presence_phil'
-    prior: 0.5
-    probability_threshold: 0.90
-    observations:
-      - entity_id: 'device_tracker.phil'
-        prob_given_true: 0.50
-        #prob_given_false: 0.90
-        platform: 'state'
-        to_state: 'present'
-      - entity_id: 'device_tracker.phils_7'
-        prob_given_true: 0.90
-        #prob_given_false: 0.90
-        platform: 'state'
-        to_state: 'home'
-      - entity_id: 'input_boolean.phil_homekit_present'
-        prob_given_true: 0.90
-        #prob_given_false: 0.90
-        platform: 'state'
-        to_state: 'on'
-
-  - platform: bayesian
-    name: 'presence_nikki'
-    prior: 0.5
-    probability_threshold: 0.90
-    observations:
-      - entity_id: 'device_tracker.nikki'
-        prob_given_true: 0.70
-        #prob_given_false: 0.70
-        platform: 'state'
-        to_state: 'present'
-      - entity_id: 'device_tracker.nikkis_iphone'
-        prob_given_true: 0.90
-        #prob_given_false: 0.90
-        platform: 'state'
-        to_state: 'home'
-      - entity_id: 'input_boolean.nikki_homekit_present'
-        prob_given_true: 0.90
-        #prob_given_false: 0.90
-        platform: 'state'
-        to_state: 'on'
-
   - platform: mqtt
     state_topic: 'smartthings/Basement Motion Sensor/motion'
-    name: 'basement_motion'
+    name: 'stairs_motion'
     payload_on: 'active'
     payload_off: 'inactive'
     retain: true
@@ -799,6 +760,13 @@ switch:
 ###################
 
 input_boolean:
+# Combined Sensor Precense
+  device_tracker_phil_home:
+    name: device_tracker_phil_home
+    initial: on
+  device_tracker_nikki_home:
+    name: device_tracker_nikki_home
+    initial: on
 # Used for homekit integration
   set_mode_sleeping:
     name: set_mode_sleeping
@@ -807,10 +775,18 @@ input_boolean:
     name: set_mode_home
   set_mode_away:
     name: set_mode_away
-# Automation Control switches
+# Automation lux ontrol switches
   lux_light_control:
     name: 'Lights Auto Control'
     initial: on
+# Automation Overall control
+  automation_control_on
+    name: 'Automation Master Control'
+    initial: on
+# Motion Test
+  stairs_motion_test:
+    name: 'Stairs Motion Test'
+    initial: off 
 # Fireplace Control switch
   fireplace_automation:
     name: 'Fireplace Automation'
@@ -841,7 +817,6 @@ input_select:
      - Home
      - Away
      - Sleeping
-     - No Automation
     initial: Home
     icon: mdi:panda
   # List must match harmony.config names for automation scripts
@@ -925,7 +900,8 @@ timer:
     duration: '00:10:00'
   master_bathroom_fan_timer2:
     duration: '00:45:00'
-
+  stairs:
+    duration: '00:15:00'
  
 group: !include groups.yaml
 
