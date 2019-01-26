@@ -64,18 +64,10 @@
   alias: Automation Mode set to home from activity with Harmony Remote
   trigger:
   - entity_id: remote.living_room
+    from: 'off'
     platform: state
-  condition:
-  - condition: and
-    conditions:
-    - condition: template
-      value_template: '{{states.input_select.automation_mode.state != ''No Automation''
-        }}'
-    - condition: template
-      value_template: '{{ trigger.to_state.attributes.current_activity != ''PowerOff''
-        }}'
-    - condition: template
-      value_template: '{{ states.input_select.automation_mode.state != ''Home'' }}'
+    to: 'on'
+  condition: []
   action:
   - data:
       entity_id: input_select.automation_mode
@@ -86,20 +78,10 @@
   trigger:
   - entity_id: remote.living_room
     platform: state
+    to: PowerOff
   condition:
-  - condition: and
-    conditions:
-    - condition: template
-      value_template: '{{states.input_select.automation_mode.state != ''No Automation''
-        }}'
-    - condition: template
-      value_template: '{{trigger.to_state.attributes.current_activity == ''PowerOff''
-        }}'
-    - condition: template
-      value_template: '{{states.binary_sensor.presence_nikki.state == ''on'' or states.binary_sensor.presence_phil.state
-        == ''on'' }}'
-    - after: '20:00:00'
-      condition: time
+  - after: '20:00:00'
+    condition: time
   action:
   - data:
       entity_id: input_select.automation_mode
@@ -110,13 +92,10 @@
   alias: Automation Mode set to home from Apple Homekit
   trigger:
   - entity_id: input_boolean.set_mode_home
+    from: 'off'
     platform: state
     to: 'on'
-  condition:
-  - condition: and
-    conditions:
-      condition: template
-      value_template: '{{states.input_select.automation_mode.state != ''No Automation''}}'
+  condition: []
   action:
   - data:
       entity_id: input_select.automation_mode
@@ -142,40 +121,20 @@
   - data:
       entity_id: input_boolean.set_mode_sleeping
     service: input_boolean.turn_off
-- id: automation_mode_away_from_homekit
-  alias: Input Boolean Set away from Im leaving
-  trigger:
-  - entity_id: input_boolean.set_mode_away
-    platform: state
-    to: 'on'
-  condition: []
-  action:
-  - data:
-      entity_id: input_select.automation_mode
-      option: Away
-    service: input_select.select_option
-  - delay: 00:00:02
-  - data:
-      entity_id: input_boolean.set_mode_away
-    service: input_boolean.turn_off
 - id: automation_mode_home_from_ecobee
   alias: Automation Mode set to home from Main Floor Occupancy (Ecobee)
   trigger:
   - entity_id: binary_sensor.main_floor_occupancy
+    from: 'off'
     platform: state
     to: 'on'
   condition:
-  - condition: and
-    conditions:
-    - condition: template
-      value_template: '{{states.input_select.automation_mode.state != ''No Automation''
-        }}'
-    - condition: template
-      value_template: '{{states.input_select.automation_mode.state == ''Sleeping''
-        }}'
-    - after: 06:00:00
-      before: '20:00:00'
-      condition: time
+  - condition: state
+    entity_id: input_select.automation_mode
+    state: Sleeping
+  - after: 06:00:00
+    before: '18:00:00'
+    condition: time
   action:
   - data:
       entity_id: input_select.automation_mode
@@ -185,6 +144,7 @@
   alias: Automation Mode actions when set to sleep
   trigger:
   - entity_id: input_select.automation_mode
+    from: Home
     platform: state
     to: Sleeping
   condition: []
@@ -210,6 +170,7 @@
   alias: Automation Mode actions when set to away
   trigger:
   - entity_id: input_select.automation_mode
+    from: Home
     platform: state
     to: Away
   condition: []
@@ -233,7 +194,7 @@
       entity_id: scene.basement_lights_off
     service: scene.turn_on
 - id: ecobee_mode_away
-  alias: Ecobee Mode Away
+  alias: Ecobee thermostat away mode to on from Automation Mode
   trigger:
   - entity_id: input_select.automation_mode
     for:
@@ -241,12 +202,9 @@
     platform: state
     to: Away
   condition:
-  - condition: and
-    conditions:
-    - condition: template
-      value_template: '{{states.input_select.automation_mode.state != ''No Automation''}}'
-    - condition: template
-      value_template: '{{states.climate.main_floor.attributes.away_mode == ''off''}}'
+  - condition: state
+    entity_id: sensor.climate_main_floor_away_mode
+    state: 'off'
   action:
   - data:
       away_mode: 'on'
@@ -257,116 +215,67 @@
       entity_id: climate.basement
     service: climate.set_away_mode
 - id: ecobee_mode_home
-  alias: Ecobee Mode Home
+  alias: Ecobee thermostat away mode to off from Automation Mode
   trigger:
+  - entity_id: input_select.automation_mode
     platform: state
-    entity_id: input_select.automation_mode
     to: Home
   condition:
-    condition: and
-    conditions:
-    - condition: template
-      value_template: '{{states.input_select.automation_mode.state != ''No Automation''}}'
-    - condition: template
-      value_template: '{{states.climate.main_floor.attributes.away_mode == ''on''}}'
+  - condition: state
+    entity_id: sensor.climate_main_floor_away_mode
+    state: 'on'
   action:
-  - service: climate.set_away_mode
-    data:
-      entity_id: climate.main_floor
+  - data:
       away_mode: 'off'
-  - service: climate.set_away_mode
-    data:
-      entity_id: climate.basement
-      away_mode: 'off'
-- id: ecobee_mode_home_from_sleep
-  alias: Ecobee Mode Home from Sleep
-  trigger:
-    platform: state
-    entity_id: input_select.automation_mode
-    from: Sleeping
-    to: Home
-  condition:
-    condition: and
-    conditions:
-    - condition: template
-      value_template: '{{states.input_select.automation_mode.state != ''No Automation''}}'
-    - condition: template
-      value_template: '{{states.climate.main_floor.attributes.operation_mode == ''heat''
-        or states.climate.main_floor.attributes.operation_mode == ''cool''}}'
-    - condition: template
-      value_template: '{{states.climate.main_floor.attributes.mode != ''Home''}}'
-  action:
-  - service: climate.set_hold_mode
-    data:
       entity_id: climate.main_floor
-      hold_mode: home
-  - service: climate.set_hold_mode
-    data:
+    service: climate.set_away_mode
+  - data:
+      away_mode: 'off'
       entity_id: climate.basement
-      hold_mode: home
+    service: climate.set_away_mode
 - id: ecobee_mode_sleep
-  alias: Ecobee Mode Sleep Heat
+  alias: Ecobee thermostat hold mode to sleep from Automation Mode
   trigger:
+  - entity_id: input_select.automation_mode
+    from: Home
     platform: state
-    entity_id: input_select.automation_mode
     to: Sleeping
-  condition:
-    condition: and
-    conditions:
-    - condition: template
-      value_template: '{{states.input_select.automation_mode.state != ''No Automation''}}'
-    - condition: template
-      value_template: '{{states.climate.main_floor.attributes.operation_mode == ''heat''
-        or states.climate.main_floor.attributes.operation_mode == ''cool''}}'
-    - condition: template
-      value_template: '{{states.climate.main_floor.attributes.mode != ''Sleep''}}'
+  condition: []
   action:
-  - service: climate.set_hold_mode
-    data:
+  - data:
       entity_id: climate.main_floor
       hold_mode: sleep
-  - service: climate.set_hold_mode
-    data:
+    service: climate.set_hold_mode
+  - data:
       entity_id: climate.basement
       hold_mode: sleep
+    service: climate.set_hold_mode
 - id: ecobee_basement_exercise_hold_on
-  alias: Ecobee Basement Exercise Hold
+  alias: Ecobee thermostat hold mode to sleep from Exercise Room Lights on
   trigger:
+  - entity_id: light.basement_exercise_area_main_lights
+    from: 'off'
     platform: state
-    entity_id: light.basement_exercise_area_main_lights
     to: 'on'
-  condition:
-    condition: and
-    conditions:
-    - condition: template
-      value_template: '{{states.input_select.automation_mode.state != ''No Automation''}}'
-    - condition: template
-      value_template: '{{states.climate.basement.attributes.operation_mode == ''heat''
-        or states.climate.basement.attributes.operation_mode == ''cool''}}'
+  condition: []
   action:
-  - service: climate.set_hold_mode
-    data:
+  - data:
       entity_id: climate.basement
       hold_mode: sleep
+    service: climate.set_hold_mode
 - id: ecobee_basement_exercise_hold_off
-  alias: Ecobee Basement Exercise Hold
+  alias: Ecobee thermostat hold mode to home from Exercise Room Lights off
   trigger:
+  - entity_id: light.basement_exercise_area_main_lights
+    from: 'on'
     platform: state
-    entity_id: light.basement_exercise_area_main_lights
     to: 'off'
-  condition:
-    condition: and
-    conditions:
-    - condition: template
-      value_template: '{{states.input_select.automation_mode.state != ''No Automation''}}'
-    - condition: template
-      value_template: '{{states.climate.basement.attributes.operation_mode == ''heat''
-        or states.climate.basement.attributes.operation_mode == ''cool''}}'
+  condition: []
   action:
-  - service: climate.set_hold_mode
-    data:
+  - data:
       entity_id: climate.basement
       hold_mode: home
+    service: climate.set_hold_mode
 - id: guest_bathroom_fan_timer_start
   alias: guest_bathroom_fan_timer_start
   trigger:
@@ -472,164 +381,81 @@
   action:
     service: switch.turn_off
     entity_id: switch.master_bathroom_fan
-- id: bedroom_fan_sleeping
-  alias: Bedroom Fan Control Sleeping
+- id: bedroom_fan_off
+  alias: Bedroom Fan off from Desired Mode sensor
   trigger:
+  - entity_id: sensor.bedroom_fan_desired_mode
     platform: state
-    entity_id: input_select.automation_mode
-    to: Sleeping
-  condition:
-    condition: and
-    conditions:
-    - condition: template
-      value_template: '{{states.input_select.automation_mode.state != ''No Automation''}}'
-    - condition: template
-      value_template: '{{states.climate.main_floor.attributes.current_temperature
-        | int > 68 }}'
-    - condition: state
-      entity_id: fan.master_bedroom_fan
-      state: 'off'
+    to: 'off'
+  condition: []
   action:
-  - service: fan.turn_on
-    entity_id: fan.master_bedroom_fan
-    data_template:
-      speed: '{%- if states.climate.main_floor.attributes.current_temperature > 77
-        -%} high {%- elif states.climate.main_floor.attributes.current_temperature
-        > 71 -%} medium  {%- elif states.climate.main_floor.attributes.current_temperature
-        > 68 -%} low  {%- endif -%}
-
-        '
-- id: bedroom_fan_lower_temperature
-  alias: Bedroom Fan Lower by Temperature
-  trigger:
-  - platform: numeric_state
-    entity_id: climate.main_floor
-    value_template: '{{ states.climate.main_floor.attributes.current_temperature }}'
-    below: 77
-  - platform: numeric_state
-    entity_id: climate.main_floor
-    value_template: '{{ states.climate.main_floor.attributes.current_temperature }}'
-    below: 71
-  condition:
-    condition: and
-    conditions:
-    - condition: template
-      value_template: '{{states.input_select.automation_mode.state == ''Sleeping''}}'
-    - condition: state
+  - data:
       entity_id: fan.master_bedroom_fan
-      state: 'on'
-  action:
-  - service: fan.set_speed
-    entity_id: fan.master_bedroom_fan
-    data_template:
-      speed: '{%- if states.climate.main_floor.attributes.current_temperature < 71
-        -%} low  {%- else -%} medium {%- endif -%}
-
-        '
-- id: bedroom_fan_off_temperature
-  alias: Bedroom Fan Off by Temperature
+    service: fan.turn_off
+- id: bedroom_fan_medium
+  alias: Bedroom Fan medium from Desired Mode sensor
   trigger:
-  - platform: numeric_state
-    entity_id: climate.main_floor
-    value_template: '{{ states.climate.main_floor.attributes.current_temperature }}'
-    below: 66
-  condition:
-    condition: and
-    conditions:
-    - condition: template
-      value_template: '{{states.input_select.automation_mode.state == ''Sleeping''}}'
-    - condition: state
-      entity_id: fan.master_bedroom_fan
-      state: 'on'
-  action:
-  - service: fan.turn_off
-    entity_id: fan.master_bedroom_fan
-- id: living_room_fan_home
-  alias: Living Room Fan Home
-  trigger:
+  - entity_id: sensor.bedroom_fan_desired_mode
     platform: state
-    entity_id: input_select.automation_mode
-    to: Home
-  condition:
-    condition: and
-    conditions:
-    - condition: template
-      value_template: '{{states.input_select.automation_mode.state != ''No Automation''}}'
-    - condition: template
-      value_template: '{{states.climate.main_floor.attributes.current_temperature
-        | int > 72}}'
-    - condition: state
+    to: medium
+  condition: []
+  action:
+  - data:
+      entity_id: fan.master_bedroom_fan
+      speed: medium
+    service: fan.turn_on
+- id: bedroom_fan_low
+  alias: Bedroom Fan low from Desired Mode sensor
+  trigger:
+  - entity_id: sensor.bedroom_fan_desired_mode
+    platform: state
+    to: low
+  condition: []
+  action:
+  - data:
+      entity_id: fan.master_bedroom_fan
+      speed: low
+    service: fan.turn_on
+- id: living_room_fan_low
+  alias: Living Room Fan low from Desired Mode sensor
+  trigger:
+  - entity_id: sensor.living_room_fan_desired_mode
+    platform: state
+    to: low
+  condition: []
+  action:
+  - data:
       entity_id: fan.living_room_fan
-      state: 'off'
-  action:
-  - service: fan.turn_on
+      speed: low
     entity_id: fan.living_room_fan
-    data_template:
-      speed: '{%- if states.climate.main_floor.attributes.current_temperature > 77
-        -%} high {%- elif states.climate.main_floor.attributes.current_temperature
-        > 75 -%} medium {%- else -%} low {%- endif -%}
-
-        '
-- id: living_room_fan_on_temperature
-  alias: Living Room Fan on  by Tempearture
+    service: fan.turn_on
+- id: living_room_fan_medium
+  alias: Living Room Fan medium from Desired Mode sensor
   trigger:
-  - platform: numeric_state
-    entity_id: climate.main_floor
-    value_template: '{{ states.climate.main_floor.attributes.current_temperature }}'
-    above: 73
-  - platform: numeric_state
-    entity_id: climate.main_floor
-    value_template: '{{ states.climate.main_floor.attributes.current_temperature }}'
-    above: 75
-  - platform: numeric_state
-    entity_id: climate.main_floor
-    value_template: '{{ states.climate.main_floor.attributes.current_temperature }}'
-    above: 77
-  condition:
-    condition: and
-    conditions:
-    - condition: template
-      value_template: '{{states.input_select.automation_mode.state == ''Home''}}'
+  - entity_id: sensor.living_room_fan_desired_mode
+    platform: state
+    to: medium
+  condition: []
   action:
-  - service: fan.turn_on
+  - data:
+      entity_id: fan.living_room_fan
+      speed: medium
     entity_id: fan.living_room_fan
-    data_template:
-      speed: '{%- if states.climate.main_floor.attributes.current_temperature > 77
-        -%} medium {%- elif states.climate.main_floor.attributes.current_temperature
-        > 75 -%} low {%- elif states.climate.main_floor.attributes.current_temperature
-        > 73 -%} low {%- endif -%}
-
-        '
-- id: living_room_fan_off_temperature
-  alias: Living Room Fan off by Temperature
+    service: fan.turn_on
+- id: living_room_fan_off
+  alias: Living Room Fan off from Desired Mode sensor
   trigger:
-  - platform: numeric_state
-    entity_id: climate.main_floor
-    value_template: '{{ states.climate.main_floor.attributes.current_temperature }}'
-    below: 73
-  - platform: numeric_state
-    entity_id: climate.main_floor
-    value_template: '{{ states.climate.main_floor.attributes.current_temperature }}'
-    below: 75
-  - platform: numeric_state
-    entity_id: climate.main_floor
-    value_template: '{{ states.climate.main_floor.attributes.current_temperature }}'
-    below: 77
+  - entity_id: sensor.living_room_fan_desired_mode
+    platform: state
+    to: 'off'
   condition:
-    condition: and
-    conditions:
-    - condition: template
-      value_template: '{{states.input_select.automation_mode.state == ''Home''}}'
+  - condition: state
+    entity_id: fan.living_room_fan
+    state: 'on'
   action:
-  - service: fan.turn_on
-    entity_id: light.living_room_fan
-    data_template:
-      speed: '{%- if states.climate.main_floor.attributes.current_temperature < 73
-        -%} low {%- elif states.climate.main_floor.attributes.current_temperature
-        < 75 -%} low {%- elif states.climate.main_floor.attributes.current_temperature
-        < 77 -%} medium {%- endif -%}
-
-        '
+  - data:
+      entity_id: fan.living_room_fan
+    service: fan.turn_off
 - id: fireplace_hot_off
   alias: Fireplace off when hot
   trigger:
@@ -639,8 +465,6 @@
   condition:
     condition: and
     conditions:
-    - condition: template
-      value_template: '{{ states.input_select.automation_mode.state != ''No Automation''}}'
     - condition: state
       entity_id: input_boolean.fireplace_automation
       state: 'on'
@@ -657,11 +481,7 @@
     platform: state
     entity_id: switch.fireplace
     to: 'on'
-  condition:
-    condition: and
-    conditions:
-    - condition: template
-      value_template: '{{ states.input_select.automation_mode.state != ''No Automation''}}'
+  condition: []
   action:
   - service: climate.ecobee_set_fan_min_on_time
     data:
@@ -673,11 +493,7 @@
     platform: state
     entity_id: switch.fireplace
     to: 'off'
-  condition:
-    condition: and
-    conditions:
-    - condition: template
-      value_template: '{{ states.input_select.automation_mode.state != ''No Automation''}}'
+  condition: []
   action:
   - service: climate.ecobee_set_fan_min_on_time
     data:
@@ -714,7 +530,7 @@
       log_name: lights_auto_off
     service: script.log_lux_levels
 - id: ambiience_lights_on
-  alias: Ambience Lights - on
+  alias: Lights on for ambiance from Sunset
   trigger:
   - event: sunset
     offset: 00:15:00
@@ -726,6 +542,8 @@
   - condition: state
     entity_id: input_select.automation_mode
     state: Home
+  - after: sunset
+    condition: sun
   action:
   - data:
       entity_id: light.kitchen_cabinet_lights
@@ -743,19 +561,21 @@
       entity_id: light.stairs_main_lights
     service: light.turn_on
 - id: master_bath_lights_on_from_fan
-  alias: Master bath lights on from fan
+  alias: Master bathroom shower lights on from fan
   trigger:
+  - entity_id: switch.master_bathroom_fan
+    from: 'off'
     platform: state
-    entity_id: switch.master_bathroom_fan
     to: 'on'
   action:
-    service: light.turn_on
-    data:
+  - data:
       entity_id: light.master_bathroom_shower
+    service: light.turn_on
 - id: basement_lights_mode_from_tv
   alias: Basement Lights to Movie Scene from Samsung TV Remote on
   trigger:
   - entity_id: media_player.samsung_tv_remote
+    from: 'off'
     platform: state
     to: 'on'
   action:
@@ -767,6 +587,7 @@
   alias: Basement Stairs Lights on from Stairs Motion
   trigger:
   - entity_id: binary_sensor.stairs_motion
+    from: 'off'
     platform: state
     to: 'on'
   condition:
@@ -780,9 +601,6 @@
   - data:
       entity_id: timer.stairs
     service: timer.start
-  - data:
-      entity_id: scene.entertaining
-    service: scene.turn_on
 - id: basement_stairs_lights_off_from_timer
   alias: Basement Stairs Motion Timer Finished
   trigger:
@@ -791,28 +609,24 @@
     event_type: timer.finished
     platform: event
   condition:
-  - condition: and
-    conditions:
-    - condition: template
-      value_template: '{{ states.input_select.automation_mode.state != ''No Automation''}}'
-    - condition: state
-      entity_id: light.stairs_main_lights
-      state: 'on'
-    - condition: state
-      entity_id: media_player.samsung_tv_remote
-      state: 'off'
-    - condition: state
-      entity_id: binary_sensor.basement_occupancy
-      state: 'off'
-    - condition: state
-      entity_id: light.basement_exercise_area_main_lights
-      state: 'off'
+  - condition: state
+    entity_id: light.stairs_main_lights
+    state: 'on'
+  - condition: state
+    entity_id: media_player.samsung_tv_remote
+    state: 'off'
+  - condition: state
+    entity_id: binary_sensor.basement_occupancy
+    state: 'off'
+  - condition: state
+    entity_id: light.basement_exercise_area_main_lights
+    state: 'off'
   action:
   - data:
       entity_id: scene.basement_lights_off
     service: scene.turn_on
 - id: lights_sun_off
-  alias: Lights off when sun rises
+  alias: Lights off from Sun Elevation
   trigger:
   - above: '-5'
     entity_id: sun.sun
@@ -825,220 +639,92 @@
       - light.upstairs_hall_scone
     service: light.turn_off
 - id: lights_sun_on
-  alias: Lights outside sunset turn on
+  alias: Lights outside on from sunset
   trigger:
   - event: sunset
     platform: sun
+  condition: []
   action:
   - data: {}
     service: script.1546906415963
-- id: denon_slider_volume_set
-  alias: Denon - Set Slider to Volume
-  trigger:
-  - platform: state
-    entity_id: media_player.denon_avrx3000
-  - platform: state
-    entity_id: remote.living_room
-  condition:
-    condition: template
-    value_template: '{% if states.media_player.denon_avrx3000.attributes.volume_level
-      %} {{ (states.media_player.denon_avrx3000.attributes.volume_level | float) !=
-      (states.input_number.denon_volume.state | float) }} {% else %} False {% endif
-      %}'
-  action:
-    service: input_number.set_value
-    data_template:
-      entity_id: input_number.denon_volume
-      value: '{{ states.media_player.denon_avrx3000.attributes.volume_level | float
-        * 100 }}
-
-        '
-- id: denon_volume_set
-  alias: Denon set volume
-  trigger:
-    platform: state
-    entity_id: input_number.denon_volume
-  condition:
-    condition: and
-    conditions:
-    - condition: template
-      value_template: '{{states.input_select.automation_mode.state != ''No Automation''}}'
-    - condition: template
-      value_template: '{% if states.media_player.denon_avrx3000.attributes.volume_level
-        %} {{(trigger.to_state.state | float / 100) != (states.media_player.denon_avrx3000.attributes.volume_level
-        | float) }} {% else %} False {% endif %}'
-  action:
-    service: media_player.volume_set
-    data_template:
-      entity_id: media_player.denon_avrx3000
-      volume_level: '{{ trigger.to_state.state | float / 100 }}'
-- id: denon_deck_volume_set
-  alias: Denon deck volume set
-  trigger:
-    platform: state
-    entity_id: input_number.denon_deck_volume
-  action:
-    service: rest_command.denon_deck_volume_set
-- id: harmony_input_change
-  alias: Send Harmony comand when input select changes
-  trigger:
-    platform: state
-    entity_id: input_select.living_room_remote
-  condition:
-    condition: and
-    conditions:
-    - condition: template
-      value_template: '{{states.input_select.automation_mode.state != ''No Automation''}}'
-    - condition: template
-      value_template: '{{states.input_select.living_room_remote.state != states.remote.living_room.attributes.current_activity
-        }}'
-  action:
-    service: remote.turn_on
-    data_template:
-      entity_id: remote.living_room
-      activity: "{% if trigger.to_state.state == \"Watch TV\" %}\n  19927261 \n{%\
-        \ elif  trigger.to_state.state == \"Watch TV / No Stereo\" %}\n  19925437\
-        \        \n{% elif  trigger.to_state.state == \"Watch Netflix\" %}\n  19933436\n\
-        {% elif  trigger.to_state.state == \"Watch Blu-Ray\" %}\n  19925431\n{% elif\
-        \  trigger.to_state.state == \"PowerOff\" %}\n  -1\n{% elif  trigger.to_state.state\
-        \ == \"Music - cable - deck\" %}\n  19926657\n{% elif  trigger.to_state.state\
-        \ == \"Music - cable\" %}\n  19926777\n{% elif  trigger.to_state.state ==\
-        \ \"Apple TV\" %}\n  19928494\n{% elif  trigger.to_state.state == \"Apple\
-        \ TV - Deck\" %}\n  19955801\n{% endif %}\n"
-- id: harmony_remote_change
-  alias: Set Harmony input select when remote activity
-  trigger:
-    platform: state
-    entity_id: remote.living_room
-  condition:
-    condition: template
-    value_template: '{{ trigger.to_state.attributes.current_activity != states.input_select.living_room_remote.state
-      }}'
-  action:
-  - service: input_select.select_option
-    data_template:
-      entity_id: input_select.living_room_remote
-      option: '{{ states.remote.living_room.attributes.current_activity }}'
-  - service: input_number.set_value
-    data_template:
-      entity_id: input_number.denon_volume
-      value: "\"{% if states.media_player.denon_avrx3000.attributes.volume_level %}\n\
-        \ {{ states.media_player.denon_avrx3000.attributes.volume_level | float }}\n\
-        \          {% else %}\n          20 | float\n          {% endif %}\"\n"
-- id: '1546087730763'
-  alias: Basement Stairs Motion Test
-  trigger:
-  - entity_id: binary_sensor.stairs_motion
-    platform: state
-    to: 'on'
-  condition:
-  - condition: state
-    entity_id: input_boolean.stairs_motion_test
-    state: 'on'
-  action:
-  - data:
-      entity_id: light.basement_game_area_main_lights
-    service: light.toggle
-  - delay: '2'
-  - data:
-      entity_id: light.basement_game_area_main_lights
-    service: light.toggle
 - id: '1546271721605'
-  alias: Basement Lights on from Stairs Motion
+  alias: Basement Lights to Entertaining Scene from Stairs Motion
   trigger:
   - entity_id: binary_sensor.stairs_motion
+    from: 'off'
     platform: state
     to: 'on'
   condition:
   - condition: state
-    entity_id: light.bar_sink_light
+    entity_id: light.basement_sitting_area_table_lamp
     state: 'off'
   action:
   - data:
       entity_id: scene.entertaining
     service: scene.turn_on
 - id: '1546695407320'
-  alias: device tracker phil home
+  alias: device tracker set from phil home
   trigger:
   - entity_id: device_tracker.phils_7
-    platform: state
-    to: home
+    event: enter
+    platform: zone
+    zone: zone.home
   - entity_id: input_boolean.phil_homekit_present
     platform: state
     to: 'on'
-  - entity_id: device_tracker.phil_smartthings
-    platform: state
-    to: home
-  condition: []
+  condition:
+  - condition: state
+    entity_id: input_boolean.device_tracker_phil_home
+    state: 'off'
   action:
   - data:
       entity_id: input_boolean.device_tracker_phil_home
     service: input_boolean.turn_on
-- id: '1546695504577'
-  alias: device tracker phil away
-  trigger:
-  - entity_id: device_tracker.phils_7
-    for: 00:01:00
-    platform: state
-    to: not_home
-  - entity_id: input_boolean.phil_homekit_present
-    for: 00:01:00
-    platform: state
-    to: 'off'
-  - entity_id: device_tracker.phil_smartthings
-    for: 00:01:00
-    platform: state
-    to: not_home
-  condition: []
-  action:
-  - alias: ''
-    data:
-      entity_id: input_boolean.device_tracker_phil_home
-    service: input_boolean.turn_off
 - id: '1546695633187'
-  alias: device tracker nikki home
+  alias: device tracker set from nikki home
   trigger:
   - entity_id: device_tracker.nikkis_iphone
-    platform: state
-    to: home
+    event: enter
+    platform: zone
+    zone: zone.home
   - entity_id: input_boolean.nikki_homekit_present
     platform: state
     to: 'on'
-  - entity_id: device_tracker.nikki_smartthings
-    platform: state
-    to: home
-  condition: []
+  condition:
+  - condition: state
+    entity_id: input_boolean.device_tracker_nikki_home
+    state: 'off'
   action:
   - data:
       entity_id: input_boolean.device_tracker_nikki_home
     service: input_boolean.turn_on
 - id: '1546695777716'
-  alias: device tracker nikki away
+  alias: device tracker set from nikki away
   trigger:
   - entity_id: device_tracker.nikkis_iphone
-    for: 00:01:00
-    platform: state
-    to: not_home
+    event: leave
+    platform: zone
+    zone: zone.home
   - entity_id: input_boolean.nikki_homekit_present
-    for: 00:01:00
     platform: state
     to: 'off'
-  - entity_id: device_tracker.nikki_smartthings
-    for: 00:01:00
-    platform: state
-    to: not_home
-  condition: []
+  condition:
+  - condition: state
+    entity_id: input_boolean.device_tracker_nikki_home
+    state: 'on'
   action:
   - data:
       entity_id: input_boolean.device_tracker_nikki_home
     service: input_boolean.turn_off
 - id: '1546696475350'
-  alias: device tracker trigger home mode
+  alias: Automation Mode set to home from device trackers
   trigger:
   - entity_id: input_boolean.device_tracker_phil_home
+    from: 'off'
     platform: state
     to: 'on'
   - entity_id: input_boolean.device_tracker_nikki_home
+    from: 'off'
     platform: state
     to: 'on'
   condition:
@@ -1051,12 +737,14 @@
       option: Home
     service: input_select.select_option
 - id: '1546696585128'
-  alias: device tracker trigger away mode
+  alias: Automation Mode set to away from device trackers
   trigger:
   - entity_id: input_boolean.device_tracker_phil_home
+    from: 'on'
     platform: state
     to: 'off'
   - entity_id: input_boolean.device_tracker_nikki_home
+    from: 'on'
     platform: state
     to: 'off'
   condition:
@@ -1071,3 +759,77 @@
       entity_id: input_select.automation_mode
       option: Away
     service: input_select.set_options
+- id: '1547473411825'
+  alias: Kitchen Island Light off when Phil Leaves
+  trigger:
+  - entity_id: input_boolean.device_tracker_phil_home
+    platform: state
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: sensor.nikkis_iphone_battery_state
+    state: unplugged
+  - condition: state
+    entity_id: light.kitchen_island_lights
+    state: 'on'
+  action:
+  - data:
+      entity_id: light.kitchen_island_light
+    service: light.turn_off
+- id: '1547519521771'
+  alias: device tracker set from phil away
+  trigger:
+  - entity_id: device_tracker.phils_7
+    event: leave
+    platform: zone
+    zone: zone.home
+  - entity_id: input_boolean.phil_homekit_present
+    platform: state
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: input_boolean.device_tracker_phil_home
+    state: 'on'
+  action:
+  - data:
+      entity_id: input_boolean.device_tracker_phil_home
+    service: input_boolean.turn_off
+- id: '1547771165504'
+  alias: Ecobee thermostat hold mode to home from Automation Mode
+  trigger:
+  - entity_id: input_select.automation_mode
+    platform: state
+    to: Home
+  condition: []
+  action:
+  - data:
+      entity_id: climate.main_floor
+      hold_mode: home
+    service: climate.set_hold_mode
+  - data:
+      entity_id: climate.basement
+      hold_mode: home
+    service: climate.set_hold_mode
+- id: '1547991056940'
+  alias: Living Room Fan high from Desired Mode sensor
+  trigger:
+  - entity_id: sensor.living_room_fan_desired_mode
+    platform: state
+    to: high
+  condition: []
+  action:
+  - data:
+      entity_id: fan.living_room_fan
+      speed: high
+    service: fan.turn_on
+- id: '1548526961586'
+  alias: Basement Stairs Motion Test
+  trigger:
+  - entity_id: binary_sensor.stairs_motion
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - data:
+      entity_id: light.basement_work_area_main_lights
+    service: light.toggle

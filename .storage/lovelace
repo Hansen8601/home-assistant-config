@@ -18,12 +18,6 @@
                         {
                             "cards": [
                                 {
-                                    "entities": [
-                                        "input_select.automation_mode"
-                                    ],
-                                    "type": "glance"
-                                },
-                                {
                                     "card": {
                                         "entity": "input_select.automation_mode",
                                         "hold_action": {
@@ -128,7 +122,7 @@
                                     "type": "conditional"
                                 }
                             ],
-                            "type": "vertical-stack"
+                            "type": "horizontal-stack"
                         },
                         {
                             "entities": [
@@ -146,58 +140,6 @@
                             "type": "entities"
                         },
                         {
-                            "cards": [
-                                {
-                                    "card": [
-                                        {
-                                            "entity": "input_select.automation_mode",
-                                            "hold_action": {
-                                                "action": "none"
-                                            },
-                                            "icon": "mdi:home",
-                                            "name": "Home",
-                                            "tap_action": {
-                                                "action": "call-service",
-                                                "service": "input_select.select_option",
-                                                "service_data": {
-                                                    "entity_id": "input_select.automation_mode",
-                                                    "option": "Home"
-                                                }
-                                            },
-                                            "type": "entity-button"
-                                        }
-                                    ],
-                                    "conditions": [
-                                        {
-                                            "entity": "input.select.automation_mode",
-                                            "state": "Home"
-                                        }
-                                    ],
-                                    "type": "conditional"
-                                }
-                            ],
-                            "type": "vertical-stack"
-                        },
-                        {
-                            "entities": [
-                                {
-                                    "entity": "scene.movie_lighting"
-                                },
-                                {
-                                    "entity": "scene.entertaining"
-                                },
-                                {
-                                    "entity": "scene.bar_time"
-                                },
-                                {
-                                    "entity": "scene.basement_lights_off"
-                                }
-                            ],
-                            "show_header_toggle": false,
-                            "title": "Basement Scenes",
-                            "type": "entities"
-                        },
-                        {
                             "entities": [
                                 {
                                     "entity": "input_number.denon_volume",
@@ -211,6 +153,59 @@
                             "show_header_toggle": true,
                             "title": "Volume",
                             "type": "entities"
+                        },
+                        {
+                            "cards": [
+                                {
+                                    "card": null,
+                                    "entity": "scene.entertaining",
+                                    "hold_action": {
+                                        "action": "none"
+                                    },
+                                    "name": "Basement Entertaining",
+                                    "tap_action": {
+                                        "action": "call-service",
+                                        "service": "scene.turn_on",
+                                        "service_data": {
+                                            "entity": "scene.entertaining"
+                                        }
+                                    },
+                                    "type": "entity-button"
+                                },
+                                {
+                                    "card": null,
+                                    "entity": "scene.movie_lighting",
+                                    "hold_action": {
+                                        "action": "none"
+                                    },
+                                    "name": "Basement Movies",
+                                    "tap_action": {
+                                        "action": "call-service",
+                                        "service": "scene.turn_on",
+                                        "service_data": {
+                                            "entity": "scene.movie_lighting"
+                                        }
+                                    },
+                                    "type": "entity-button"
+                                },
+                                {
+                                    "card": null,
+                                    "entity": "scene.basement_lights_off",
+                                    "hold_action": {
+                                        "action": "none"
+                                    },
+                                    "name": "Basement Lights Off",
+                                    "tap_action": {
+                                        "action": "call-service",
+                                        "service": "scene.turn_on",
+                                        "service_data": {
+                                            "entity": "scene.basement_lights_off"
+                                        }
+                                    },
+                                    "type": "entity-button"
+                                }
+                            ],
+                            "type": "horizontal-stack"
                         }
                     ],
                     "id": "summary",
@@ -1332,6 +1327,15 @@
                         {
                             "entities": [
                                 {
+                                    "entity": "light.basement_sitting_area_can_lights"
+                                },
+                                {
+                                    "entity": "light.basement_sitting_area_table_lamp"
+                                },
+                                {
+                                    "entity": "light.bar_bar_pendants"
+                                },
+                                {
                                     "entity": "light.bar_cove_lights"
                                 },
                                 {
@@ -1341,28 +1345,22 @@
                                     "entity": "light.bar_cabinets"
                                 },
                                 {
-                                    "entity": "light.bar_bar_pendants"
+                                    "entity": "light.downstairs_hallway_hall_lights"
                                 },
                                 {
-                                    "entity": "light.basement_sitting_area_can_lights"
-                                },
-                                {
-                                    "entity": "light.basement_sitting_area_table_lamp"
+                                    "entity": "light.downstairs_hallway_table_lamp"
                                 },
                                 {
                                     "entity": "light.stairs_main_lights"
                                 },
                                 {
-                                    "entity": "light.downstairs_hallway_hall_lights"
-                                },
-                                {
-                                    "entity": "light.basement_exercise_area_main_lights"
+                                    "entity": "binary_sensor.stairs_motion"
                                 },
                                 {
                                     "entity": "light.basement_game_area_main_lights"
                                 },
                                 {
-                                    "entity": "binary_sensor.stairs_motion"
+                                    "entity": "light.basement_exercise_area_main_lights"
                                 }
                             ],
                             "show_header_toggle": true,
@@ -1646,16 +1644,18 @@
                         {
                             "entities": [
                                 {
-                                    "entity": "automation.automation_mode_to_away_actions"
+                                    "entity": "sensor.bedroom_fan_desired_mode"
                                 },
                                 {
-                                    "entity": "automation.automation_mode_to_sleep_actions"
+                                    "entity": "sensor.living_room_fan_desired_mode"
                                 },
                                 {
-                                    "entity": "input_select.automation_mode"
+                                    "entity": "sensor.living_room_denon_volume"
+                                },
+                                {
+                                    "entity": "sensor.living_room_remote_activity"
                                 }
                             ],
-                            "title": "Automation Modes",
                             "type": "entities"
                         }
                     ],
@@ -1686,7 +1686,7 @@
                 {
                     "cards": [
                         {
-                            "content": "## Material Design Icons\nhttps://materialdesignicons.com/   \n## Lovelace Docs\nhttps://www.home-assistant.io/lovelace/ \n## Awesome-HA\nhttps://www.awesome-ha.com/\n## Amazon Alexa Developer Console\nhttps://developer.amazon.com/alexa/console\n",
+                            "content": "## Home Assistant Docker\nhttps://hub.docker.com/r/homeassistant/home-assistant/tags\n## Material Design Icons\nhttps://materialdesignicons.com/   \n## Lovelace Docs\nhttps://www.home-assistant.io/lovelace/ \n## Awesome-HA\nhttps://www.awesome-ha.com/\n## Amazon Alexa Developer Console\nhttps://developer.amazon.com/alexa/console\n",
                             "type": "markdown"
                         }
                     ],

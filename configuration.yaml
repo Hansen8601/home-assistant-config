@@ -32,10 +32,6 @@ recorder:
       - sensor.dark_sky_wind_speed
       - sensor.dark_sky_temperature
       - automation.denon_set_volume
-      - automation.denon__set_slider_to_volume
-      - automation.activity_with_remote__set_automation_to_sleeping
-      - automation.activity_with_remote__set_mode_to_home
-        #- automation.set_harmony_input_select_to_remote_activity
       - script.denon_deck_volume_down
       - script.denon_deck_volume_up
       - script.denon_deck_volume_set
@@ -156,8 +152,8 @@ camera:
   - platform: xeoma
     host: http://192.168.1.22:10090
     cameras:
+      - image_name: porch
       - image_name: driveway
-
 amcrest:
   - host: !secret camera_front_ip
     port: 80
@@ -181,13 +177,11 @@ amcrest:
 #      - sdcard
 
 
-device_tracker:
-  platform: mqtt
-  devices:
-    Phil_SmartThings: smartthings/Phil Hansen's iPhone/presence
-    Nikki_SmartThings: smartthings/Nikki's iPhone/presence
-    #Phil: hass/phil/presence
-    #Nikki: hass/nikki/presence
+#device_tracker:
+#  platform: mqtt
+#  devices:
+#    Phil_SmartThings: smartthings/Phil Hansen's iPhone/presence
+#    Nikki_SmartThings: smartthings/Nikki's iPhone/presence
 
 
 #mqtt broker
@@ -213,9 +207,9 @@ media_player:
     host: !secret dennon_ip
     name: Denon AVRX3000
     #  - platform: plex
-  - platform: samsungtv
-    host: 192.168.1.40
-    port: 8001
+    #  - platform: samsungtv
+    #host: 192.168.1.40
+    #port: 8001
 
 ecobee:
   api_key: !secret ecobee_api_key
@@ -403,6 +397,42 @@ fan:
       - low
       - medium
       - high
+
+
+###################
+#                 #
+# Groups          #
+#                 #
+###################
+group:
+  room_living:
+    entities:
+      - light.ge_living_room_1
+      - light.ge_living_room_2
+      - light.ge_living_room_3
+  room_kitchen:
+    entities:
+      - light.kitchen_cabinet_lights
+      - light.kitchen_island_lights
+      - sensor.kitchen_multisensor_lux
+
+  room_master_bathroom:
+    entities:
+      - light.master_bathroom_chandelier
+      - light.master_bathroom_dimmer
+      - light.master_bathroom_shower
+      - switch.master_bathroom_fan
+
+  room_guest_bathroom:
+    entities:
+      - light.guest_bathroom_lights
+      - switch.guest_bathroom_fan
+
+  outside_lights:
+    entities:
+      - light.entry_walkway_dimmer_switch
+      - light.garage_outside_lights
+
 
 
 ###################
@@ -650,14 +680,25 @@ sensor:
   value_template: '{{ value_json | float }}'
 
 
+####################
+#                  #
+# Template Sensors #
+#                  #
+####################
+
 - platform: template
   sensors:
     living_room_remote_activity:
       value_template: '{{ states.remote.living_room.attributes.current_activity }}'
       friendly_name: 'Living Room Remote Activity'
-
-- platform: template
-  sensors:
+    living_room_denon_volume:
+      friendly_name: 'Living Room Denon Volume'
+      value_template: >-
+        {%- if states.media_player.denon_avrx3000.attributes.volume_level -%}
+          {{states.media_player.denon_avrx3000.attributes.volume_level | float / 100 }}
+        {%- else -%}
+          off
+        {%- endif -%}  
     avg_lux:
       friendly_name: 'Avg Lux'
       value_template: >-
@@ -672,21 +713,51 @@ sensor:
           {{states.sensor.living_room_lux.state | int }}
         {%- endif -%}
       unit_of_measurement: 'Lux'
+    bedroom_fan_desired_mode:
+      friendly_name: 'Bedroom Fan Desired Mode'
+      value_template: >-
+        {%- if is_state("input_select.automation_mode","Away")  -%}
+          off
+        {%- elif is_state("input_select.automation_mode","Sleeping") -%}
+          {%- if states.climate.main_floor.attributes.current_temperature > 77 -%}
+            high
+          {%- elif states.climate.main_floor.attributes.current_temperature > 71 -%}
+            medium
+          {%- elif states.climate.main_floor.attributes.current_temperature > 68 -%}
+            low
+          {%- else -%}
+            off
+          {%- endif -%}
+        {%- else -%}
+          off
+        {%- endif -%}
+    living_room_fan_desired_mode:
+      friendly_name: 'Living Room Fan Desired Mode'
+      value_template: >-
+        {%- if is_state("input_select.automation_mode","Away")  -%}
+          off
+        {%- elif is_state("input_select.automation_mode","Home") -%}
+          {%- if states.climate.main_floor.attributes.current_temperature > 77 -%}
+            high
+          {%- elif states.climate.main_floor.attributes.current_temperature > 75 -%}
+            medium
+          {%- elif states.climate.main_floor.attributes.current_temperature > 73 -%}
+            low
+          {%- else -%}
+            off
+          {%- endif -%}
+        {%- else -%}
+          off
+        {%- endif -%}
+    climate_main_floor_away_mode:
+      friendly_name: 'Climate Main Floor Away Mode'
+      value_template: >-
+        {{states.climate.main_floor.attributes.away_mode}}
+    climate_basement_away_mode:
+      friendly_name: 'Climate Basement Away Mode'
+      value_template: >-
+        {{states.climate.basement.attributes.away_mode}}
 
-      #- platform: template
-      #sensors:
-      #living_room_lux_max:
-      #friendly_name: 'Living Room Lux Max'
-      #value_template: '{{ states.sensor.living_room_lux_stats_mean.attributes["max_value"] | int }}'
-      #unit_of_measurement: 'Lux'
-
-      #- platform: template
-      #  sensors:
-      #    kitchen_lux_max:
-      #      friendly_name: 'Kitchen Lux Max'
-      #      value_template: '{{ states.sensor.kitchen_lux_stats_mean.attributes["max_value"] | int }}'
-      #      unit_of_measurement: 'Lux'
-  
 - platform: statistics
   name: avg_lux_stats
   entity_id: sensor.avg_lux
@@ -780,7 +851,7 @@ input_boolean:
     name: 'Lights Auto Control'
     initial: on
 # Automation Overall control
-  automation_control_on
+  automation_control_on:
     name: 'Automation Master Control'
     initial: on
 # Motion Test
@@ -903,7 +974,7 @@ timer:
   stairs:
     duration: '00:15:00'
  
-group: !include groups.yaml
+    #group: !include groups.yaml
 
 script: !include scripts.yaml
 

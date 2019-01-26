@@ -48,9 +48,7 @@ denon_deck_volume_50:
   - service: input_number.set_value
     data_template:
       entity_id: input_number.denon_deck_volume
-      value: '{{ 50 }}
-
-        '
+      value: '{{ 50 }}'
 denon_deck_volume_55:
   alias: denon_deck_volume_55
   sequence:
@@ -63,9 +61,7 @@ denon_deck_volume_55:
   - service: input_number.set_value
     data_template:
       entity_id: input_number.denon_deck_volume
-      value: '{{ 55 }}
-
-        '
+      value: '{{ 55 }}'
 denon_deck_volume_60:
   alias: denon_deck_volume_60
   sequence:
@@ -78,9 +74,7 @@ denon_deck_volume_60:
   - service: input_number.set_value
     data_template:
       entity_id: input_number.denon_deck_volume
-      value: '{{ 60 }}
-
-        '
+      value: '{{ 60 }}'
 denon_deck_volume_down:
   alias: denon_deck_volume_down
   sequence:
@@ -162,15 +156,11 @@ lights_main_on_dim:
   - service: light.turn_on
     data_template:
       entity_id: light.ge_living_room_1,light.ge_living_room_2,light.ge_living_room_3
-      brightness: '100
-
-        '
+      brightness: 100
   - service: light.turn_on
     data_template:
       entity_id: light.kitchen_island_lights
-      brightness: '100
-
-        '
+      brightness: 100
 lights_upstairs_off:
   alias: lights_all_off
   sequence:
@@ -206,7 +196,7 @@ log_lux_levels:
         max_value\"]}} < {{states.input_number.lux_setpoint.state}} and Kitchen Lux\
         \ < 10'\n{%- endif -%}\n"
 '1546906415963':
-  alias: lights_outside_on
+  alias: lights outside on
   sequence:
   - data:
       brightness: 50
