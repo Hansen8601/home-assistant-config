@@ -725,7 +725,7 @@
                                     "type": "state-icon"
                                 },
                                 {
-                                    "entity": "light.basement_game_area_main_lights",
+                                    "entity": "light.basement_work_area_main_lights",
                                     "style": {
                                         "left": "42%",
                                         "top": "70%"
@@ -1357,7 +1357,7 @@
                                     "entity": "binary_sensor.stairs_motion"
                                 },
                                 {
-                                    "entity": "light.basement_game_area_main_lights"
+                                    "entity": "light.basement_work_area_main_lights"
                                 },
                                 {
                                     "entity": "light.basement_exercise_area_main_lights"

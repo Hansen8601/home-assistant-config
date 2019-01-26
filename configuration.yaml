@@ -939,22 +939,6 @@ input_number:
     max: 80
     step: 1
 
-###################
-#                 #
-# Scene           #
-#                 #
-###################
-
-scene:
-  - name: sleeping
-    entities:
-      input_boolean.set_mode_sleeping: on
-  - name: home
-    entities:
-      input_boolean.set_mode_home: on
-  - name: away
-    entities:
-      input_boolean.set_mode_away: on
 
 ###################
 #                 #
@@ -973,8 +957,6 @@ timer:
     duration: '00:45:00'
   stairs:
     duration: '00:15:00'
- 
-    #group: !include groups.yaml
 
 script: !include scripts.yaml
 
