@@ -127,6 +127,25 @@
                         {
                             "entities": [
                                 {
+                                    "entity": "cover.garage_right"
+                                },
+                                {
+                                    "entity": "cover.garage_left"
+                                },
+                                {
+                                    "entity": "sensor.garage_service_door"
+                                }
+                            ],
+                            "type": "glance"
+                        },
+                        {
+                            "entity": "weather.main_floor",
+                            "name": "Weather",
+                            "type": "weather-forecast"
+                        },
+                        {
+                            "entities": [
+                                {
                                     "entity": "group.room_living",
                                     "name": "Living Room Lights"
                                 },
@@ -138,6 +157,83 @@
                             "show_header_toggle": true,
                             "title": "Lights",
                             "type": "entities"
+                        },
+                        {
+                            "card": {
+                                "entities": [
+                                    "light.basement_exercise_area_main_lights"
+                                ],
+                                "type": "entities"
+                            },
+                            "conditions": [
+                                {
+                                    "entity": "light.basement_exercise_area_main_lights",
+                                    "state": "on"
+                                }
+                            ],
+                            "type": "conditional"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "scene.entertaining",
+                                    "name": "Night",
+                                    "tap_action": {
+                                        "action": "call-service",
+                                        "service": "scene.turn_on",
+                                        "service_data": {
+                                            "entity_id": "scene.entertaining"
+                                        }
+                                    }
+                                },
+                                {
+                                    "entity": "scene.entertaining_day",
+                                    "name": "Day",
+                                    "tap_action": {
+                                        "action": "call-service",
+                                        "service": "scene.turn_on",
+                                        "service_data": {
+                                            "entity_id": "scene.entertaining_day"
+                                        }
+                                    }
+                                },
+                                {
+                                    "entity": "scene.movie_lighting",
+                                    "name": "Movie",
+                                    "tap_action": {
+                                        "action": "call-service",
+                                        "service": "scene.turn_on",
+                                        "service_data": {
+                                            "entity_id": "scene.movie_lighting"
+                                        }
+                                    }
+                                },
+                                {
+                                    "entity": "scene.bar_time",
+                                    "name": "Bright",
+                                    "tap_action": {
+                                        "action": "call-service",
+                                        "service": "scene.turn_on",
+                                        "service_data": {
+                                            "entity_id": "scene.bar_time"
+                                        }
+                                    }
+                                },
+                                {
+                                    "entity": "scene.basement_lights_off",
+                                    "name": "Off",
+                                    "tap_action": {
+                                        "action": "call-service",
+                                        "service": "scene.turn_on",
+                                        "service_data": {
+                                            "entity_id": "scene.basement_lights_off"
+                                        }
+                                    }
+                                }
+                            ],
+                            "show_state": false,
+                            "title": "Basement Lights",
+                            "type": "glance"
                         },
                         {
                             "entities": [
@@ -158,68 +254,55 @@
                             "cards": [
                                 {
                                     "card": null,
-                                    "entity": "scene.entertaining",
-                                    "hold_action": {
-                                        "action": "none"
-                                    },
-                                    "name": "Basement Entertaining",
-                                    "tap_action": {
-                                        "action": "call-service",
-                                        "service": "scene.turn_on",
-                                        "service_data": {
-                                            "entity": "scene.entertaining"
-                                        }
-                                    },
-                                    "type": "entity-button"
+                                    "entity": "climate.main_floor",
+                                    "name": "Main Floor",
+                                    "type": "thermostat"
                                 },
                                 {
                                     "card": null,
-                                    "entity": "scene.movie_lighting",
-                                    "hold_action": {
-                                        "action": "none"
-                                    },
-                                    "name": "Basement Movies",
-                                    "tap_action": {
-                                        "action": "call-service",
-                                        "service": "scene.turn_on",
-                                        "service_data": {
-                                            "entity": "scene.movie_lighting"
-                                        }
-                                    },
-                                    "type": "entity-button"
-                                },
-                                {
-                                    "card": null,
-                                    "entity": "scene.basement_lights_off",
-                                    "hold_action": {
-                                        "action": "none"
-                                    },
-                                    "name": "Basement Lights Off",
-                                    "tap_action": {
-                                        "action": "call-service",
-                                        "service": "scene.turn_on",
-                                        "service_data": {
-                                            "entity": "scene.basement_lights_off"
-                                        }
-                                    },
-                                    "type": "entity-button"
+                                    "entity": "climate.basement",
+                                    "name": "Basement",
+                                    "type": "thermostat"
                                 }
                             ],
-                            "type": "horizontal-stack"
+                            "type": "vertical-stack"
                         }
                     ],
-                    "id": "summary",
-                    "title": "Summary"
+                    "icon": "mdi:home",
+                    "id": "home",
+                    "title": "Home"
                 },
                 {
                     "cards": [
                         {
                             "elements": [
                                 {
+                                    "entity": "climate.main_floor",
+                                    "style": {
+                                        "left": "69%",
+                                        "top": "34%"
+                                    },
+                                    "tap_action": {
+                                        "action": "more-info"
+                                    },
+                                    "type": "state-badge"
+                                },
+                                {
+                                    "entity": "climate.basement",
+                                    "style": {
+                                        "left": "69%",
+                                        "top": "78%"
+                                    },
+                                    "tap_action": {
+                                        "action": "more-info"
+                                    },
+                                    "type": "state-badge"
+                                },
+                                {
                                     "entity": "light.kitchen_island_lights",
                                     "style": {
                                         "left": "39%",
-                                        "top": "38%"
+                                        "top": "18%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -230,7 +313,7 @@
                                     "entity": "light.kitchen_cabinet_lights",
                                     "style": {
                                         "left": "39%",
-                                        "top": "48%"
+                                        "top": "28%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -241,7 +324,7 @@
                                     "entity": "light.ge_living_room_1",
                                     "style": {
                                         "left": "61%",
-                                        "top": "35%"
+                                        "top": "15%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -252,7 +335,7 @@
                                     "entity": "light.ge_living_room_2",
                                     "style": {
                                         "left": "61%",
-                                        "top": "28%"
+                                        "top": "20%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -263,7 +346,7 @@
                                     "entity": "light.ge_living_room_3",
                                     "style": {
                                         "left": "58%",
-                                        "top": "19%"
+                                        "top": "11%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -274,7 +357,7 @@
                                     "entity": "fan.living_room_fan",
                                     "style": {
                                         "left": "50%",
-                                        "top": "30%"
+                                        "top": "16%"
                                     },
                                     "tap_action": {
                                         "action": "more-info"
@@ -285,7 +368,7 @@
                                     "entity": "light.guest_bathroom_lights",
                                     "style": {
                                         "left": "70%",
-                                        "top": "40%"
+                                        "top": "23.5%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -296,7 +379,7 @@
                                     "entity": "switch.guest_bathroom_fan",
                                     "style": {
                                         "left": "74%",
-                                        "top": "40%"
+                                        "top": "23.5%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -307,7 +390,7 @@
                                     "entity": "fan.master_bedroom_fan",
                                     "style": {
                                         "left": "70%",
-                                        "top": "27%"
+                                        "top": "16%"
                                     },
                                     "tap_action": {
                                         "action": "more-info"
@@ -318,7 +401,7 @@
                                     "entity": "light.master_bathroom_dimmer",
                                     "style": {
                                         "left": "78.5%",
-                                        "top": "30%"
+                                        "top": "17%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -329,7 +412,7 @@
                                     "entity": "switch.master_bathroom_fan",
                                     "style": {
                                         "left": "84%",
-                                        "top": "30%"
+                                        "top": "17%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -340,7 +423,7 @@
                                     "entity": "light.master_bathroom_shower",
                                     "style": {
                                         "left": "86%",
-                                        "top": "30%"
+                                        "top": "17%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -351,7 +434,7 @@
                                     "entity": "light.master_bathroom_chandelier",
                                     "style": {
                                         "left": "81%",
-                                        "top": "34%"
+                                        "top": "20%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -362,7 +445,7 @@
                                     "entity": "light.upstairs_hall_scone",
                                     "style": {
                                         "left": "70%",
-                                        "top": "48%"
+                                        "top": "27.5%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -373,7 +456,7 @@
                                     "entity": "light.entry_walkway_dimmer_switch",
                                     "style": {
                                         "left": "57%",
-                                        "top": "55%"
+                                        "top": "32%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -384,7 +467,7 @@
                                     "entity": "light.garage_outside_lights",
                                     "style": {
                                         "left": "51.5%",
-                                        "top": "95%"
+                                        "top": "55%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -395,7 +478,7 @@
                                     "entity": "light.garage_outside_lights",
                                     "style": {
                                         "left": "30%",
-                                        "top": "95%"
+                                        "top": "55%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -406,7 +489,7 @@
                                     "entity": "light.garage_outside_lights",
                                     "style": {
                                         "left": "26.5%",
-                                        "top": "92%"
+                                        "top": "53%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -417,7 +500,7 @@
                                     "entity": "light.garage_outside_lights",
                                     "style": {
                                         "left": "10.5%",
-                                        "top": "92%"
+                                        "top": "53%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -428,7 +511,7 @@
                                     "entity": "switch.fireplace",
                                     "style": {
                                         "left": "50%",
-                                        "top": "18.5%"
+                                        "top": "11%"
                                     },
                                     "tap_action": {
                                         "action": "more-info"
@@ -440,7 +523,7 @@
                                     "icon": "mdi:power",
                                     "style": {
                                         "left": "46%",
-                                        "top": "24%"
+                                        "top": "14%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -452,7 +535,7 @@
                                     "icon": "mdi:music",
                                     "style": {
                                         "left": "49%",
-                                        "top": "24%"
+                                        "top": "14%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -464,7 +547,7 @@
                                     "icon": "mdi:television-classic",
                                     "style": {
                                         "left": "52%",
-                                        "top": "24%"
+                                        "top": "14%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -476,7 +559,7 @@
                                     "icon": "mdi:apple",
                                     "style": {
                                         "left": "55%",
-                                        "top": "24%"
+                                        "top": "14%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -511,7 +594,7 @@
                                     "entity": "cover.garage_left",
                                     "style": {
                                         "left": "19%",
-                                        "top": "78%"
+                                        "top": "46%"
                                     },
                                     "type": "state-badge"
                                 },
@@ -519,7 +602,7 @@
                                     "entity": "cover.garage_right",
                                     "style": {
                                         "left": "41%",
-                                        "top": "78%"
+                                        "top": "46%"
                                     },
                                     "type": "state-badge"
                                 },
@@ -527,31 +610,16 @@
                                     "entity": "sensor.garage_service_door",
                                     "style": {
                                         "left": "26%",
-                                        "top": "47%"
+                                        "top": "24%"
                                     },
                                     "type": "state-badge"
-                                }
-                            ],
-                            "image": "/local/home-ground-floor.png",
-                            "type": "picture-elements"
-                        }
-                    ],
-                    "icon": "mdi:home-outline",
-                    "id": "plan",
-                    "panel": true,
-                    "title": "Home"
-                },
-                {
-                    "badges": [],
-                    "cards": [
-                        {
-                            "elements": [
+                                },
                                 {
                                     "entity": "light.bar_cove_lights",
                                     "hold_action": "more-info",
                                     "style": {
-                                        "left": "36%",
-                                        "top": "29%"
+                                        "left": "66%",
+                                        "top": "90%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -564,8 +632,8 @@
                                         "action": "more-info"
                                     },
                                     "style": {
-                                        "left": "41%",
-                                        "top": "29%"
+                                        "left": "72%",
+                                        "top": "90%"
                                     },
                                     "tap_action": "toggle",
                                     "type": "state-icon"
@@ -573,8 +641,8 @@
                                 {
                                     "entity": "light.bar_cabinets",
                                     "style": {
-                                        "left": "43%",
-                                        "top": "34%"
+                                        "left": "63%",
+                                        "top": "83%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -584,8 +652,8 @@
                                 {
                                     "entity": "light.bar_sink_light",
                                     "style": {
-                                        "left": "43%",
-                                        "top": "38%"
+                                        "left": "63%",
+                                        "top": "85%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -595,8 +663,8 @@
                                 {
                                     "entity": "light.bar_cabinets",
                                     "style": {
-                                        "left": "43%",
-                                        "top": "42%"
+                                        "left": "63%",
+                                        "top": "87%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -606,8 +674,8 @@
                                 {
                                     "entity": "light.bar_bar_pendants",
                                     "style": {
-                                        "left": "40%",
-                                        "top": "36%"
+                                        "left": "66%",
+                                        "top": "86%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -617,8 +685,8 @@
                                 {
                                     "entity": "light.bar_bar_pendants",
                                     "style": {
-                                        "left": "40%",
-                                        "top": "40%"
+                                        "left": "66%",
+                                        "top": "84%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -628,8 +696,8 @@
                                 {
                                     "entity": "light.basement_sitting_area_can_lights",
                                     "style": {
-                                        "left": "25%",
-                                        "top": "52%"
+                                        "left": "80%",
+                                        "top": "76%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -639,8 +707,8 @@
                                 {
                                     "entity": "light.basement_sitting_area_can_lights",
                                     "style": {
-                                        "left": "31%",
-                                        "top": "52%"
+                                        "left": "80%",
+                                        "top": "82%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -650,8 +718,8 @@
                                 {
                                     "entity": "light.basement_sitting_area_can_lights",
                                     "style": {
-                                        "left": "25%",
-                                        "top": "40%"
+                                        "left": "84%",
+                                        "top": "76%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -661,8 +729,8 @@
                                 {
                                     "entity": "light.basement_sitting_area_can_lights",
                                     "style": {
-                                        "left": "31%",
-                                        "top": "40%"
+                                        "left": "84%",
+                                        "top": "82%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -672,8 +740,8 @@
                                 {
                                     "entity": "light.basement_sitting_area_table_lamp",
                                     "style": {
-                                        "left": "30%",
-                                        "top": "45%"
+                                        "left": "80%",
+                                        "top": "80%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -683,8 +751,8 @@
                                 {
                                     "entity": "light.downstairs_hallway_hall_lights",
                                     "style": {
-                                        "left": "55%",
-                                        "top": "50%"
+                                        "left": "40%",
+                                        "top": "77%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -694,8 +762,8 @@
                                 {
                                     "entity": "light.downstairs_hallway_hall_lights",
                                     "style": {
-                                        "left": "60%",
-                                        "top": "50%"
+                                        "left": "45%",
+                                        "top": "77%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -705,8 +773,8 @@
                                 {
                                     "entity": "light.downstairs_hallway_hall_lights",
                                     "style": {
-                                        "left": "65%",
-                                        "top": "50%"
+                                        "left": "50%",
+                                        "top": "77%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -716,8 +784,8 @@
                                 {
                                     "entity": "light.stairs_main_lights",
                                     "style": {
-                                        "left": "69%",
-                                        "top": "41%"
+                                        "left": "40%",
+                                        "top": "83%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -727,8 +795,8 @@
                                 {
                                     "entity": "light.basement_work_area_main_lights",
                                     "style": {
-                                        "left": "42%",
-                                        "top": "70%"
+                                        "left": "67%",
+                                        "top": "65%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -738,8 +806,19 @@
                                 {
                                     "entity": "light.basement_exercise_area_main_lights",
                                     "style": {
-                                        "left": "30%",
-                                        "top": "70%"
+                                        "left": "80%",
+                                        "top": "65%"
+                                    },
+                                    "tap_action": {
+                                        "action": "toggle"
+                                    },
+                                    "type": "state-icon"
+                                },
+                                {
+                                    "entity": "light.downstairs_hallway_table_lamp",
+                                    "style": {
+                                        "left": "45%",
+                                        "top": "80%"
                                     },
                                     "tap_action": {
                                         "action": "toggle"
@@ -747,14 +826,14 @@
                                     "type": "state-icon"
                                 }
                             ],
-                            "image": "/local/home-basement.png",
+                            "image": "/local/home-floor-plan.png",
                             "type": "picture-elements"
                         }
                     ],
                     "icon": "mdi:home-outline",
-                    "id": "plan2",
+                    "id": "plan",
                     "panel": true,
-                    "title": "Basement"
+                    "title": "Floor Plan"
                 },
                 {
                     "cards": [
@@ -1285,12 +1364,27 @@
                         },
                         {
                             "entities": [
-                                "light.ge_living_room_1",
-                                "light.ge_living_room_2",
-                                "light.ge_living_room_3",
-                                "fan.living_room_fan",
-                                "sensor.living_room_lux",
-                                "switch.fireplace"
+                                {
+                                    "entity": "light.ge_living_room_1"
+                                },
+                                {
+                                    "entity": "light.ge_living_room_2"
+                                },
+                                {
+                                    "entity": "light.ge_living_room_3"
+                                },
+                                {
+                                    "entity": "fan.living_room_fan"
+                                },
+                                {
+                                    "entity": "sensor.living_room_fan_desired_mode"
+                                },
+                                {
+                                    "entity": "sensor.living_room_lux"
+                                },
+                                {
+                                    "entity": "switch.fireplace"
+                                }
                             ],
                             "show_header_toggle": false,
                             "title": "Living Room",
@@ -1298,7 +1392,12 @@
                         },
                         {
                             "entities": [
-                                "fan.master_bedroom_fan"
+                                {
+                                    "entity": "fan.master_bedroom_fan"
+                                },
+                                {
+                                    "entity": "sensor.living_room_fan_desired_mode"
+                                }
                             ],
                             "show_header_toggle": true,
                             "title": "Master Bedroom",
@@ -1354,13 +1453,13 @@
                                     "entity": "light.stairs_main_lights"
                                 },
                                 {
-                                    "entity": "binary_sensor.stairs_motion"
-                                },
-                                {
                                     "entity": "light.basement_work_area_main_lights"
                                 },
                                 {
                                     "entity": "light.basement_exercise_area_main_lights"
+                                },
+                                {
+                                    "entity": "binary_sensor.stairs_motion"
                                 }
                             ],
                             "show_header_toggle": true,
@@ -1390,7 +1489,7 @@
                                 "cover.garage_right",
                                 "sensor.garage_service_door"
                             ],
-                            "show_header_toggle": true,
+                            "show_header_toggle": false,
                             "title": "Garage",
                             "type": "entities"
                         }
@@ -1506,10 +1605,6 @@
                                             "secondary_info": "last-changed"
                                         },
                                         {
-                                            "entity": "device_tracker.phil_smartthings",
-                                            "secondary_info": "last-changed"
-                                        },
-                                        {
                                             "entity": "device_tracker.phils_7",
                                             "secondary_info": "last-changed"
                                         },
@@ -1535,10 +1630,6 @@
                                         {
                                             "entity": "input_boolean.device_tracker_nikki_home",
                                             "name": "Combined Device Tracker - Nikki",
-                                            "secondary_info": "last-changed"
-                                        },
-                                        {
-                                            "entity": "device_tracker.nikki_smartthings",
                                             "secondary_info": "last-changed"
                                         },
                                         {
@@ -1574,39 +1665,14 @@
                         },
                         {
                             "entities": [
-                                "binary_sensor.indoor_lights_auto_on",
-                                "sun.sun",
-                                "sensor.dark_sky_cloud_coverage",
-                                "sensor.dark_sky_cloud_coverage_stats_mean",
-                                "sensor.living_room_lux",
-                                "sensor.kitchen_multisensor_lux",
-                                "sensor.avg_lux",
-                                {
-                                    "entity": "sensor.avg_lux_stats_mean",
-                                    "name": "Avg Lux Stats Mean"
-                                },
-                                {
-                                    "filter": {
-                                        "include": [
-                                            "sensor.avg_lux_stats_mean.max_value"
-                                        ]
-                                    },
-                                    "heading_name": "Avg Lux Attributes",
-                                    "heading_state": "States",
-                                    "type": "custom:entity-attributes-card"
-                                }
-                            ],
-                            "show_header_toggle": true,
-                            "title": "Indoor Lights Auto Debug",
-                            "type": "entities"
-                        },
-                        {
-                            "entities": [
                                 {
                                     "entity": "input_select.automation_mode"
                                 },
                                 {
                                     "entity": "input_boolean.lux_light_control"
+                                },
+                                {
+                                    "entity": "input_boolean.automation_heat_control_on"
                                 },
                                 {
                                     "entity": "input_boolean.text_alerts"
@@ -1621,7 +1687,7 @@
                                     "entity": "input_number.fireplace_high_setpoint"
                                 },
                                 {
-                                    "entity": "input_boolean.stairs_motion_test"
+                                    "entity": "sensor.indoor_lights_auto_on_message"
                                 }
                             ],
                             "show_header_toggle": false,
@@ -1631,46 +1697,15 @@
                         {
                             "entities": [
                                 {
-                                    "entity": "script.twillio_test"
-                                },
-                                {
-                                    "entity": "script.1546906415963"
+                                    "entity": "automation.basement_stairs_motion_test"
                                 }
                             ],
                             "show_header_toggle": false,
-                            "title": "Scripts Debug",
-                            "type": "entities"
-                        },
-                        {
-                            "entities": [
-                                {
-                                    "entity": "sensor.bedroom_fan_desired_mode"
-                                },
-                                {
-                                    "entity": "sensor.living_room_fan_desired_mode"
-                                },
-                                {
-                                    "entity": "sensor.living_room_denon_volume"
-                                },
-                                {
-                                    "entity": "sensor.living_room_remote_activity"
-                                }
-                            ],
+                            "title": "Scripts and Automation Debug",
                             "type": "entities"
                         }
                     ],
                     "title": "Debug"
-                },
-                {
-                    "badges": [],
-                    "cards": [
-                        {
-                            "type": "iframe",
-                            "url": "http://192.168.1.22:9000/#/dashboard"
-                        }
-                    ],
-                    "panel": true,
-                    "title": "Portainer"
                 },
                 {
                     "cards": [

@@ -12,8 +12,9 @@ tags
 *.conf
 secrets.yaml
 home-assistant.log
-home-assistant_v2.db
+home-assistant_v2.*
 harmony_living_room.conf
+ip_bans.yaml
 custom_components
 known_devices.yaml
 HarmonyHub.AuthorizationToken

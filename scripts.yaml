@@ -185,16 +185,7 @@ log_lux_levels:
   - service: logbook.log
     data_template:
       name: '{{log_name}}'
-      message: "{%- if (states.sun.sun.attributes.elevation | int < 10 ) -%}\n  'Sun\
-        \ Elevation: {{states.sun.sun.attributes.elevation}} < 10'\n{%- elif (states.sensor.dark_sky_cloud_coverage_stats_mean.state\
-        \ | int > 85) -%}\n  'Cloud Cover: {{states.sensor.dark_sky_cloud_coverage_stats_mean.state}}\
-        \ > 85' \n{%- elif (states.sensor.avg_lux_stats_mean.attributes[\"max_value\"\
-        ] | int < states.input_number.lux_setpoint.state | int\n      and states.sensor.avg_lux_stats_mean.attributes[\"\
-        max_value\"] != 'unknown'\n      and (states.sensor.kitchen_multisensor_lux\
-        \ < 10 or as_timestamp(now()) - as_timestamp(states.sensor.kitchen_multisensor_lux.last_changed)\
-        \ > 3600)) -%}\n  'Avg Lux Max {{states.sensor.avg_lux_stats_mean.attributes[\"\
-        max_value\"]}} < {{states.input_number.lux_setpoint.state}} and Kitchen Lux\
-        \ < 10'\n{%- endif -%}\n"
+      message: '{{states.sensor.indoor_lighs_auto_on_message}}'
 '1546906415963':
   alias: lights outside on
   sequence:

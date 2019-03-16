@@ -3,17 +3,46 @@
 # Used to switch between development & production system
 homeassistant: !include homeassistant.yaml
 
+alexa:
 auth:
+config:
+discovery:
+
+ecobee:
+  api_key: !secret ecobee_api_key
 
 frontend:
   javascript_version: latest
+
+history:
+  exclude:
+    domains:
+      - automation
+      - weblink
+      - updater
 
 http:
   api_password: !secret api_password
   ip_ban_enabled: True
   login_attempts_threshold: 5
 
-# Recorder
+logbook:
+  exclude:
+    entities:
+      - binary_sensor.stairs_motion
+      - sensor.living_room_denon_volume
+      - automation.denon_slider_volume_set
+      - automation.denon_volume_set
+      - automation.denon_deck_volume_set
+      - input_boolean.set_mode_home
+      - input_boolean.set_mode_sleeping
+      - input_boolean.set_mode_away
+      - input_boolean.nikki_homekit_present
+      - input_boolean.phil_homekit_present
+
+logger:
+  default: info
+
 recorder:
   purge_interval: 1
   purge_keep_days: 7
@@ -26,15 +55,10 @@ recorder:
       - input_number.denon_volume
       - input_select.living_room_remote
       - binary_sensor.main_floor_occupancy
-      - sensor.average_load_1m
-      - sensor.average_load_5m
       - sensor.dark_sky_wind_bearing
       - sensor.dark_sky_wind_speed
       - sensor.dark_sky_temperature
       - automation.denon_set_volume
-      - script.denon_deck_volume_down
-      - script.denon_deck_volume_up
-      - script.denon_deck_volume_set
     domains:
       - weather
       - sun
@@ -43,36 +67,8 @@ recorder:
       - remote
       - group
       - timer
-
-
-# View all events in a logbook
-logbook:
-  exclude:
-    entities:
-      - automation.denon_slider_volume_set
-      - automation.denon_volume_set
-      - automation.denon_deck_volume_set
-      - input_boolean.set_mode_home
-      - input_boolean.set_mode_sleeping
-      - input_boolean.set_mode_away
-      - input_boolean.nikki_homekit_present
-      - input_boolean.phil_homekit_present
-        #- binary_sensor.stairs_motion
-
-
-# Enables support for tracking state changes over time.
-history:
-  exclude:
-    domains:
-      - automation
-      - weblink
-      - updater
-
-
-# Logger settings
-logger:
-  default: warn
-
+        
+system_health:
 
 influxdb:
   host: 192.168.1.22
@@ -84,10 +80,6 @@ influxdb:
       - group
       - timer
 
-alexa:
-
-ios:
-
 intent_script:
   ActivateSceneIntent:
     action:
@@ -98,33 +90,23 @@ intent_script:
       type: plain  
       text: !include alexa_confirm.yaml
 
+ios:
+
 lutron_caseta:
   host: 192.168.1.85
   keyfile: caseta.key
   certfile: caseta.crt
   ca_certs: caseta-bridge.crt
 
-# Track the sun
 sun:
   elevation: 278
-
 
 # Allows you to issue voice commands from the frontend
 #conversation:
 
-
-# Checks for available updates
 updater:
   card_urls:
     - https://raw.githubusercontent.com/kalkih/mini-media-player/master/tracker.json
-
-# Discover some devices automatically
-discovery:
-
-
-# Show configuration panel
-config:
-
 
 # Homekit integration
 homekit:
@@ -142,47 +124,36 @@ homekit:
 ffmpeg:
   ffmpeg_bin: /usr/bin/ffmpeg
 
-
-camera:
-  - platform: amcrest
-#  - platform: ffmpeg
-#    input: !secret camera_front_url1
-#    name: 'Front Door 2'
-
-  - platform: xeoma
-    host: http://192.168.1.22:10090
-    cameras:
-      - image_name: porch
-      - image_name: driveway
 amcrest:
   - host: !secret camera_front_ip
-    port: 80
+    #port: 80
     name: 'Front Door'
     username: !secret amcrestuser
     password: !secret amcrestpwd
-    resolution: high
+    #resolution: low
     stream_source: rtsp
     #sensors:
     #  - motion_detector
     #  - sdcard
   - host: !secret camera_driveway_ip
-    port: 80
+    #port: 80
     name: 'Driveway'
     username: !secret amcrestuser
     password: !secret amcrestpwd
-    resolution: high
+    #resolution: low
     stream_source: rtsp
 #    sensors:
 #      - motion_detector
 #      - sdcard
 
-
-#device_tracker:
-#  platform: mqtt
-#  devices:
-#    Phil_SmartThings: smartthings/Phil Hansen's iPhone/presence
-#    Nikki_SmartThings: smartthings/Nikki's iPhone/presence
-
+camera:
+  - platform: amcrest
+#  - platform: xeoma
+#    host: http://192.168.1.22:10090
+#    cameras:
+#      - image_name: porch
+#      - image_name: driveway
+#
 
 #mqtt broker
 mqtt:
@@ -190,30 +161,23 @@ mqtt:
   port: 1883
   keepalive: 60
 
-
 twilio:
   account_sid: !secret twillo_sid 
   auth_token: !secret twillo_token
-
 
 notify:
   - name: twilio_sms
     platform: twilio_sms
     from_number: !secret twillo_number
 
-
 media_player:
   - platform: denonavr
     host: !secret dennon_ip
     name: Denon AVRX3000
-    #  - platform: plex
-    #  - platform: samsungtv
-    #host: 192.168.1.40
-    #port: 8001
-
-ecobee:
-  api_key: !secret ecobee_api_key
-
+    #- platform: plex
+  - platform: samsungtv
+    host: 192.168.1.40
+    port: 8001
 
 apple_tv:
   - host: 192.168.1.126
@@ -229,12 +193,10 @@ apple_tv:
     name: "Apple TV Basement"
     start_off: true
 
-
 remote:
   - platform: harmony
     name: living_room
     host: !secret harmony_ip
-
 
 rest_command:
   denon_deck_volume_set:
@@ -262,6 +224,22 @@ rest_command:
     method: post
     payload: 'cmd0=PutMasterVolumeSet%2F-20&ZoneName=ZONE2'
 
+    #transmission:
+    #  host: !secret transmission_server
+    #  port: !secret transmission_port
+    #  #username: !secret transmission_username
+    #  #password: !secret transmission_password
+    #  monitored_conditions:
+    #    - 'current_status'
+    #    - 'download_speed'
+    #    - 'upload_speed'
+    #    - 'active_torrents'
+    #    - 'paused_torrents'
+    #    - 'total_torrents'
+    #    - 'started_torrents'
+    #    - 'completed_torrents'
+    #  turtle_mode: true
+    #
 
 ###################
 #                 #
@@ -296,6 +274,8 @@ binary_sensor:
           {%- else -%}
             False
           {%- endif -%}
+          
+
 
   - platform: template
     sensors:
@@ -315,7 +295,7 @@ binary_sensor:
     name: 'stairs_motion'
     payload_on: 'active'
     payload_off: 'inactive'
-    retain: true
+    #retain: true
 
 
 ###################
@@ -325,37 +305,33 @@ binary_sensor:
 ###################
 
 cover:
-- platform: mqtt
-  state_topic: "esp8266/garageIO/switch1"
-  command_topic: "esp8266/garageIO/switch1/set"
-  #availability_topic: "rpi/garage/status"
-  #payload_available: "running"
-  #payload_not_available: "stopped"
-  name: "garage right"
-  device_class: "garage"
-  qos: 0 #Must be zero to work correctly
-  retain: false 
-  payload_open: "open"
-  payload_close: "close"
-  state_open: "open"
-  state_closed: "closed"
-  #optimistic: false
+  - platform: mqtt
+    state_topic: "esp8266/garageIO/switch1"
+    command_topic: "esp8266/garageIO/switch1/set"
+    #availability_topic: "rpi/garage/status"
+    #payload_available: "running"
+    #payload_not_available: "stopped"
+    name: "garage right"
+    qos: 0 #Must be zero to work correctly
+    payload_open: "open"
+    payload_close: "close"
+    state_open: "open"
+    state_closed: "closed"
+    optimistic: false
 
-- platform: mqtt
-  state_topic: "esp8266/garageIO/switch2"
-  command_topic: "esp8266/garageIO/switch2/set"
-  #availability_topic: "rpi/garage/status"
-  #payload_available: "running"
-  #payload_not_available: "stopped"
-  name: "garage left"
-  device_class: "garage"
-  qos: 0 #must be zero to work correctly.
-  retain: false
-  payload_open: "open"
-  payload_close: "close"
-  state_open: "open"
-  state_closed: "closed"
-  #optimistic: false
+  - platform: mqtt
+    state_topic: "esp8266/garageIO/switch2"
+    command_topic: "esp8266/garageIO/switch2/set"
+    #availability_topic: "rpi/garage/status"
+    #payload_available: "running"
+    #payload_not_available: "stopped"
+    name: "garage left"
+    qos: 0 #must be zero to work correctly.
+    payload_open: "open"
+    payload_close: "close"
+    state_open: "open"
+    state_closed: "closed"
+    optimistic: false
 
 
 ###################
@@ -434,7 +410,6 @@ group:
       - light.garage_outside_lights
 
 
-
 ###################
 #                 #
 # Light           #
@@ -454,7 +429,7 @@ light:
   payload_on: "on"
   payload_off: "off"
   optimistic: false
-  retain: true
+  #retain: true
 - platform: mqtt
   name: "ge_living_room_2"
   state_topic: "smartthings/GE Living Room 2/switch"
@@ -467,7 +442,7 @@ light:
   payload_on: "on"
   payload_off: "off"
   optimistic: false
-  retain: true
+  #retain: true
 - platform: mqtt
   name: "ge_living_room_3"
   state_topic: "smartthings/GE Living Room 3/switch"
@@ -480,7 +455,7 @@ light:
   payload_on: "on"
   payload_off: "off"
   optimistic: false
-  retain: true
+  #retain: true
 - platform: mqtt
   name: "Guest Bathroom Lights"
   state_topic: "smartthings/Guest Bathroom Lights/switch"
@@ -493,7 +468,7 @@ light:
   payload_on: "on"
   payload_off: "off"
   optimistic: false
-  retain: true
+  #retain: true
 - platform: mqtt
   name: "Entry_Walkway_Dimmer_Switch"
   state_topic: "smartthings/Entry Walkway Dimmer Switch/switch"
@@ -506,7 +481,7 @@ light:
   payload_on: "on"
   payload_off: "off"
   optimistic: false
-  retain: true
+  #retain: true
 - platform: mqtt
   name: "Garage_Outside_Lights"
   state_topic: "smartthings/Garage Outside Lights/switch"
@@ -519,7 +494,7 @@ light:
   payload_on: "on"
   payload_off: "off"
   optimistic: false
-  retain: true
+  #retain: true
 - platform: mqtt
   name: "Master_Bathroom_Dimmer"
   state_topic: "smartthings/Master bathroom dimmer/switch"
@@ -532,7 +507,7 @@ light:
   payload_on: "on"
   payload_off: "off"
   optimistic: false
-  retain: true
+  #retain: true
 - platform: mqtt
   name: "Master_Bathroom_Shower"
   state_topic: "smartthings/Master bathroom shower/switch"
@@ -541,7 +516,7 @@ light:
   payload_on: "on"
   payload_off: "off"
   optimistic: false
-  retain: true
+  #retain: true
 - platform: mqtt
   name: "Upstairs_Hall_Scone"
   state_topic: "smartthings/Upstairs Hall Scone/switch"
@@ -554,7 +529,7 @@ light:
   payload_on: "on"
   payload_off: "off"
   optimistic: false
-  retain: true
+  #retain: true
 - platform: mqtt
   name: "Kitchen_Cabinet_Lights"
   state_topic: "smartthings/Kitchen Cabinet Lights/switch"
@@ -562,7 +537,7 @@ light:
   payload_on: "on"
   payload_off: "off"
   optimistic: false
-  retain: true
+  #retain: true
 - platform: mqtt
   name: "Kitchen_island_Lights"
   state_topic: "smartthings/Kitchen Island Lights/switch"
@@ -575,7 +550,7 @@ light:
   payload_on: "on"
   payload_off: "off"
   optimistic: false
-  retain: true
+  #retain: true
 - platform: mqtt
   name: "Master_bathroom_chandelier"
   state_topic: "smartthings/Master bathroom chandelier/switch"
@@ -588,7 +563,7 @@ light:
   payload_on: "on"
   payload_off: "off"
   optimistic: false
-  retain: true
+  #retain: true
 
 
 ###################
@@ -680,11 +655,11 @@ sensor:
   value_template: '{{ value_json | float }}'
 
 
-####################
-#                  #
-# Template Sensors #
-#                  #
-####################
+#####################
+#                   #
+# Sensor - Template #
+#                   #
+#####################
 
 - platform: template
   sensors:
@@ -721,15 +696,19 @@ sensor:
         {%- elif is_state("input_select.automation_mode","Sleeping") -%}
           {%- if states.climate.main_floor.attributes.current_temperature > 77 -%}
             high
-          {%- elif states.climate.main_floor.attributes.current_temperature > 71 -%}
+          {%- elif states.climate.main_floor.attributes.current_temperature > 70 -%}
             medium
-          {%- elif states.climate.main_floor.attributes.current_temperature > 68 -%}
+          {%- elif states.climate.main_floor.attributes.current_temperature > 66 -%}
             low
           {%- else -%}
             off
           {%- endif -%}
-        {%- else -%}
-          off
+        {%- else -%} # Until 9,keep fan at what it was at. 
+          {%- if (now().hour > 0 and now().hour < 9)-%}
+            {{states.sensor.bedroom_fan_desired_mode.state}}
+          {%- else -%}
+            off
+          {%- endif -%}
         {%- endif -%}
     living_room_fan_desired_mode:
       friendly_name: 'Living Room Fan Desired Mode'
@@ -757,6 +736,31 @@ sensor:
       friendly_name: 'Climate Basement Away Mode'
       value_template: >-
         {{states.climate.basement.attributes.away_mode}}
+    indoor_lights_auto_on_message:
+      friendly_name: 'Indoor Lights Auto On Text Message'
+      value_template: >-
+        {%- if is_state("input_select.automation_mode","Home") -%}
+          {%- if (as_timestamp(now()) - (as_timestamp(states.binary_sensor.indoor_lights_auto_on.last_changed) | int) > 900 or
+                  as_timestamp(now()) - (as_timestamp(states.input_select.automation_mode.last_changed) | int) < 900 or
+                  as_timestamp(now()) - (as_timestamp(states.input_number.lux_setpoint.last_changed) | int) < 10) -%}
+            {%- if ((states.sun.sun.attributes.elevation | int) < 10 ) -%}
+              'Sun < 10'
+            {%- elif ((states.sensor.dark_sky_cloud_coverage_stats_mean.state | int) > 85) -%}
+              'Cloud coverage > 85'
+            {%- elif ((states.sensor.avg_lux_stats_mean.attributes["max_value"] | int) < (states.input_number.lux_setpoint.state | int)
+                       and (states.sensor.avg_lux_stats_mean.attributes["max_value"] | int) != 'unknown'
+                       and ((states.sensor.kitchen_multisensor_lux | int) < 12 or (as_timestamp(now()) |int) - (as_timestamp(states.sensor.kitchen_multisensor_lux.last_changed) | int) > 3600))-%}
+               'Avg Lux Max {{states.sensor.avg_lux_stats_mean.attributes.max_value}} < {{states.input_number.lux_setpoint.state}} and Kitchen Lux < 12'
+            {%- else -%}
+               'Lights Off'
+            {%- endif -%}
+          {%- else -%}
+            {%- if is_state("binary_sensor.indoor_lights_auto_on","off") -%}'Lights off'{%- else -%}'Lights off'{%- endif -%}
+          {%- endif -%}
+        {%- else -%}
+          'Lights Off'
+        {%- endif -%}
+
 
 - platform: statistics
   name: avg_lux_stats
@@ -776,13 +780,14 @@ sensor:
   max_age:
     minutes: 60
 
-- platform: systemmonitor
-  resources:
-    - type: memory_use_percent
-    - type: swap_use_percent
-    - type: load_1m
-    - type: load_5m
-
+    #- platform: systemmonitor
+    #  resources:
+    #    - type: memory_use_percent
+    #    - type: swap_use_percent
+    #    - type: load_1m
+    #    - type: load_5m
+    #
+    
 - platform: plex
   host: 192.168.1.10
   token: !secret plex_token
@@ -799,7 +804,7 @@ switch:
   state_topic: "esp8266/fireplace/switch1"
   command_topic: "esp8266/fireplace/switch1/set"
   qos: 0
-  retain: false
+  #retain: false
   payload_on: "ON"
   payload_off: "OFF"
 
@@ -808,7 +813,7 @@ switch:
   state_topic: "smartthings/Guest Bathroom Fan/switch"
   command_topic: "smartthings/Guest Bathroom Fan/switch"
   qos: 0
-  retain: true
+  #retain: true
   payload_on: "on"
   payload_off: "off"
   optimistic: false
@@ -818,7 +823,7 @@ switch:
   state_topic: "smartthings/Master bathroom fan/switch"
   command_topic: "smartthings/Master bathroom fan/switch"
   qos: 0
-  retain: true
+  #retain: true
   payload_on: "on"
   payload_off: "off"
   optimistic: false
@@ -846,7 +851,7 @@ input_boolean:
     name: set_mode_home
   set_mode_away:
     name: set_mode_away
-# Automation lux ontrol switches
+# Automation lux control switches
   lux_light_control:
     name: 'Lights Auto Control'
     initial: on
@@ -854,10 +859,10 @@ input_boolean:
   automation_control_on:
     name: 'Automation Master Control'
     initial: on
-# Motion Test
-  stairs_motion_test:
-    name: 'Stairs Motion Test'
-    initial: off 
+# Heat Automation control switch
+  automation_heat_control_on:
+    name: 'Automation Heat Control'
+    initial: on
 # Fireplace Control switch
   fireplace_automation:
     name: 'Fireplace Automation'

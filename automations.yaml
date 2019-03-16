@@ -1,65 +1,65 @@
-- id: doors_check_status
-  alias: Alert for open doors when mode changes
+- id: basement_stairs_motion_test
+  alias: Basement Stairs Motion Test
   trigger:
-  - platform: state
-    entity_id: input_select.automation_mode
+  - entity_id: binary_sensor.stairs_motion
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - data:
+      entity_id: light.basement_work_area_main_lights
+    service: light.toggle
+  - delay: 00:00:01
+  - alias: ''
+    data:
+      entity_id: light.basement_work_area_main_lights
+    service: light.toggle
+- id: doors_check_status
+  alias: Alert for doors open when automation mode changes
+  trigger:
+  - entity_id: input_select.automation_mode
+    platform: state
     to: Sleeping
-  - platform: state
-    entity_id: input_select.automation_mode
+  - entity_id: input_select.automation_mode
+    platform: state
     to: Away
   condition:
-    condition: and
-    conditions:
-    - condition: state
-      entity_id: input_boolean.text_alerts
-      state: 'on'
-    - condition: or
-      conditions:
-      - condition: state
-        entity_id: sensor.garage_service_door
-        state: open
-      - condition: state
-        entity_id: cover.garage_right
-        state: open
-      - condition: state
-        entity_id: cover.garage_left
-        state: open
+  - condition: state
+    entity_id: input_boolean.text_alerts
+    state: 'on'
+  - condition: template
+    value_template: '{is_state("input_select.automation_mode", "sleeping") or is_state("input_select.automation_mode", "away") }'
   action:
-    service: notify.twilio_sms
-    data:
+  - data:
       message: Sleep or Away mode set but doors still open!
       target: 6082352167
+    service: notify.twilio_sms
+  - data:
+      message: Service Door Open
+      title: Alert
+    service: notify.ios_phils_7
 - id: doors_open_status
   alias: Alert for open doors when sleeping or away
   trigger:
-  - platform: state
-    entity_id: sensor.garage_service_door
+  - entity_id: sensor.garage_service_door
+    for: 00:00:01
+    platform: state
     to: open
-  - platform: state
-    entity_id: cover.garage_door_right
+  - entity_id: cover.garage_door_right
+    platform: state
     to: open
-  - platform: state
-    entity_id: cover.garage_door_left
+  - entity_id: cover.garage_door_left
+    platform: state
     to: open
   condition:
-    condition: and
-    conditions:
-    - condition: state
-      entity_id: input_boolean.text_alerts
-      state: 'on'
-    - condition: or
-      conditions:
-      - condition: state
-        entity_id: input_select.automation_mode
-        state: Sleeping
-      - condition: state
-        entity_id: input_select.automation_mode
-        state: Away
+  - condition: template
+    value_template: '{is_state("input_select.automation_mode", "sleeping") or is_state("input_select.automation_mode", "away")}'
   action:
-    service: notify.twilio_sms
-    data:
+  - data:
       message: Door opened while mode was sleeping or away
       target: 6082352167
+    service: notify.twilio_sms
 - id: automation_mode_home_from_harmony
   alias: Automation Mode set to home from activity with Harmony Remote
   trigger:
@@ -157,11 +157,9 @@
     service: light.turn_off
   - data:
       entity_id: fan.living_room_fan
-    entity_id: fan.living_room_fan
     service: fan.turn_off
   - data:
       entity_id: remote.living_room
-    entity_id: remote.living_room
     service: remote.turn_off
   - data:
       entity_id: scene.basement_lights_off
@@ -184,11 +182,9 @@
     service: light.turn_off
   - data:
       entity_id: fan.living_room_fan
-    entity_id: fan.living_room_fan
     service: fan.turn_off
   - data:
       entity_id: remote.living_room
-    entity_id: remote.living_room
     service: remote.turn_off
   - data:
       entity_id: scene.basement_lights_off
@@ -205,6 +201,9 @@
   - condition: state
     entity_id: sensor.climate_main_floor_away_mode
     state: 'off'
+  - condition: state
+    entity_id: input_boolean.automation_heat_control_on
+    state: 'on'
   action:
   - data:
       away_mode: 'on'
@@ -224,6 +223,9 @@
   - condition: state
     entity_id: sensor.climate_main_floor_away_mode
     state: 'on'
+  - condition: state
+    entity_id: input_boolean.automation_heat_control_on
+    state: 'on'
   action:
   - data:
       away_mode: 'off'
@@ -240,7 +242,10 @@
     from: Home
     platform: state
     to: Sleeping
-  condition: []
+  condition:
+  - condition: state
+    entity_id: input_boolean.automation_heat_control_on
+    state: 'on'
   action:
   - data:
       entity_id: climate.main_floor
@@ -254,10 +259,14 @@
   alias: Ecobee thermostat hold mode to sleep from Exercise Room Lights on
   trigger:
   - entity_id: light.basement_exercise_area_main_lights
+    for: 00:05:00
     from: 'off'
     platform: state
     to: 'on'
-  condition: []
+  condition:
+  - condition: state
+    entity_id: input_boolean.automation_heat_control_on
+    state: 'on'
   action:
   - data:
       entity_id: climate.basement
@@ -270,7 +279,10 @@
     from: 'on'
     platform: state
     to: 'off'
-  condition: []
+  condition:
+  - condition: state
+    entity_id: input_boolean.automation_heat_control_on
+    state: 'on'
   action:
   - data:
       entity_id: climate.basement
@@ -613,9 +625,6 @@
     entity_id: light.stairs_main_lights
     state: 'on'
   - condition: state
-    entity_id: media_player.samsung_tv_remote
-    state: 'off'
-  - condition: state
     entity_id: binary_sensor.basement_occupancy
     state: 'off'
   - condition: state
@@ -658,6 +667,9 @@
   - condition: state
     entity_id: light.basement_sitting_area_table_lamp
     state: 'off'
+  - condition: template
+    value_template: '{{as_timestamp(states.light.basement_sitting_area_table_lamp.last_changed)|float
+      > 300}}'
   action:
   - data:
       entity_id: scene.entertaining
@@ -758,7 +770,7 @@
   - data:
       entity_id: input_select.automation_mode
       option: Away
-    service: input_select.set_options
+    service: input_select.select_option
 - id: '1547473411825'
   alias: Kitchen Island Light off when Phil Leaves
   trigger:
@@ -800,7 +812,10 @@
   - entity_id: input_select.automation_mode
     platform: state
     to: Home
-  condition: []
+  condition:
+  - condition: state
+    entity_id: input_boolean.automation_heat_control_on
+    state: 'on'
   action:
   - data:
       entity_id: climate.main_floor
@@ -822,14 +837,3 @@
       entity_id: fan.living_room_fan
       speed: high
     service: fan.turn_on
-- id: '1548526961586'
-  alias: Basement Stairs Motion Test
-  trigger:
-  - entity_id: binary_sensor.stairs_motion
-    platform: state
-    to: 'on'
-  condition: []
-  action:
-  - data:
-      entity_id: light.basement_work_area_main_lights
-    service: light.toggle

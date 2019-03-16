@@ -7,17 +7,19 @@ cover.dennon_deck:
   friendly_name: Deck Volume
   entity_picture: mdi:radio
 cover.garage_right:
+  device_class: garage
   friendly_name: Garage Main
-  icon: mdi:garage
-  homebridge_visible: true
+  homebridge_cover_type: garage_door
   homebridge_name: Garage Main
-  homebridge_cover_type: garage_door
-cover.garage_left:
-  friendly_name: Garage Shop
-  icon: mdi:garage
   homebridge_visible: true
-  homebridge_name: Garage Shop
+  icon: mdi:garage
+cover.garage_left:
+  device_class: garage
+  friendly_name: Garage Shop
   homebridge_cover_type: garage_door
+  homebridge_name: Garage Shop
+  homebridge_visible: true
+  icon: mdi:garage
 input_boolean.set_mode_sleeping:
   homebridge_visible: true
   homebridge_name: Set Sleep
