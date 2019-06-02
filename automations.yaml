@@ -8,13 +8,15 @@
   condition: []
   action:
   - data:
+      brightness: '255'
       entity_id: light.basement_work_area_main_lights
-    service: light.toggle
-  - delay: 00:00:01
+    service: light.turn_on
+  - delay: 00:00:02
   - alias: ''
     data:
+      brightness: '10'
       entity_id: light.basement_work_area_main_lights
-    service: light.toggle
+    service: light.turn_on
 - id: doors_check_status
   alias: Alert for doors open when automation mode changes
   trigger:
@@ -29,7 +31,8 @@
     entity_id: input_boolean.text_alerts
     state: 'on'
   - condition: template
-    value_template: '{is_state("input_select.automation_mode", "sleeping") or is_state("input_select.automation_mode", "away") }'
+    value_template: '{is_state("input_select.automation_mode", "sleeping") or is_state("input_select.automation_mode",
+      "away") }'
   action:
   - data:
       message: Sleep or Away mode set but doors still open!
@@ -54,7 +57,8 @@
     to: open
   condition:
   - condition: template
-    value_template: '{is_state("input_select.automation_mode", "sleeping") or is_state("input_select.automation_mode", "away")}'
+    value_template: '{is_state("input_select.automation_mode", "sleeping") or is_state("input_select.automation_mode",
+      "away")}'
   action:
   - data:
       message: Door opened while mode was sleeping or away
@@ -572,6 +576,10 @@
       brightness: 50
       entity_id: light.stairs_main_lights
     service: light.turn_on
+  - data:
+      brightness: 25
+      entity_id: light.master_bedroom_hall
+    service: light.turn_on
 - id: master_bath_lights_on_from_fan
   alias: Master bathroom shower lights on from fan
   trigger:
@@ -837,3 +845,101 @@
       entity_id: fan.living_room_fan
       speed: high
     service: fan.turn_on
+- id: '1557070286068'
+  alias: Automation Mode set to sleeping from Master Bedroom Hall Light Off
+  trigger:
+  - entity_id: light.master_bedroom_hall
+    platform: state
+    to: 'off'
+  condition:
+  - after: '20:00:00'
+    condition: time
+  action:
+  - alias: ''
+    data:
+      entity_id: input_select.automation_mode
+      option: Sleeping
+    service: input_select.select_option
+- id: '1557451253030'
+  alias: Basement Lights to Off from lamps off
+  trigger:
+  - entity_id: light.basement_sitting_area_table_lamp
+    platform: state
+    to: 'off'
+  condition: []
+  action:
+  - delay: 00:00:10
+  - data:
+      entity_id: light.stairs_main_lights
+    service: light.turn_off
+- id: '1558982217228'
+  alias: Denon Deck set volume from Denon_Deck_Volume change
+  trigger:
+  - entity_id: input_number.denon_deck_volume
+    platform: state
+  condition: []
+  action:
+  - service: rest_command.denon_deck_volume_set
+- id: '1558983657273'
+  alias: Harmony set activity from input_select.living_room_remote change
+  trigger:
+  - entity_id: input_select.living_room_remote
+    platform: state
+  condition: []
+  action:
+  - data_template:
+      activity: '{{ states.input_select.living_room_remote.state }}'
+    entity_id: remote.living_room
+    service: remote.turn_on
+- id: '1558986283268'
+  alias: Harmony get activity from remote.living_room change
+  trigger:
+  - entity_id: remote.living_room
+    platform: state
+  condition: []
+  action:
+    service: input_select.select_option
+    entity_id: input_select.living_room_remote
+    data_template:
+      option: '{{ states.remote.living_room.attributes.current_activity }}'
+- id: '1559086612190'
+  alias: Ecobee thermostat mode set both from one mode change
+  trigger:
+  - entity_id: climate.main_floor
+    platform: state
+  - entity_id: climate.basement
+    platform: state
+  condition:
+  - condition: template
+    value_template: "{{ trigger.to_state.state != 'off' }}"
+  - condition: template
+    value_template: "{{states.climate.main_floor.state != states.climate.basement.state }}"
+  action:
+  - data_template:
+      operation_mode: '{{ trigger.to_state.state }}'
+      entity_id: climate.basement,climate.main_floor
+    service: climate.set_operation_mode
+- id: '1559087060888'
+  alias: Ecobee thermostats fan on from automation mode Home
+  trigger:
+  - entity_id: input_select.automation_mode
+    platform: state
+    to: Home
+  condition: []
+  action:
+  - data:
+      entity_id: climate.basement,climate.main_floor
+      fan_min_on_time: 60
+    service: climate.ecobee_set_fan_min_on_time
+- id: '1559087805822'
+  alias: Ecobee thermostats fan on from automation mode Sleeping
+  trigger:
+  - entity_id: input_select.automation_mode
+    platform: state
+    to: Sleeping
+  condition: []
+  action:
+  - data:
+      entity_id: climate.basement,climate.main_floor
+      fan_min_on_time: 0
+    service: climate.ecobee_set_fan_min_on_time

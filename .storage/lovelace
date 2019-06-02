@@ -1333,10 +1333,6 @@
                             "type": "vertical-stack"
                         },
                         {
-                            "entity": "media_player.samsung_tv_remote",
-                            "type": "media-control"
-                        },
-                        {
                             "entities": [
                                 {
                                     "entity": "sensor.plex"
@@ -1393,10 +1389,13 @@
                         {
                             "entities": [
                                 {
+                                    "entity": "light.master_bedroom_hall"
+                                },
+                                {
                                     "entity": "fan.master_bedroom_fan"
                                 },
                                 {
-                                    "entity": "sensor.living_room_fan_desired_mode"
+                                    "entity": "sensor.bedroom_fan_desired_mode"
                                 }
                             ],
                             "show_header_toggle": true,
@@ -1499,35 +1498,28 @@
                 {
                     "cards": [
                         {
-                            "cards": [
-                                {
-                                    "camera_image": "camera.front_door",
-                                    "entity": "camera.front_door",
-                                    "show_info": true,
-                                    "tap_action": {
-                                        "action": "dialog"
-                                    },
-                                    "title": "Front Door",
-                                    "type": "picture-entity"
-                                },
-                                {
-                                    "camera_image": "camera.driveway",
-                                    "entity": "camera.driveway",
-                                    "show_info": true,
-                                    "tap_action": {
-                                        "action": "dialog"
-                                    },
-                                    "title": "Driveway",
-                                    "type": "picture-entity"
-                                }
-                            ],
-                            "type": "vertical-stack"
+                            "camera_image": "camera.camera1",
+                            "entity": "camera.camera1",
+                            "title": "Living room",
+                            "type": "picture-entity"
+                        },
+                        {
+                            "camera_image": "camera.camera2",
+                            "entity": "camera.camera2",
+                            "title": "Living room",
+                            "type": "picture-entity"
                         }
                     ],
                     "title": "Cameras"
                 },
                 {
                     "cards": [
+                        {
+                            "camera_image": "camera.radar_wu_wisconsin",
+                            "entity": "camera.radar_wu_wisconsin",
+                            "title": "Radar",
+                            "type": "picture-entity"
+                        },
                         {
                             "cards": [
                                 {
@@ -1553,39 +1545,100 @@
                             "cards": [
                                 {
                                     "entities": [
-                                        "binary_sensor.main_floor_occupancy",
+                                        {
+                                            "entity": "sensor.living_room_temperature",
+                                            "name": "Living Room Temp"
+                                        },
+                                        {
+                                            "entity": "sensor.main_floor_temperature",
+                                            "name": "Main Ecobee Temp"
+                                        },
+                                        {
+                                            "entity": "sensor.basement_temperature",
+                                            "name": "Basement Ecobee Temp"
+                                        },
+                                        {
+                                            "entity": "sensor.kitchen_multisensor_temperature",
+                                            "name": "Kitchen Temp"
+                                        }
+                                    ],
+                                    "title": "Inside Temperatures",
+                                    "type": "history-graph"
+                                },
+                                {
+                                    "entities": [
                                         "climate.main_floor",
-                                        "sensor.main_floor_temperature",
-                                        "sensor.main_floor_humidity"
-                                    ],
-                                    "show_header_toggle": true,
-                                    "title": "Main Floor Climate",
-                                    "type": "entities"
-                                },
-                                {
-                                    "entities": [
-                                        "binary_sensor.basement_occupancy",
                                         "climate.basement",
-                                        "sensor.basement_temperature",
-                                        "sensor.basement_humidity"
+                                        "binary_sensor.basement_occupancy",
+                                        "binary_sensor.main_floor_occupancy",
+                                        "binary_sensor.dehumidifier"
                                     ],
-                                    "show_header_toggle": true,
-                                    "title": "Basement Climate",
+                                    "show_header_toggle": false,
+                                    "title": "Climate Sensors",
                                     "type": "entities"
+                                }
+                            ],
+                            "type": "vertical-stack"
+                        },
+                        {
+                            "cards": [
+                                {
+                                    "entities": [
+                                        {
+                                            "entity": "sensor.main_floor_humidity",
+                                            "name": "Main Ecobee Humidity"
+                                        },
+                                        {
+                                            "entity": "sensor.basement_humidity",
+                                            "name": "Basement Ecobee Humidity"
+                                        },
+                                        {
+                                            "entity": "sensor.living_room_humidity",
+                                            "name": "Living Room Humidity"
+                                        },
+                                        {
+                                            "entity": "sensor.kitchen_multisensor_humidity",
+                                            "name": "Kitchen Humidity"
+                                        }
+                                    ],
+                                    "title": "Humidity",
+                                    "type": "history-graph"
                                 },
                                 {
                                     "entities": [
-                                        "sensor.living_room_temperature",
-                                        "sensor.living_room_humidity",
-                                        "sensor.living_room_lux",
-                                        "sensor.kitchen_multisensor_temperature",
-                                        "sensor.kitchen_multisensor_humidity",
-                                        "sensor.kitchen_multisensor_lux",
-                                        "switch.fireplace"
+                                        {
+                                            "entity": "sensor.kitchen_lux_stats_mean_attribute",
+                                            "name": "Kitchen Lux Avg"
+                                        },
+                                        {
+                                            "entity": "sensor.living_room_lux_stats_mean_attribute",
+                                            "name": "Living Room Lux Avg"
+                                        },
+                                        {
+                                            "entity": "sensor.kitchen_multisensor_lux",
+                                            "name": "Kitchen Lux"
+                                        },
+                                        {
+                                            "entity": "sensor.living_room_lux",
+                                            "name": "Living Room Lux"
+                                        }
                                     ],
-                                    "show_header_toggle": true,
-                                    "title": "Living Room Climate",
-                                    "type": "entities"
+                                    "title": "Lux Levels",
+                                    "type": "history-graph"
+                                },
+                                {
+                                    "entities": [
+                                        {
+                                            "entity": "sensor.dark_sky_cloud_coverage",
+                                            "name": "Dark Sky Cloud"
+                                        },
+                                        {
+                                            "entity": "sensor.dark_sky_cloud_coverage_stats_mean_attribute",
+                                            "name": "Dark Sky Cloud Average"
+                                        }
+                                    ],
+                                    "title": "Cloud Coverage",
+                                    "type": "history-graph"
                                 }
                             ],
                             "type": "vertical-stack"
@@ -1687,7 +1740,10 @@
                                     "entity": "input_number.fireplace_high_setpoint"
                                 },
                                 {
-                                    "entity": "sensor.indoor_lights_auto_on_message"
+                                    "entity": "script.log_lux_levels"
+                                },
+                                {
+                                    "entity": "binary_sensor.indoor_lights_auto_on"
                                 }
                             ],
                             "show_header_toggle": false,
@@ -1703,6 +1759,54 @@
                             "show_header_toggle": false,
                             "title": "Scripts and Automation Debug",
                             "type": "entities"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "sensor.kitchen_multisensor_lux"
+                                },
+                                {
+                                    "entity": "sensor.kitchen_lux_stats_mean"
+                                },
+                                {
+                                    "entity": "sensor.living_room_lux"
+                                },
+                                {
+                                    "entity": "sensor.living_room_lux_stats_mean"
+                                },
+                                {
+                                    "entity": "sensor.dark_sky_cloud_coverage"
+                                },
+                                {
+                                    "entity": "sensor.dark_sky_cloud_coverage_stats_mean"
+                                },
+                                {
+                                    "entity": "sun.sun"
+                                }
+                            ],
+                            "show_header_toggle": false,
+                            "title": "Lights Auto Debug",
+                            "type": "entities"
+                        },
+                        {
+                            "entity": "sensor.energy_usage",
+                            "max": 10000,
+                            "min": 0,
+                            "severity": {
+                                "green": 0,
+                                "red": 8000,
+                                "yellow": 5000
+                            },
+                            "theme": "default",
+                            "type": "gauge"
+                        },
+                        {
+                            "entities": [
+                                "sensor.energy_usage"
+                            ],
+                            "name": "Watts",
+                            "title": "Energy Usage",
+                            "type": "history-graph"
                         }
                     ],
                     "title": "Debug"
@@ -1721,7 +1825,7 @@
                 {
                     "cards": [
                         {
-                            "content": "## Home Assistant Docker\nhttps://hub.docker.com/r/homeassistant/home-assistant/tags\n## Material Design Icons\nhttps://materialdesignicons.com/   \n## Lovelace Docs\nhttps://www.home-assistant.io/lovelace/ \n## Awesome-HA\nhttps://www.awesome-ha.com/\n## Amazon Alexa Developer Console\nhttps://developer.amazon.com/alexa/console\n",
+                            "content": "## Home Assistant Docker\nhttps://hub.docker.com/r/homeassistant/home-assistant/tags\n## Material Design Icons\nhttps://materialdesignicons.com/   \n## Lovelace Docs\nhttps://www.home-assistant.io/lovelace/ \n## Awesome-HA\nhttps://www.awesome-ha.com/\n## Amazon Alexa Developer Console\nhttps://developer.amazon.com/alexa/console\n\n## hass-cli\nTo activate from an SSH session, enter hass-cli-activate",
                             "type": "markdown"
                         }
                     ],

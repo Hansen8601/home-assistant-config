@@ -14,5 +14,4 @@ customize_glob: !include customize_glob.yaml
 auth_providers:
   - type: homeassistant
   - type: legacy_api_password
-    #- type: trusted_networks
-    # - api_password: !secret api_password
+    api_password: !secret api_password

@@ -11,6 +11,10 @@ discovery:
 ecobee:
   api_key: !secret ecobee_api_key
 
+sense:
+  email: !secret sense_email
+  password: !secret sense_password
+
 frontend:
   javascript_version: latest
 
@@ -21,10 +25,10 @@ history:
       - weblink
       - updater
 
-http:
-  api_password: !secret api_password
-  ip_ban_enabled: True
-  login_attempts_threshold: 5
+#http:
+#  api_password: !secret api_password
+#  ip_ban_enabled: True
+#  login_attempts_threshold: 5
 
 logbook:
   exclude:
@@ -112,7 +116,7 @@ updater:
 homekit:
   filter:
     include_entities:
-      - cover.garage_left
+            #      - cover.garage_left
       - cover.garage_right
       - input_boolean.phil_homekit_present
       - input_boolean.nikki_homekit_present
@@ -120,40 +124,28 @@ homekit:
       - input_boolean.set_mode_home 
       - input_boolean.set_mode_sleeping 
 
-# Used for camera display
-ffmpeg:
-  ffmpeg_bin: /usr/bin/ffmpeg
-
-amcrest:
-  - host: !secret camera_front_ip
-    #port: 80
-    name: 'Front Door'
-    username: !secret amcrestuser
-    password: !secret amcrestpwd
-    #resolution: low
-    stream_source: rtsp
-    #sensors:
-    #  - motion_detector
-    #  - sdcard
-  - host: !secret camera_driveway_ip
-    #port: 80
-    name: 'Driveway'
-    username: !secret amcrestuser
-    password: !secret amcrestpwd
-    #resolution: low
-    stream_source: rtsp
-#    sensors:
-#      - motion_detector
-#      - sdcard
 
 camera:
-  - platform: amcrest
-#  - platform: xeoma
-#    host: http://192.168.1.22:10090
-#    cameras:
-#      - image_name: porch
-#      - image_name: driveway
-#
+  - platform: generic
+    name: camera1
+    still_image_url: http://192.168.1.153/cgi-bin/snapshot.cgi
+    username: !secret amcrestuser
+    password: !secret amcrestpwd
+    authentication: digest
+    verify_ssl: false
+  - platform: generic
+    name: camera2
+    still_image_url: http://192.168.1.108/cgi-bin/snapshot.cgi
+    username: !secret amcrestuser
+    password: !secret amcrestpwd
+    authentication: digest
+    verify_ssl: false
+  - platform: generic
+    still_image_url: 'https://icons.wxug.com/data/weather-maps/radar/united-states/saint-cloud-minnesota-region-current-radar.gif'
+    name: Radar WU Wisconsin
+  - platform: generic
+    still_image_url: 'https://radblast.wunderground.com/cgi-bin/radar/WUNIDS_map?num=6&type=N0R&mapx=400&mapy=240&brand=wui&delay=15&frame=0&scale=1&transx=0&transy=0&severe=0&smooth=0&centerx=400&centery=240&station=MKX&rainsnow=0&lightning=0&noclutter=0&showlabels=1&showstorms=0&rand=25971178'
+    name: Radar WU Local
 
 #mqtt broker
 mqtt:
@@ -261,12 +253,22 @@ binary_sensor:
                 True
               {%- elif ((states.sensor.dark_sky_cloud_coverage_stats_mean.state | int) > 85) -%}
                 True
-              {%- elif ((states.sensor.avg_lux_stats_mean.attributes["max_value"] | int) < (states.input_number.lux_setpoint.state | int)
-                         and (states.sensor.avg_lux_stats_mean.attributes["max_value"] | int) != 'unknown'
-                         and ((states.sensor.kitchen_multisensor_lux | int) < 12 or (as_timestamp(now()) |int) - (as_timestamp(states.sensor.kitchen_multisensor_lux.last_changed) | int) > 3600))-%}
-                 True
-              {%- else -%}
-                 False
+              {%- elif is_state("binary_sensor.indoor_lights_auto_on","off") -%}
+                {%- if ((states.sensor.living_room_lux_stats_mean.attributes["mean"] | int) < (states.input_number.lux_setpoint.state | int))
+                     and (((states.sensor.kitchen_lux_stats_mean.attributes["mean"] | int) < (states.input_number.lux_setpoint.state | int))
+                            or (as_timestamp(now()) |int) - (as_timestamp(states.sensor.kitchen_multisensor_lux.last_changed) | int) > 3600)-%}
+                  True
+                {%- else -%}
+                  False
+                {%- endif -%}
+              {%- elif is_state("binary_sensor.indoor_lights_auto_on","on") -%}
+                {%- if ((states.sensor.living_room_lux_stats_mean.attributes["mean"] | int) > (states.input_number.lux_setpoint.state | int))
+                     and (((states.sensor.kitchen_lux_stats_mean.attributes["mean"] | int) > (states.input_number.lux_setpoint.state | int))
+                            or (as_timestamp(now()) |int) - (as_timestamp(states.sensor.kitchen_multisensor_lux.last_changed) | int) > 3600)-%}
+                  False
+                {%- else -%}
+                  True
+                {%- endif -%}
               {%- endif -%}
             {%- else -%}
               {%- if is_state("binary_sensor.indoor_lights_auto_on","off") -%}False{%- else -%}True{%- endif -%}
@@ -564,6 +566,19 @@ light:
   payload_off: "off"
   optimistic: false
   #retain: true
+- platform: mqtt
+  name: "Master_bedroom_hall"
+  state_topic: "smartthings/Master Bedroom Hall/switch"
+  command_topic: "smartthings/Master Bedroom Hall/switch"
+  brightness_state_topic: "smartthings/Master Bedroom Hall/level"
+  brightness_command_topic: "smartthings/Master Bedroom Hall/level"
+  brightness_scale: 99
+  brightness_value_template: '{{ value }}'
+  qos: 1
+  payload_on: "on"
+  payload_off: "off"
+  optimistic: false
+  #retain: true
 
 
 ###################
@@ -619,7 +634,7 @@ sensor:
 - platform: mqtt
   state_topic: "smartthings/Aeon Multisensor 6/illuminance"
   name: "living_room_lux"
-  unit_of_measurement: "Lux"
+  unit_of_measurement: "lux"
   value_template: '{{ value_json | float }}'
 
 - platform: mqtt
@@ -645,7 +660,7 @@ sensor:
 - platform: mqtt
   state_topic: 'smartthings/MultiSensor 6 Kitchen/illuminance'
   name: 'kitchen_multisensor_lux'
-  unit_of_measurement: "Lux"
+  unit_of_measurement: "lux"
   value_template: '{{ value_json | float }}'
 
 - platform: mqtt
@@ -674,20 +689,6 @@ sensor:
         {%- else -%}
           off
         {%- endif -%}  
-    avg_lux:
-      friendly_name: 'Avg Lux'
-      value_template: >-
-        {%- if as_timestamp(now()) - as_timestamp(states.sensor.kitchen_multisensor_lux.last_changed) < 5000 -%}
-          {%- if (states.sensor.living_room_lux.state | int + 
-                  states.sensor.kitchen_multisensor_lux.state | int  < 400 ) -%}
-               {{(states.sensor.living_room_lux.state | int + states.sensor.kitchen_multisensor_lux.state | int) / 2 }}
-          {%- else -%}
-             200
-          {%- endif -%}
-        {%- else -%}
-          {{states.sensor.living_room_lux.state | int }}
-        {%- endif -%}
-      unit_of_measurement: 'Lux'
     bedroom_fan_desired_mode:
       friendly_name: 'Bedroom Fan Desired Mode'
       value_template: >-
@@ -703,7 +704,7 @@ sensor:
           {%- else -%}
             off
           {%- endif -%}
-        {%- else -%} # Until 9,keep fan at what it was at. 
+        {%- else -%}
           {%- if (now().hour > 0 and now().hour < 9)-%}
             {{states.sensor.bedroom_fan_desired_mode.state}}
           {%- else -%}
@@ -736,43 +737,33 @@ sensor:
       friendly_name: 'Climate Basement Away Mode'
       value_template: >-
         {{states.climate.basement.attributes.away_mode}}
-    indoor_lights_auto_on_message:
-      friendly_name: 'Indoor Lights Auto On Text Message'
+    living_room_lux_stats_mean_attribute:
+      friendly_name: 'Living Room Lux Mean Attribute'
+      unit_of_measurement: lux
       value_template: >-
-        {%- if is_state("input_select.automation_mode","Home") -%}
-          {%- if (as_timestamp(now()) - (as_timestamp(states.binary_sensor.indoor_lights_auto_on.last_changed) | int) > 900 or
-                  as_timestamp(now()) - (as_timestamp(states.input_select.automation_mode.last_changed) | int) < 900 or
-                  as_timestamp(now()) - (as_timestamp(states.input_number.lux_setpoint.last_changed) | int) < 10) -%}
-            {%- if ((states.sun.sun.attributes.elevation | int) < 10 ) -%}
-              'Sun < 10'
-            {%- elif ((states.sensor.dark_sky_cloud_coverage_stats_mean.state | int) > 85) -%}
-              'Cloud coverage > 85'
-            {%- elif ((states.sensor.avg_lux_stats_mean.attributes["max_value"] | int) < (states.input_number.lux_setpoint.state | int)
-                       and (states.sensor.avg_lux_stats_mean.attributes["max_value"] | int) != 'unknown'
-                       and ((states.sensor.kitchen_multisensor_lux | int) < 12 or (as_timestamp(now()) |int) - (as_timestamp(states.sensor.kitchen_multisensor_lux.last_changed) | int) > 3600))-%}
-               'Avg Lux Max {{states.sensor.avg_lux_stats_mean.attributes.max_value}} < {{states.input_number.lux_setpoint.state}} and Kitchen Lux < 12'
-            {%- else -%}
-               'Lights Off'
-            {%- endif -%}
-          {%- else -%}
-            {%- if is_state("binary_sensor.indoor_lights_auto_on","off") -%}'Lights off'{%- else -%}'Lights off'{%- endif -%}
-          {%- endif -%}
-        {%- else -%}
-          'Lights Off'
-        {%- endif -%}
-
-
-- platform: statistics
-  name: avg_lux_stats
-  entity_id: sensor.avg_lux
-  max_age:
-    minutes: 15
+        {{states.sensor.living_room_lux_stats_mean.state}}
+    kitchen_lux_stats_mean_attribute:
+      friendly_name: 'Kitchen Lux Mean Attribute'
+      unit_of_measurement: lux
+      value_template: >-
+        {{states.sensor.kitchen_lux_stats_mean.state}}
+    dark_sky_cloud_coverage_stats_mean_attribute:
+      friendly_name: 'Dark Sky Cloud Coverage Mean Attribute'
+      unit_of_measurement: '%'
+      value_template: >-
+        {{states.sensor.dark_sky_cloud_coverage.state}}
 
 - platform: statistics
   name: living_room_lux_stats
   entity_id: sensor.living_room_lux
   max_age:
-    minutes: 15
+    minutes: 30
+
+- platform: statistics
+  name: kitchen_lux_stats
+  entity_id: sensor.kitchen_multisensor_lux
+  max_age:
+    minutes: 30
 
 - platform: statistics
   name: dark_sky_cloud_coverage_stats

@@ -9,16 +9,10 @@ cover.dennon_deck:
 cover.garage_right:
   device_class: garage
   friendly_name: Garage Main
-  homebridge_cover_type: garage_door
-  homebridge_name: Garage Main
-  homebridge_visible: true
   icon: mdi:garage
 cover.garage_left:
   device_class: garage
   friendly_name: Garage Shop
-  homebridge_cover_type: garage_door
-  homebridge_name: Garage Shop
-  homebridge_visible: true
   icon: mdi:garage
 input_boolean.set_mode_sleeping:
   homebridge_visible: true
@@ -139,3 +133,5 @@ sensor.basement_temperature:
   friendly_name: Ecobee Basement Temperature
 sensor.basement_humidity:
   friendly_name: Ecobee Basement Humidity
+light.master_bedroom_hall:
+  friendly_name: Master Bedroom Hall
