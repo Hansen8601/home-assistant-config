@@ -31,18 +31,18 @@ history:
 #  login_attempts_threshold: 5
 
 logbook:
-  exclude:
+  include:
     entities:
-      - binary_sensor.stairs_motion
-      - sensor.living_room_denon_volume
-      - automation.denon_slider_volume_set
-      - automation.denon_volume_set
-      - automation.denon_deck_volume_set
-      - input_boolean.set_mode_home
-      - input_boolean.set_mode_sleeping
-      - input_boolean.set_mode_away
-      - input_boolean.nikki_homekit_present
-      - input_boolean.phil_homekit_present
+      - binary_sensor.garage_door_main
+      - binary_sensor.garage_door_shop
+      - binary_sensor.indoor_lights_needed
+      - binary_sensor.shop_heater
+      - climate.basement
+      - climate.main_floor
+    domains:
+      - automation
+      - media_player
+      - camera
 
 logger:
   default: info
@@ -50,6 +50,7 @@ logger:
 recorder:
   purge_interval: 1
   purge_keep_days: 7
+  db_url: !secret mysql_connection
   exclude:
     entities:
       - input_boolean.set_mode_sleeping
@@ -58,11 +59,9 @@ recorder:
       - input_number.denon_deck_volume 
       - input_number.denon_volume
       - input_select.living_room_remote
-      - binary_sensor.main_floor_occupancy
       - sensor.dark_sky_wind_bearing
       - sensor.dark_sky_wind_speed
       - sensor.dark_sky_temperature
-      - automation.denon_set_volume
     domains:
       - weather
       - sun
@@ -112,6 +111,12 @@ updater:
   card_urls:
     - https://raw.githubusercontent.com/kalkih/mini-media-player/master/tracker.json
 
+      #custom_updater:
+      #  track:
+      #    - components
+      #  component_urls:
+      #    - https://raw.githubusercontent.com/elad-bar/ha-blueiris/master/blueiris.json
+
 # Homekit integration
 homekit:
   filter:
@@ -124,29 +129,52 @@ homekit:
       - input_boolean.set_mode_home 
       - input_boolean.set_mode_sleeping 
 
+blueiris:
+  host: !secret blueiris_host
+  port: !secret blueiris_port
+  #username: !secret blueiris_username
+  #password: !secret blueiris_password
+  camera:
+    - id: Cam1
+      name: 'Cam1'
+      room: 'Outside'
+    - id: Cam2
+      name: "Cam2"
+      room: 'Outside'
+    - id: Cam3
+      name: "Cam3"
+      room: 'Patio'
+    - id: Cam4
+      name: "Cam4"
+      room: 'Garage'
+
+# Stream
+# https://www.home-assistant.io/components/stream
+stream: 
 
 camera:
-  - platform: generic
-    name: camera1
-    still_image_url: http://192.168.1.153/cgi-bin/snapshot.cgi
-    username: !secret amcrestuser
-    password: !secret amcrestpwd
-    authentication: digest
-    verify_ssl: false
-  - platform: generic
-    name: camera2
-    still_image_url: http://192.168.1.108/cgi-bin/snapshot.cgi
-    username: !secret amcrestuser
-    password: !secret amcrestpwd
-    authentication: digest
-    verify_ssl: false
+  - platform: blueiris
+        #  - platform: generic
+        #    name: camera1
+        #    still_image_url: http://192.168.1.153/cgi-bin/snapshot.cgi
+        #    username: !secret amcrestuser
+        #    password: !secret amcrestpwd
+        #    authentication: digest
+        #    verify_ssl: false
+        #  - platform: generic
+        #    name: camera2
+        #    still_image_url: http://192.168.1.108/cgi-bin/snapshot.cgi
+        #    username: !secret amcrestuser
+        #    password: !secret amcrestpwd
+        #    authentication: digest
+        #    verify_ssl: false
   - platform: generic
     still_image_url: 'https://icons.wxug.com/data/weather-maps/radar/united-states/saint-cloud-minnesota-region-current-radar.gif'
     name: Radar WU Wisconsin
   - platform: generic
     still_image_url: 'https://radblast.wunderground.com/cgi-bin/radar/WUNIDS_map?num=6&type=N0R&mapx=400&mapy=240&brand=wui&delay=15&frame=0&scale=1&transx=0&transy=0&severe=0&smooth=0&centerx=400&centery=240&station=MKX&rainsnow=0&lightning=0&noclutter=0&showlabels=1&showstorms=0&rand=25971178'
     name: Radar WU Local
-
+ 
 #mqtt broker
 mqtt:
   broker: !secret mqtt_broker
@@ -242,18 +270,18 @@ rest_command:
 binary_sensor:
   - platform: template
     sensors:
-      indoor_lights_auto_on:
-        friendly_name: 'Indoor Lights Auto On'
+      indoor_lights_needed:
+        friendly_name: 'Indoor Lights Needed'
         value_template: >-
           {%- if is_state("input_select.automation_mode","Home") -%}
-            {%- if (as_timestamp(now()) - (as_timestamp(states.binary_sensor.indoor_lights_auto_on.last_changed) | int) > 900 or
+            {%- if (as_timestamp(now()) - (as_timestamp(states.binary_sensor.indoor_lights_needed.last_changed) | int) > 900 or
                     as_timestamp(now()) - (as_timestamp(states.input_select.automation_mode.last_changed) | int) < 900 or
                     as_timestamp(now()) - (as_timestamp(states.input_number.lux_setpoint.last_changed) | int) < 10) -%}
               {%- if ((states.sun.sun.attributes.elevation | int) < 10 ) -%}
                 True
               {%- elif ((states.sensor.dark_sky_cloud_coverage_stats_mean.state | int) > 85) -%}
                 True
-              {%- elif is_state("binary_sensor.indoor_lights_auto_on","off") -%}
+              {%- elif is_state("binary_sensor.indoor_lights_needed","off") -%}
                 {%- if ((states.sensor.living_room_lux_stats_mean.attributes["mean"] | int) < (states.input_number.lux_setpoint.state | int))
                      and (((states.sensor.kitchen_lux_stats_mean.attributes["mean"] | int) < (states.input_number.lux_setpoint.state | int))
                             or (as_timestamp(now()) |int) - (as_timestamp(states.sensor.kitchen_multisensor_lux.last_changed) | int) > 3600)-%}
@@ -261,7 +289,7 @@ binary_sensor:
                 {%- else -%}
                   False
                 {%- endif -%}
-              {%- elif is_state("binary_sensor.indoor_lights_auto_on","on") -%}
+              {%- elif is_state("binary_sensor.indoor_lights_needed","on") -%}
                 {%- if ((states.sensor.living_room_lux_stats_mean.attributes["mean"] | int) > (states.input_number.lux_setpoint.state | int))
                      and (((states.sensor.kitchen_lux_stats_mean.attributes["mean"] | int) > (states.input_number.lux_setpoint.state | int))
                             or (as_timestamp(now()) |int) - (as_timestamp(states.sensor.kitchen_multisensor_lux.last_changed) | int) > 3600)-%}
@@ -271,7 +299,7 @@ binary_sensor:
                 {%- endif -%}
               {%- endif -%}
             {%- else -%}
-              {%- if is_state("binary_sensor.indoor_lights_auto_on","off") -%}False{%- else -%}True{%- endif -%}
+              {%- if is_state("binary_sensor.indoor_lights_needed","off") -%}False{%- else -%}True{%- endif -%}
             {%- endif -%}
           {%- else -%}
             False
@@ -298,6 +326,9 @@ binary_sensor:
     payload_on: 'active'
     payload_off: 'inactive'
     #retain: true
+    #
+  # Creates binary sensors according cameras defined in the platform
+  - platform: blueiris
 
 
 ###################

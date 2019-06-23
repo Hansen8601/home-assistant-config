@@ -518,7 +518,7 @@
 - id: lights_auto_on from binary sensor
   alias: lights_auto_on from indoor_lights_binary_sensor
   trigger:
-  - entity_id: binary_sensor.indoor_lights_auto_on
+  - entity_id: binary_sensor.indoor_lights_needed
     platform: state
     to: 'on'
   condition:
@@ -533,7 +533,7 @@
 - id: lights_auto_off from binary sensor
   alias: lights_auto_off from indoor_lights_binary_sensor
   trigger:
-  - entity_id: binary_sensor.indoor_lights_auto_on
+  - entity_id: binary_sensor.indoor_lights_needed
     platform: state
     to: 'off'
   condition:
@@ -760,10 +760,12 @@
   alias: Automation Mode set to away from device trackers
   trigger:
   - entity_id: input_boolean.device_tracker_phil_home
+    for: 00:00:30
     from: 'on'
     platform: state
     to: 'off'
   - entity_id: input_boolean.device_tracker_nikki_home
+    for: 00:00:30
     from: 'on'
     platform: state
     to: 'off'
@@ -868,7 +870,24 @@
     to: 'off'
   condition: []
   action:
-  - delay: 00:00:10
+  - data_template:
+      brightness: '{{((states.light.stairs_main_lights.attributes.brightness * 0.5)
+        | int)}}'
+      entity_id: light.stairs_main_lights
+    service: light.turn_on
+  - delay: 00:00:02
+  - data_template:
+      brightness: '{{((states.light.stairs_main_lights.attributes.brightness * 0.5)
+        | int)}}'
+      entity_id: light.stairs_main_lights
+    service: light.turn_on
+  - delay: 00:00:02
+  - data_template:
+      brightness: '{{((states.light.stairs_main_lights.attributes.brightness * 0.5)
+        | int)}}'
+      entity_id: light.stairs_main_lights
+    service: light.turn_on
+  - delay: 00:00:02
   - data:
       entity_id: light.stairs_main_lights
     service: light.turn_off
@@ -911,14 +930,19 @@
     platform: state
   condition:
   - condition: template
-    value_template: "{{ trigger.to_state.state != 'off' }}"
+    value_template: '{{ trigger.to_state.state != ''off'' }}'
   - condition: template
-    value_template: "{{states.climate.main_floor.state != states.climate.basement.state }}"
+    value_template: '{{states.climate.main_floor.state != states.climate.basement.state
+      }}'
   action:
   - data_template:
-      operation_mode: '{{ trigger.to_state.state }}'
       entity_id: climate.basement,climate.main_floor
+      operation_mode: '{{ trigger.to_state.state }}'
     service: climate.set_operation_mode
+  - data:
+      message: Ecobee Mode Change Triggered
+      title: Ecobee Alert
+    service: notify.ios_phils_7
 - id: '1559087060888'
   alias: Ecobee thermostats fan on from automation mode Home
   trigger:
@@ -943,3 +967,29 @@
       entity_id: climate.basement,climate.main_floor
       fan_min_on_time: 0
     service: climate.ecobee_set_fan_min_on_time
+- id: '1559492618128'
+  alias: Denon set volume from Denon_Volume change
+  trigger:
+  - entity_id: input_number.denon_volume
+    platform: state
+  condition: []
+  action:
+    service: media_player.volume_set
+    entity_id: media_player.denon_avrx3000
+    data_template:
+      volume_level: '{{ states.input_number.denon_volume.state | int / 100 }}'
+- id: '1560038586853'
+  alias: Basement Lights to off from stairs switch off
+  trigger:
+  - entity_id: light.stairs_main_lights
+    platform: state
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: media_player.samsung_tv_remote
+    state: 'off'
+  action:
+  - alias: ''
+    data:
+      entity_id: scene.basement_lights_off
+    service: scene.turn_on

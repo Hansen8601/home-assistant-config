@@ -1347,6 +1347,137 @@
                     "title": "Audio-video"
                 },
                 {
+                    "badges": [],
+                    "cards": [
+                        {
+                            "cards": [
+                                {
+                                    "cards": [
+                                        {
+                                            "cards": [
+                                                {
+                                                    "entity": "camera.all",
+                                                    "name": "All",
+                                                    "show_state": false,
+                                                    "type": "picture-entity"
+                                                }
+                                            ],
+                                            "type": "vertical-stack"
+                                        },
+                                        {
+                                            "cards": [
+                                                {
+                                                    "entity": "camera.cycle",
+                                                    "name": "Cycle",
+                                                    "show_state": false,
+                                                    "type": "picture-entity"
+                                                }
+                                            ],
+                                            "type": "vertical-stack"
+                                        }
+                                    ],
+                                    "type": "horizontal-stack"
+                                },
+                                {
+                                    "entity": "camera.cam1",
+                                    "name": "front door",
+                                    "show_state": false,
+                                    "type": "picture-entity"
+                                },
+                                {
+                                    "entities": [
+                                        {
+                                            "entity": "binary_sensor.cam1_motion",
+                                            "name": "Motion"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.cam1_audio",
+                                            "name": "Audio"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.cam1_watchdog",
+                                            "name": "Watchdog"
+                                        }
+                                    ],
+                                    "type": "glance"
+                                },
+                                {
+                                    "entity": "camera.cam2",
+                                    "name": "Driveway",
+                                    "show_state": false,
+                                    "type": "picture-entity"
+                                },
+                                {
+                                    "entities": [
+                                        {
+                                            "entity": "binary_sensor.cam2_motion",
+                                            "name": "Motion"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.cam2_audio",
+                                            "name": "Audio"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.cam2_watchdog",
+                                            "name": "Watchdog"
+                                        }
+                                    ],
+                                    "type": "glance"
+                                },
+                                {
+                                    "entity": "camera.cam3",
+                                    "name": "Patio",
+                                    "show_state": false,
+                                    "type": "picture-entity"
+                                },
+                                {
+                                    "entities": [
+                                        {
+                                            "entity": "binary_sensor.cam3_motion",
+                                            "name": "Motion"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.cam3_audio",
+                                            "name": "Audio"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.cam3_watchdog",
+                                            "name": "Watchdog"
+                                        }
+                                    ],
+                                    "type": "glance"
+                                },
+                                {
+                                    "entity": "camera.cam4",
+                                    "name": "Garage",
+                                    "show_state": false,
+                                    "type": "picture-entity"
+                                },
+                                {
+                                    "entities": [
+                                        {
+                                            "entity": "binary_sensor.cam4_motion",
+                                            "name": "Motion"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.cam4_audio",
+                                            "name": "Audio"
+                                        },
+                                        {
+                                            "entity": "binary_sensor.cam4_watchdog",
+                                            "name": "Watchdog"
+                                        }
+                                    ],
+                                    "type": "glance"
+                                }
+                            ],
+                            "type": "vertical-stack"
+                        }
+                    ],
+                    "icon": "mdi:eye",
+                    "title": "Blue Iris"
+                },
+                {
                     "cards": [
                         {
                             "entities": [
@@ -1494,23 +1625,6 @@
                         }
                     ],
                     "title": "Rooms"
-                },
-                {
-                    "cards": [
-                        {
-                            "camera_image": "camera.camera1",
-                            "entity": "camera.camera1",
-                            "title": "Living room",
-                            "type": "picture-entity"
-                        },
-                        {
-                            "camera_image": "camera.camera2",
-                            "entity": "camera.camera2",
-                            "title": "Living room",
-                            "type": "picture-entity"
-                        }
-                    ],
-                    "title": "Cameras"
                 },
                 {
                     "cards": [
@@ -1804,6 +1918,7 @@
                             "entities": [
                                 "sensor.energy_usage"
                             ],
+                            "hours_to_show": 168,
                             "name": "Watts",
                             "title": "Energy Usage",
                             "type": "history-graph"
@@ -1825,7 +1940,7 @@
                 {
                     "cards": [
                         {
-                            "content": "## Home Assistant Docker\nhttps://hub.docker.com/r/homeassistant/home-assistant/tags\n## Material Design Icons\nhttps://materialdesignicons.com/   \n## Lovelace Docs\nhttps://www.home-assistant.io/lovelace/ \n## Awesome-HA\nhttps://www.awesome-ha.com/\n## Amazon Alexa Developer Console\nhttps://developer.amazon.com/alexa/console\n\n## hass-cli\nTo activate from an SSH session, enter hass-cli-activate",
+                            "content": "## Home Assistant Docker\nhttps://hub.docker.com/r/homeassistant/home-assistant/tags\n## Material Design Icons\nhttps://materialdesignicons.com/   \n## Lovelace Docs\nhttps://www.home-assistant.io/lovelace/ \n## Awesome-HA\nhttps://www.awesome-ha.com/\n## Amazon Alexa Developer Console\nhttps://developer.amazon.com/alexa/console\n\n## Blue Iris Integration\nhttps://github.com/elad-bar/ha-blueiris/tree/a2c04c6c62ac2519be5e1b6223805e91a44a0feb\n\n## hass-cli\nTo activate from an SSH session, enter hass-cli-activate\n\n## Things to do\n+ Add automation_mode to included log entities\n+ Add blue Iris switches and complete setup\n+ Add history sensor for dehumidifier",
                             "type": "markdown"
                         }
                     ],

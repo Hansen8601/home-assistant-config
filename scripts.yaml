@@ -147,7 +147,8 @@ log_lux_levels:
   - service: logbook.log
     data_template:
       name: 'Time since Automation Mode change:'
-      message: '{{(as_timestamp(now()) - (as_timestamp(states.input_select.automation_mode.last_changed)))| round(0) }}'
+      message: '{{(as_timestamp(now()) - (as_timestamp(states.input_select.automation_mode.last_changed)))|
+        round(0) }}'
   - service: logbook.log
     data_template:
       name: 'Sun Elevation:'
@@ -159,11 +160,13 @@ log_lux_levels:
   - service: logbook.log
     data_template:
       name: 'Living Room Mean Lux:'
-      message: '{{states.sensor.living_room_lux_stats_mean.state | round(0)}}'
+      message: '{{states.sensor.living_room_lux_stats_mean.state}} (Last Change {{(as_timestamp(now())
+        - (as_timestamp(states.sensor.living_room_multisensor_lux.last_changed)))|round(0)}})'
   - service: logbook.log
     data_template:
       name: 'Kitchen Mean Lux:'
-      message: '{{states.sensor.kitchen_lux_stats_mean.state}} (Last Change {{(as_timestamp(now()) - (as_timestamp(states.sensor.kitchen_multisensor_lux.last_changed)))|round(0)}})'
+      message: '{{states.sensor.kitchen_lux_stats_mean.state}} (Last Change {{(as_timestamp(now())
+        - (as_timestamp(states.sensor.kitchen_multisensor_lux.last_changed)))|round(0)}})'
 '1546906415963':
   alias: lights outside on
   sequence:
