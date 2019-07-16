@@ -942,7 +942,7 @@
                                                     "0",
                                                     "1"
                                                 ],
-                                                "device": 35717540,
+                                                "device": 63818612,
                                                 "entity_id": "remote.living_room"
                                             },
                                             "type": "call-service"
@@ -958,7 +958,7 @@
                                                     "2",
                                                     "0"
                                                 ],
-                                                "device": 35717540,
+                                                "device": 63818612,
                                                 "entity_id": "remote.living_room"
                                             },
                                             "type": "call-service"
@@ -974,7 +974,7 @@
                                                     "2",
                                                     "1"
                                                 ],
-                                                "device": 35717540,
+                                                "device": 63818612,
                                                 "entity_id": "remote.living_room"
                                             },
                                             "type": "call-service"
@@ -990,7 +990,7 @@
                                                     "3",
                                                     "2"
                                                 ],
-                                                "device": 35717540,
+                                                "device": 63818612,
                                                 "entity_id": "remote.living_room"
                                             },
                                             "type": "call-service"
@@ -1006,7 +1006,7 @@
                                                     "3",
                                                     "3"
                                                 ],
-                                                "device": 35717540,
+                                                "device": 63818612,
                                                 "entity_id": "remote.living_room"
                                             },
                                             "type": "call-service"
@@ -1022,7 +1022,7 @@
                                                     "3",
                                                     "4"
                                                 ],
-                                                "device": 35717540,
+                                                "device": 63818612,
                                                 "entity_id": "remote.living_room"
                                             },
                                             "type": "call-service"
@@ -1038,7 +1038,7 @@
                                                     "4",
                                                     "3"
                                                 ],
-                                                "device": 35717540,
+                                                "device": 63818612,
                                                 "entity_id": "remote.living_room"
                                             },
                                             "type": "call-service"
@@ -1685,7 +1685,8 @@
                                         "climate.basement",
                                         "binary_sensor.basement_occupancy",
                                         "binary_sensor.main_floor_occupancy",
-                                        "binary_sensor.dehumidifier"
+                                        "binary_sensor.dehumidifier",
+                                        "binary_sensor.ac"
                                     ],
                                     "show_header_toggle": false,
                                     "title": "Climate Sensors",
@@ -1857,7 +1858,7 @@
                                     "entity": "script.log_lux_levels"
                                 },
                                 {
-                                    "entity": "binary_sensor.indoor_lights_auto_on"
+                                    "entity": "binary_sensor.indoor_lights_needed"
                                 }
                             ],
                             "show_header_toggle": false,
@@ -1940,7 +1941,7 @@
                 {
                     "cards": [
                         {
-                            "content": "## Home Assistant Docker\nhttps://hub.docker.com/r/homeassistant/home-assistant/tags\n## Material Design Icons\nhttps://materialdesignicons.com/   \n## Lovelace Docs\nhttps://www.home-assistant.io/lovelace/ \n## Awesome-HA\nhttps://www.awesome-ha.com/\n## Amazon Alexa Developer Console\nhttps://developer.amazon.com/alexa/console\n\n## Blue Iris Integration\nhttps://github.com/elad-bar/ha-blueiris/tree/a2c04c6c62ac2519be5e1b6223805e91a44a0feb\n\n## hass-cli\nTo activate from an SSH session, enter hass-cli-activate\n\n## Things to do\n+ Add automation_mode to included log entities\n+ Add blue Iris switches and complete setup\n+ Add history sensor for dehumidifier",
+                            "content": "## Home Assistant Docker\nhttps://hub.docker.com/r/homeassistant/home-assistant/tags\n## Material Design Icons\nhttps://materialdesignicons.com/   \n## Lovelace Docs\nhttps://www.home-assistant.io/lovelace/ \n## Awesome-HA\nhttps://www.awesome-ha.com/\n## Amazon Alexa Developer Console\nhttps://developer.amazon.com/alexa/console\n\n## Blue Iris Integration\nhttps://github.com/elad-bar/ha-blueiris/tree/a2c04c6c62ac2519be5e1b6223805e91a44a0feb\n\nUser Interface: http://192.168.1.10:81/\n\n## hass-cli\nTo activate from an SSH session, enter hass-cli-activate\n\n## Things to do\n+ Add automation_mode to included log entities\n+ Add blue Iris switches and complete setup\n+ Add history sensor for dehumidifier",
                             "type": "markdown"
                         }
                     ],

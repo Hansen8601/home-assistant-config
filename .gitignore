@@ -11,6 +11,7 @@ tags
 *.json
 *.conf
 secrets.yaml
+core.config
 home-assistant.log
 home-assistant_v2.*
 harmony_living_room.conf

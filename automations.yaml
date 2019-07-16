@@ -826,6 +826,8 @@
   - condition: state
     entity_id: input_boolean.automation_heat_control_on
     state: 'on'
+  - before: '10:00:00'
+    condition: time
   action:
   - data:
       entity_id: climate.main_floor
@@ -993,3 +995,19 @@
     data:
       entity_id: scene.basement_lights_off
     service: scene.turn_on
+- id: '1561904757421'
+  alias: Automation Mode set to away from Apple Homekit
+  trigger:
+  - entity_id: input_boolean.set_mode_away
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - data:
+      entity_id: input_select.automation_mode
+      option: Away
+    service: input_select.select_option
+  - delay: 00:00:02
+  - data:
+      entity_id: input_boolean.set_mode_away
+    service: input_boolean.turn_off

@@ -1,7 +1,15 @@
 # Home assistant configuration file
 
-# Used to switch between development & production system
-homeassistant: !include homeassistant.yaml
+#homeassistant: !include homeassistant.yaml
+homeassistant:
+
+  customize: !include customize.yaml
+  customize_glob: !include customize_glob.yaml
+
+  auth_providers:
+    - type: homeassistant
+    - type: legacy_api_password
+      api_password: !secret api_password
 
 alexa:
 auth:
@@ -989,5 +997,5 @@ script: !include scripts.yaml
 
 automation: !include automations.yaml
 
-shell_command: !include shell_commands.yaml
+#shell_command: !include shell_commands.yaml
 
