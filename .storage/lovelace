@@ -1923,6 +1923,18 @@
                             "name": "Watts",
                             "title": "Energy Usage",
                             "type": "history-graph"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "binary_sensor.cam1_motion"
+                                },
+                                {
+                                    "entity": "binary_sensor.cam1_audio"
+                                }
+                            ],
+                            "title": "Blue Iris Test",
+                            "type": "entities"
                         }
                     ],
                     "title": "Debug"

@@ -41,6 +41,10 @@ history:
 logbook:
   include:
     entities:
+#      - binary_sensor.cam1_motion
+#      - binary_sensor.cam2_motion
+#      - binary_sensor.cam3_motion
+#      - binary_sensor.cam4_motion
       - binary_sensor.garage_door_main
       - binary_sensor.garage_door_shop
       - binary_sensor.indoor_lights_needed
@@ -140,8 +144,8 @@ homekit:
 blueiris:
   host: !secret blueiris_host
   port: !secret blueiris_port
-  #username: !secret blueiris_username
-  #password: !secret blueiris_password
+  username: !secret blueiris_username
+  password: !secret blueiris_password
   camera:
     - id: Cam1
       name: 'Cam1'

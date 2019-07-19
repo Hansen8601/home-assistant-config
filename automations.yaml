@@ -210,13 +210,13 @@
     state: 'on'
   action:
   - data:
-      away_mode: 'on'
+      preset_mode: 'away'
       entity_id: climate.main_floor
-    service: climate.set_away_mode
+    service: climate.set_preset_mode
   - data:
-      away_mode: 'on'
+      preset_mode: 'away'
       entity_id: climate.basement
-    service: climate.set_away_mode
+    service: climate.set_preset_mode
 - id: ecobee_mode_home
   alias: Ecobee thermostat away mode to off from Automation Mode
   trigger:
@@ -232,13 +232,11 @@
     state: 'on'
   action:
   - data:
-      away_mode: 'off'
       entity_id: climate.main_floor
-    service: climate.set_away_mode
+    service: climate.ecobee_resume_program
   - data:
-      away_mode: 'off'
       entity_id: climate.basement
-    service: climate.set_away_mode
+    service: climate.ecobee_resume_program
 - id: ecobee_mode_sleep
   alias: Ecobee thermostat hold mode to sleep from Automation Mode
   trigger:
@@ -253,12 +251,12 @@
   action:
   - data:
       entity_id: climate.main_floor
-      hold_mode: sleep
-    service: climate.set_hold_mode
+      set_preset_mode: sleep
+    service: climate.set_preset_mode
   - data:
       entity_id: climate.basement
-      hold_mode: sleep
-    service: climate.set_hold_mode
+      preset__mode: sleep
+    service: climate.set_preset_mode
 - id: ecobee_basement_exercise_hold_on
   alias: Ecobee thermostat hold mode to sleep from Exercise Room Lights on
   trigger:
@@ -274,8 +272,8 @@
   action:
   - data:
       entity_id: climate.basement
-      hold_mode: sleep
-    service: climate.set_hold_mode
+      preset_mode: sleep
+    service: climate.set_preset_mode
 - id: ecobee_basement_exercise_hold_off
   alias: Ecobee thermostat hold mode to home from Exercise Room Lights off
   trigger:
@@ -290,8 +288,7 @@
   action:
   - data:
       entity_id: climate.basement
-      hold_mode: home
-    service: climate.set_hold_mode
+    service: climate.ecobee_resume_program
 - id: guest_bathroom_fan_timer_start
   alias: guest_bathroom_fan_timer_start
   trigger:
@@ -817,26 +814,25 @@
       entity_id: input_boolean.device_tracker_phil_home
     service: input_boolean.turn_off
 - id: '1547771165504'
-  alias: Ecobee thermostat hold mode to home from Automation Mode
+  alias: Ecobee thermostat hold mode to home from Automation Mode (when sleeping)
   trigger:
   - entity_id: input_select.automation_mode
+    from: Sleeping
     platform: state
     to: Home
   condition:
   - condition: state
     entity_id: input_boolean.automation_heat_control_on
     state: 'on'
-  - before: '10:00:00'
-    condition: time
   action:
   - data:
       entity_id: climate.main_floor
-      hold_mode: home
-    service: climate.set_hold_mode
+      preset_mode: home
+    service: climate.set_preset_mode
   - data:
       entity_id: climate.basement
-      hold_mode: home
-    service: climate.set_hold_mode
+      preset_mode: home
+    service: climate.set_preset_mode
 - id: '1547991056940'
   alias: Living Room Fan high from Desired Mode sensor
   trigger:
@@ -939,8 +935,8 @@
   action:
   - data_template:
       entity_id: climate.basement,climate.main_floor
-      operation_mode: '{{ trigger.to_state.state }}'
-    service: climate.set_operation_mode
+      hvac_mode: '{{ trigger.to_state.state }}'
+    service: climate.set_hvac_mode
   - data:
       message: Ecobee Mode Change Triggered
       title: Ecobee Alert
