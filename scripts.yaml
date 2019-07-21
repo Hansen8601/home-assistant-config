@@ -1,54 +1,68 @@
-denon_deck_volume_50:
-  alias: denon_deck_volume_50
-  sequence:
-  - event: LOGBOOK_ENTRY
-    event_data:
-      name: EVENT
-      message: Deck Volume Set to 50
-  - service: rest_command.denon_deck_volume_50
-  - delay: 00:00:01
-  - service: input_number.set_value
-    data_template:
-      entity_id: input_number.denon_deck_volume
-      value: '{{ 50 }}'
-denon_deck_volume_55:
-  alias: denon_deck_volume_55
-  sequence:
-  - event: LOGBOOK_ENTRY
-    event_data:
-      name: EVENT
-      message: Deck Volume Set to 55
-  - service: rest_command.denon_deck_volume_55
-  - delay: 00:00:01
-  - service: input_number.set_value
-    data_template:
-      entity_id: input_number.denon_deck_volume
-      value: '{{ 55 }}'
-denon_deck_volume_60:
-  alias: denon_deck_volume_60
-  sequence:
-  - event: LOGBOOK_ENTRY
-    event_data:
-      name: EVENT
-      message: Deck Volume Set to 60
-  - service: rest_command.denon_deck_volume_60
-  - delay: 00:00:01
-  - service: input_number.set_value
-    data_template:
-      entity_id: input_number.denon_deck_volume
-      value: '{{ 60 }}'
-denon_deck_volume_down:
-  alias: denon_deck_volume_down
-  sequence:
-  - service: rest_command.denon_deck_volume_down
-denon_deck_volume_set:
-  alias: denon_deck_volume_set
-  sequence:
-  - service: rest_command.denon_deck_volume_set
-denon_deck_volume_up:
-  alias: denon_deck_volume_up
-  sequence:
-  - service: rest_command.denon_deck_volume_up
+#denon_deck_volume_50:
+#  alias: denon_deck_volume_50
+#  sequence:
+#  - event: LOGBOOK_ENTRY
+#    event_data:
+#      name: EVENT
+#      message: Deck Volume Set to 50
+#  - service: rest_command.denon_deck_volume_50
+#  - delay: 00:00:01
+#  - service: input_number.set_value
+#    data_template:
+#      entity_id: input_number.denon_deck_volume
+#      value: '{{ 50 }}'
+#denon_deck_volume_55:
+#  alias: denon_deck_volume_55
+#  sequence:
+#  - event: LOGBOOK_ENTRY
+#    event_data:
+#      name: EVENT
+#      message: Deck Volume Set to 55
+#  - service: rest_command.denon_deck_volume_55
+#  - delay: 00:00:01
+#  - service: input_number.set_value
+#    data_template:
+#      entity_id: input_number.denon_deck_volume
+#      value: '{{ 55 }}'
+#denon_deck_volume_60:
+#  alias: denon_deck_volume_60
+#  sequence:
+#  - event: LOGBOOK_ENTRY
+#    event_data:
+#      name: EVENT
+#      message: Deck Volume Set to 60
+#  - service: rest_command.denon_deck_volume_60
+#  - delay: 00:00:01
+#  - service: input_number.set_value
+#    data_template:
+#      entity_id: input_number.denon_deck_volume
+#      value: '{{ 60 }}'
+#denon_deck_volume_down:
+#  alias: denon_deck_volume_down
+#  sequence:
+#  - service: rest_command.denon_deck_volume_down
+#denon_deck_volume_set:
+#  alias: denon_deck_volume_set
+#  sequence:
+#  - service: rest_command.denon_deck_volume_set
+#denon_deck_volume_up:
+#  alias: denon_deck_volume_up
+#  sequence:
+#  - service: rest_command.denon_deck_volume_up
+denon_set_volume_input_number:
+   alias: denon_set_volume_input_number
+   sequence:
+   - service: input_number.set_value
+     data_template:
+       entity_id: input_number.denon_volume
+       value: '{{states.media_player.denon_avrx3000.attributes.volume_level | float * 100 | int}}'
+denon_deck_set_volume_input_number:
+   alias: denon_deck_set_volume_input_number
+   sequence:
+   - service: input_number.set_value
+     data_template:
+       entity_id: input_number.denon_deck_volume
+       value: '{{states.media_player.denon_avrx3000_deck.attributes.volume_level | float * 100 | int}}'
 ecobee_mode_sleep:
   alias: ecobee mode sleep
   sequence:

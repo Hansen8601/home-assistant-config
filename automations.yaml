@@ -203,18 +203,15 @@
     to: Away
   condition:
   - condition: state
-    entity_id: sensor.climate_main_floor_away_mode
-    state: 'off'
-  - condition: state
     entity_id: input_boolean.automation_heat_control_on
     state: 'on'
   action:
   - data:
-      preset_mode: 'away'
+      preset_mode: away
       entity_id: climate.main_floor
     service: climate.set_preset_mode
   - data:
-      preset_mode: 'away'
+      preset_mode: away
       entity_id: climate.basement
     service: climate.set_preset_mode
 - id: ecobee_mode_home
@@ -224,9 +221,6 @@
     platform: state
     to: Home
   condition:
-  - condition: state
-    entity_id: sensor.climate_main_floor_away_mode
-    state: 'on'
   - condition: state
     entity_id: input_boolean.automation_heat_control_on
     state: 'on'
@@ -896,7 +890,10 @@
     platform: state
   condition: []
   action:
-  - service: rest_command.denon_deck_volume_set
+    service: media_player.volume_set
+    entity_id: media_player.denon_avrx3000_deck
+    data_template:
+      volume_level: '{{ states.input_number.denon_deck_volume.state | int / 100 }}'
 - id: '1558983657273'
   alias: Harmony set activity from input_select.living_room_remote change
   trigger:
@@ -1007,3 +1004,24 @@
   - data:
       entity_id: input_boolean.set_mode_away
     service: input_boolean.turn_off
+- id: '1563716742712'
+  alias: Denon set input_number volume from media_player change
+  trigger:
+    platform: template
+    value_template: '{{ not is_state_attr("media_player.denon_avrx3000", "volume_level", (states.input_number.denon_volume.state | float / 100 | int)) }}'
+  condition: 
+  - condition: template
+    value_template: '{{(as_timestamp(now()) - (as_timestamp(states.input_number.denon_volume.last_changed) | int) > 10)}}'
+  action:
+  - service: script.denon_set_volume_input_number
+- id: 'denon_deck_input_volume'
+  alias: Denon Deck set input_number volume from media_player change
+  trigger:
+    platform: template
+    value_template: '{{ not is_state_attr("media_player.denon_avrx3000_deck", "volume_level", (states.input_number.denon_deck_volume.state | float / 100 | int)) }}'
+  condition: 
+  - condition: template
+    value_template: '{{(as_timestamp(now()) - (as_timestamp(states.input_number.denon_deck_volume.last_changed) | int) > 10)}}'
+  action:
+  - service: script.denon_deck_set_volume_input_number
+

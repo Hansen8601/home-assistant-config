@@ -1328,6 +1328,10 @@
                                 {
                                     "entity": "media_player.denon_avrx3000",
                                     "type": "media-control"
+                                },
+                                {
+                                    "entity": "media_player.denon_avrx3000_deck",
+                                    "type": "media-control"
                                 }
                             ],
                             "type": "vertical-stack"

@@ -206,6 +206,9 @@ media_player:
   - platform: denonavr
     host: !secret dennon_ip
     name: Denon AVRX3000
+    zones:
+      zone: Zone2
+      name: Denon AVRX3000 Deck
     #- platform: plex
   - platform: samsungtv
     host: 192.168.1.40
@@ -230,31 +233,31 @@ remote:
     name: living_room
     host: !secret harmony_ip
 
-rest_command:
-  denon_deck_volume_set:
-    url: !secret denon_url
-    method: post
-    payload: 'cmd0=PutMasterVolumeSet%2F{{((states.input_number.denon_deck_volume.state  | float)) - 80 }}&ZoneName=ZONE2'
-  denon_deck_volume_up:
-    url: !secret denon_url
-    method: post
-    payload: 'cmd0=PutMasterVolumeBtn%2F%3C&ZoneName=ZONE2'
-  denon_deck_volume_down:
-    url: !secret denon_url
-    method: post
-    payload: 'cmd0=PutMasterVolumeBtn%2F%3E&ZoneName=ZONE2'
-  denon_deck_volume_50:
-    url: !secret denon_url
-    method: post
-    payload: 'cmd0=PutMasterVolumeSet%2F-30&ZoneName=ZONE2'
-  denon_deck_volume_55:
-    url: !secret denon_url
-    method: post
-    payload: 'cmd0=PutMasterVolumeSet%2F-25&ZoneName=ZONE2'
-  denon_deck_volume_60:
-    url: !secret denon_url
-    method: post
-    payload: 'cmd0=PutMasterVolumeSet%2F-20&ZoneName=ZONE2'
+    #rest_command:
+    #  denon_deck_volume_set:
+    #    url: !secret denon_url
+    #    method: post
+    #    payload: 'cmd0=PutMasterVolumeSet%2F{{((states.input_number.denon_deck_volume.state  | float)) - 80 }}&ZoneName=ZONE2'
+    #  denon_deck_volume_up:
+    #    url: !secret denon_url
+    #    method: post
+    #    payload: 'cmd0=PutMasterVolumeBtn%2F%3C&ZoneName=ZONE2'
+    #  denon_deck_volume_down:
+    #    url: !secret denon_url
+    #    method: post
+    #    payload: 'cmd0=PutMasterVolumeBtn%2F%3E&ZoneName=ZONE2'
+    #  denon_deck_volume_50:
+    #    url: !secret denon_url
+    #    method: post
+    #    payload: 'cmd0=PutMasterVolumeSet%2F-30&ZoneName=ZONE2'
+    #  denon_deck_volume_55:
+    #    url: !secret denon_url
+    #    method: post
+    #    payload: 'cmd0=PutMasterVolumeSet%2F-25&ZoneName=ZONE2'
+    #  denon_deck_volume_60:
+    #    url: !secret denon_url
+    #    method: post
+    #    payload: 'cmd0=PutMasterVolumeSet%2F-20&ZoneName=ZONE2'
 
     #transmission:
     #  host: !secret transmission_server
@@ -772,14 +775,6 @@ sensor:
         {%- else -%}
           off
         {%- endif -%}
-    climate_main_floor_away_mode:
-      friendly_name: 'Climate Main Floor Away Mode'
-      value_template: >-
-        {{states.climate.main_floor.attributes.away_mode}}
-    climate_basement_away_mode:
-      friendly_name: 'Climate Basement Away Mode'
-      value_template: >-
-        {{states.climate.basement.attributes.away_mode}}
     living_room_lux_stats_mean_attribute:
       friendly_name: 'Living Room Lux Mean Attribute'
       unit_of_measurement: lux
