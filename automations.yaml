@@ -1,7 +1,7 @@
 - id: basement_stairs_motion_test
   alias: Basement Stairs Motion Test
   trigger:
-  - entity_id: binary_sensor.stairs_motion
+  - entity_id: binary_sensor.basement_motion_sensor_motion
     from: 'off'
     platform: state
     to: 'on'
@@ -18,7 +18,7 @@
       entity_id: light.basement_work_area_main_lights
     service: light.turn_on
 - id: doors_check_status
-  alias: Alert for doors open when automation mode changes
+  alias: Alert for doors open when automation mode to sleep or away
   trigger:
   - entity_id: input_select.automation_mode
     platform: state
@@ -30,9 +30,9 @@
   - condition: state
     entity_id: input_boolean.text_alerts
     state: 'on'
-  - condition: template
-    value_template: '{is_state("input_select.automation_mode", "sleeping") or is_state("input_select.automation_mode",
-      "away") }'
+  - condition: state
+    entity_id: sensor.garage_service_door
+    state: open
   action:
   - data:
       message: Sleep or Away mode set but doors still open!
@@ -43,7 +43,7 @@
       title: Alert
     service: notify.ios_phils_7
 - id: doors_open_status
-  alias: Alert for open doors when sleeping or away
+  alias: Alert for doors opening when sleeping or away
   trigger:
   - entity_id: sensor.garage_service_door
     for: 00:00:01
@@ -64,19 +64,10 @@
       message: Door opened while mode was sleeping or away
       target: 6082352167
     service: notify.twilio_sms
-- id: automation_mode_home_from_harmony
-  alias: Automation Mode set to home from activity with Harmony Remote
-  trigger:
-  - entity_id: remote.living_room
-    from: 'off'
-    platform: state
-    to: 'on'
-  condition: []
-  action:
   - data:
-      entity_id: input_select.automation_mode
-      option: Home
-    service: input_select.select_option
+      message: Door opened while mode was sleeping or away
+      title: Alert
+    service: notify.ios_phils_7
 - id: automation_mode_sleeping_from_harmony
   alias: Automation Mode set to sleeping from activity with Harmony Remote
   trigger:
@@ -126,9 +117,17 @@
       entity_id: input_boolean.set_mode_sleeping
     service: input_boolean.turn_off
 - id: automation_mode_home_from_ecobee
-  alias: Automation Mode set to home from Main Floor Occupancy (Ecobee)
+  alias: Automation Mode set to home from activity when sleeping
   trigger:
   - entity_id: binary_sensor.main_floor_occupancy
+    from: 'off'
+    platform: state
+    to: 'on'
+  - entity_id: binary_sensor.multisensor_6_kitchen_motion
+    from: 'off'
+    platform: state
+    to: 'on'
+  - entity_id: remote.living_room
     from: 'off'
     platform: state
     to: 'on'
@@ -160,8 +159,8 @@
       - light.master_bathroom_chandelier
     service: light.turn_off
   - data:
-      entity_id: fan.living_room_fan
-    service: fan.turn_off
+      entity_id: light.living_room_fan
+    service: light.turn_off
   - data:
       entity_id: remote.living_room
     service: remote.turn_off
@@ -185,8 +184,8 @@
       - group.room_master_bathroom
     service: light.turn_off
   - data:
-      entity_id: fan.living_room_fan
-    service: fan.turn_off
+      entity_id: light.living_room_fan
+    service: light.turn_off
   - data:
       entity_id: remote.living_room
     service: remote.turn_off
@@ -215,9 +214,10 @@
       entity_id: climate.basement
     service: climate.set_preset_mode
 - id: ecobee_mode_home
-  alias: Ecobee thermostat away mode to off from Automation Mode
+  alias: Ecobee thermostat resume program when Home
   trigger:
   - entity_id: input_select.automation_mode
+    from: Away
     platform: state
     to: Home
   condition:
@@ -245,11 +245,11 @@
   action:
   - data:
       entity_id: climate.main_floor
-      set_preset_mode: sleep
+      preset_mode: sleep
     service: climate.set_preset_mode
   - data:
       entity_id: climate.basement
-      preset__mode: sleep
+      preset_mode: sleep
     service: climate.set_preset_mode
 - id: ecobee_basement_exercise_hold_on
   alias: Ecobee thermostat hold mode to sleep from Exercise Room Lights on
@@ -397,8 +397,8 @@
   condition: []
   action:
   - data:
-      entity_id: fan.master_bedroom_fan
-    service: fan.turn_off
+      entity_id: light.master_bedroom_fan
+    service: light.turn_off
 - id: bedroom_fan_medium
   alias: Bedroom Fan medium from Desired Mode sensor
   trigger:
@@ -408,9 +408,9 @@
   condition: []
   action:
   - data:
-      entity_id: fan.master_bedroom_fan
-      speed: medium
-    service: fan.turn_on
+      brightness: 150
+      entity_id: light.master_bedroom_fan
+    service: light.turn_on
 - id: bedroom_fan_low
   alias: Bedroom Fan low from Desired Mode sensor
   trigger:
@@ -420,9 +420,9 @@
   condition: []
   action:
   - data:
-      entity_id: fan.master_bedroom_fan
-      speed: low
-    service: fan.turn_on
+      brightness: 75
+      entity_id: light.master_bedroom_fan
+    service: light.turn_on
 - id: living_room_fan_low
   alias: Living Room Fan low from Desired Mode sensor
   trigger:
@@ -432,10 +432,10 @@
   condition: []
   action:
   - data:
-      entity_id: fan.living_room_fan
-      speed: low
-    entity_id: fan.living_room_fan
-    service: fan.turn_on
+      entity_id: light.living_room_fan
+      brightness: 75
+    entity_id: light.living_room_fan
+    service: light.turn_on
 - id: living_room_fan_medium
   alias: Living Room Fan medium from Desired Mode sensor
   trigger:
@@ -445,10 +445,10 @@
   condition: []
   action:
   - data:
-      entity_id: fan.living_room_fan
-      speed: medium
-    entity_id: fan.living_room_fan
-    service: fan.turn_on
+      entity_id: light.living_room_fan
+      brightness: 150
+    entity_id: light.living_room_fan
+    service: light.turn_on
 - id: living_room_fan_off
   alias: Living Room Fan off from Desired Mode sensor
   trigger:
@@ -457,12 +457,12 @@
     to: 'off'
   condition:
   - condition: state
-    entity_id: fan.living_room_fan
+    entity_id: light.living_room_fan
     state: 'on'
   action:
   - data:
-      entity_id: fan.living_room_fan
-    service: fan.turn_off
+      entity_id: light.living_room_fan
+    service: light.turn_off
 - id: fireplace_hot_off
   alias: Fireplace off when hot
   trigger:
@@ -493,7 +493,7 @@
   - service: climate.ecobee_set_fan_min_on_time
     data:
       entity_id: climate.main_floor
-      fan_min_on_time: 60
+      fan_min_on_time: 150
 - id: furnace_fan_off_when_fireplace_off
   alias: Furnace fan off when fireplace off
   trigger:
@@ -553,7 +553,7 @@
     condition: sun
   action:
   - data:
-      entity_id: light.kitchen_cabinet_lights
+      entity_id: switch.kitchen_cabinet_lights
     service: light.turn_on
   - data:
       brightness: 50
@@ -580,8 +580,8 @@
     to: 'on'
   action:
   - data:
-      entity_id: light.master_bathroom_shower
-    service: light.turn_on
+      entity_id: switch.master_bathroom_shower
+    service: switch.turn_on
 - id: basement_lights_mode_from_tv
   alias: Basement Lights to Movie Scene from Samsung TV Remote on
   trigger:
@@ -597,7 +597,7 @@
 - id: basement_stairs_motion_on
   alias: Basement Stairs Lights on from Stairs Motion
   trigger:
-  - entity_id: binary_sensor.stairs_motion
+  - entity_id: binary_sensor.basement_motion_sensor_motion
     from: 'off'
     platform: state
     to: 'on'
@@ -658,7 +658,7 @@
 - id: '1546271721605'
   alias: Basement Lights to Entertaining Scene from Stairs Motion
   trigger:
-  - entity_id: binary_sensor.stairs_motion
+  - entity_id: binary_sensor.basement_motion_sensor_motion
     from: 'off'
     platform: state
     to: 'on'
@@ -709,35 +709,17 @@
   - data:
       entity_id: input_boolean.device_tracker_nikki_home
     service: input_boolean.turn_on
-- id: '1546695777716'
-  alias: device tracker set from nikki away
-  trigger:
-  - entity_id: device_tracker.nikkis_iphone
-    event: leave
-    platform: zone
-    zone: zone.home
-  - entity_id: input_boolean.nikki_homekit_present
-    platform: state
-    to: 'off'
-  condition:
-  - condition: state
-    entity_id: input_boolean.device_tracker_nikki_home
-    state: 'on'
-  action:
-  - data:
-      entity_id: input_boolean.device_tracker_nikki_home
-    service: input_boolean.turn_off
 - id: '1546696475350'
   alias: Automation Mode set to home from device trackers
   trigger:
-  - entity_id: input_boolean.device_tracker_phil_home
-    from: 'off'
-    platform: state
-    to: 'on'
-  - entity_id: input_boolean.device_tracker_nikki_home
-    from: 'off'
-    platform: state
-    to: 'on'
+  - entity_id: device_tracker.phils_7
+    event: enter
+    platform: zone
+    zone: zone.home
+  - entity_id: device_tracker.nikkis_iphone
+    event: enter
+    platform: zone
+    zone: zone.home
   condition:
   - condition: state
     entity_id: input_select.automation_mode
@@ -750,65 +732,47 @@
 - id: '1546696585128'
   alias: Automation Mode set to away from device trackers
   trigger:
-  - entity_id: input_boolean.device_tracker_phil_home
-    for: 00:00:30
-    from: 'on'
-    platform: state
-    to: 'off'
-  - entity_id: input_boolean.device_tracker_nikki_home
-    for: 00:00:30
-    from: 'on'
-    platform: state
-    to: 'off'
+  - entity_id: device_tracker.phils_7
+    event: leave
+    platform: zone
+    zone: zone.home
+  - entity_id: device_tracker.nikkis_iphone
+    event: leave
+    platform: zone
+    zone: zone.home
   condition:
   - condition: state
-    entity_id: input_boolean.device_tracker_phil_home
-    state: 'off'
+    entity_id: device_tracker.phils_7
+    state: not_home
   - condition: state
-    entity_id: input_boolean.device_tracker_nikki_home
-    state: 'off'
+    entity_id: device_tracker.nikkis_iphone
+    state: not_home
   action:
   - data:
       entity_id: input_select.automation_mode
       option: Away
     service: input_select.select_option
 - id: '1547473411825'
-  alias: Kitchen Island Light off when Phil Leaves
-  trigger:
-  - entity_id: input_boolean.device_tracker_phil_home
-    platform: state
-    to: 'off'
-  condition:
-  - condition: state
-    entity_id: sensor.nikkis_iphone_battery_state
-    state: unplugged
-  - condition: state
-    entity_id: light.kitchen_island_lights
-    state: 'on'
-  action:
-  - data:
-      entity_id: light.kitchen_island_light
-    service: light.turn_off
-- id: '1547519521771'
-  alias: device tracker set from phil away
+  alias: Phil Leaves for work - turn off stuff
   trigger:
   - entity_id: device_tracker.phils_7
     event: leave
     platform: zone
     zone: zone.home
-  - entity_id: input_boolean.phil_homekit_present
-    platform: state
-    to: 'off'
   condition:
   - condition: state
-    entity_id: input_boolean.device_tracker_phil_home
+    entity_id: light.kitchen_island_lights
     state: 'on'
+  - before: 07:00:00
+    condition: time
   action:
   - data:
-      entity_id: input_boolean.device_tracker_phil_home
-    service: input_boolean.turn_off
+      entity_id: light.kitchen_island_light
+    service: light.turn_off
+  - data: {}
+    service: script.harmony_power_off
 - id: '1547771165504'
-  alias: Ecobee thermostat hold mode to home from Automation Mode (when sleeping)
+  alias: Ecobee thermostat mode to home from Automation Mode (when sleeping)
   trigger:
   - entity_id: input_select.automation_mode
     from: Sleeping
@@ -836,9 +800,9 @@
   condition: []
   action:
   - data:
-      entity_id: fan.living_room_fan
-      speed: high
-    service: fan.turn_on
+      entity_id: light.living_room_fan
+      brightness: 225
+    service: light.turn_on
 - id: '1557070286068'
   alias: Automation Mode set to sleeping from Master Bedroom Hall Light Off
   trigger:
@@ -916,28 +880,6 @@
     entity_id: input_select.living_room_remote
     data_template:
       option: '{{ states.remote.living_room.attributes.current_activity }}'
-- id: '1559086612190'
-  alias: Ecobee thermostat mode set both from one mode change
-  trigger:
-  - entity_id: climate.main_floor
-    platform: state
-  - entity_id: climate.basement
-    platform: state
-  condition:
-  - condition: template
-    value_template: '{{ trigger.to_state.state != ''off'' }}'
-  - condition: template
-    value_template: '{{states.climate.main_floor.state != states.climate.basement.state
-      }}'
-  action:
-  - data_template:
-      entity_id: climate.basement,climate.main_floor
-      hvac_mode: '{{ trigger.to_state.state }}'
-    service: climate.set_hvac_mode
-  - data:
-      message: Ecobee Mode Change Triggered
-      title: Ecobee Alert
-    service: notify.ios_phils_7
 - id: '1559087060888'
   alias: Ecobee thermostats fan on from automation mode Home
   trigger:
@@ -1008,20 +950,169 @@
   alias: Denon set input_number volume from media_player change
   trigger:
     platform: template
-    value_template: '{{ not is_state_attr("media_player.denon_avrx3000", "volume_level", (states.input_number.denon_volume.state | float / 100 | int)) }}'
-  condition: 
+    value_template: '{{ not is_state_attr("media_player.denon_avrx3000", "volume_level",
+      (states.input_number.denon_volume.state | float / 100 | int)) }}'
+  condition:
   - condition: template
-    value_template: '{{(as_timestamp(now()) - (as_timestamp(states.input_number.denon_volume.last_changed) | int) > 10)}}'
+    value_template: '{{(as_timestamp(now()) - (as_timestamp(states.input_number.denon_volume.last_changed)
+      | int) > 10)}}'
   action:
   - service: script.denon_set_volume_input_number
-- id: 'denon_deck_input_volume'
+- id: denon_deck_input_volume
   alias: Denon Deck set input_number volume from media_player change
   trigger:
     platform: template
-    value_template: '{{ not is_state_attr("media_player.denon_avrx3000_deck", "volume_level", (states.input_number.denon_deck_volume.state | float / 100 | int)) }}'
-  condition: 
+    value_template: '{{ not is_state_attr("media_player.denon_avrx3000_deck", "volume_level",
+      (states.input_number.denon_deck_volume.state | float / 100 | int)) }}'
+  condition:
   - condition: template
-    value_template: '{{(as_timestamp(now()) - (as_timestamp(states.input_number.denon_deck_volume.last_changed) | int) > 10)}}'
+    value_template: '{{(as_timestamp(now()) - (as_timestamp(states.input_number.denon_deck_volume.last_changed)
+      | int) > 10)}}'
   action:
   - service: script.denon_deck_set_volume_input_number
-
+- id: '1564271529756'
+  alias: Garage Service Door Open Alert
+  trigger:
+  - entity_id: sensor.garage_service_door
+    platform: state
+    to: open
+  condition: []
+  action:
+  - data:
+      message: Garage Service Door Open
+    service: notify.ios_phils_7
+- id: '1564867287951'
+  alias: Alert for Kitchen multisensor 6 battery level low
+  trigger:
+  - below: '90'
+    entity_id: sensor.multisensor_6_kitchen_battery
+    platform: numeric_state
+  condition: []
+  action:
+  - alias: ''
+    data:
+      message: Multisensor 6 Kitchen Battery Low
+      title: Battery Low
+    service: notify.ios_phils_7
+- id: '1564867397740'
+  alias: New Automation
+  trigger:
+  - below: '10'
+    entity_id: sensor.basement_motion_sensor_battery
+    platform: numeric_state
+  condition: []
+  action:
+  - data:
+      message: Basement Motion sensor Battery Low
+      title: Battery Low
+    service: notify.ios_phils_7
+- id: '1564867590937'
+  alias: Alert for Basement Motion Sensor Battery Low
+  trigger:
+  - below: '10'
+    entity_id: sensor.basement_motion_sensor_battery
+    platform: numeric_state
+  condition: []
+  action:
+  - data:
+      message: Multisensor 6 Kitchen Battery Low
+      title: Battery Low
+    service: notify.ios_phils_7
+- id: '1564868593065'
+  alias: Alert for motion when Away
+  trigger:
+  - entity_id: binary_sensor.multisensor_6_kitchen_motion
+    platform: state
+    to: 'on'
+  - entity_id: binary_sensor.basement_motion_sensor_motion
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: device_tracker.nikkis_iphone
+    state: not_home
+  - condition: state
+    entity_id: device_tracker.phils_7
+    state: not_home
+  action:
+  - data:
+      message: Motion while away
+      title: Alert
+    service: notify.ios_phils_7
+- id: '1565832944340'
+  alias: Kitchen motion timer start
+  trigger:
+  - entity_id: binary_sensor.multisensor_6_kitchen_motion
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: input_select.automation_mode
+    state: Home
+  - condition: state
+    entity_id: binary_sensor.indoor_lights_needed
+    state: 'on'
+  action:
+  - data:
+      entity_id: timer.kitchen_motion
+    service: timer.start
+- id: '1566864718079'
+  alias: Denon play WISN when automation mode from sleep to home
+  trigger:
+  - entity_id: input_select.automation_mode
+    from: Sleeping
+    platform: state
+    to: Home
+  condition:
+  - after: 05:00
+    before: 07:00
+    condition: time
+  action:
+  - data: {}
+    service: script.harmony_apple_tv
+  - delay: 00:00:05
+  - data:
+      entity_id: media_player.apple_tv
+      media_content_id: https://c13icy.prod.playlists.ihrhls.com/4245_icy
+      media_content_type: music
+    service: media_player.play_media
+- id: '1566865515702'
+  alias: Kitchen Island Lights Dim when no motion
+  trigger:
+  - event_data:
+      entity_id: timer.kitchen_motion
+    event_type: timer.finished
+    platform: event
+  condition:
+  - condition: state
+    entity_id: binary_sensor.indoor_lights_needed
+    state: 'on'
+  - condition: state
+    entity_id: light.kitchen_island_lights
+    state: 'on'
+  action:
+  - data:
+      brightness: '50'
+      entity_id: light.kitchen_island_lights
+    service: light.turn_on
+- id: '1566865646095'
+  alias: Kitchen Island Light bright when motion
+  trigger:
+  - entity_id: binary_sensor.multisensor_6_kitchen_motion
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: binary_sensor.indoor_lights_needed
+    state: 'on'
+  - condition: template
+    value_template: '{{states.light.kitchen_island_lights.attributes.brightness ==
+      51}}'
+  - condition: state
+    entity_id: light.kitchen_island_lights
+    state: 'on'
+  action:
+  - data:
+      brightness: '125'
+      entity_id: light.kitchen_island_lights
+    service: light.turn_on

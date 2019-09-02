@@ -33,7 +33,8 @@ history:
       - weblink
       - updater
 
-#http:
+http:
+  base_url: !secret base_url
 #  api_password: !secret api_password
 #  ip_ban_enabled: True
 #  login_attempts_threshold: 5
@@ -45,8 +46,7 @@ logbook:
 #      - binary_sensor.cam2_motion
 #      - binary_sensor.cam3_motion
 #      - binary_sensor.cam4_motion
-      - binary_sensor.garage_door_main
-      - binary_sensor.garage_door_shop
+      - sensor.garage_service_door
       - binary_sensor.indoor_lights_needed
       - binary_sensor.shop_heater
       - climate.basement
@@ -55,6 +55,7 @@ logbook:
       - automation
       - media_player
       - camera
+      - device_tracker
 
 logger:
   default: info
@@ -221,6 +222,7 @@ apple_tv:
     start_off: true
   - host: 192.168.1.86
     login_id: !secret apple_tv_login_id
+    credentials: !secret apple_tv_credentials
     name: "Apple TV Upstairs"
     start_off: true
   - host: 192.168.1.109
@@ -294,24 +296,12 @@ binary_sensor:
                     as_timestamp(now()) - (as_timestamp(states.input_number.lux_setpoint.last_changed) | int) < 10) -%}
               {%- if ((states.sun.sun.attributes.elevation | int) < 10 ) -%}
                 True
-              {%- elif ((states.sensor.dark_sky_cloud_coverage_stats_mean.state | int) > 85) -%}
+              {%- elif ((states.sensor.dark_sky_cloud_coverage_stats.attributes["mean"] | int) > 85) -%}
                 True
-              {%- elif is_state("binary_sensor.indoor_lights_needed","off") -%}
-                {%- if ((states.sensor.living_room_lux_stats_mean.attributes["mean"] | int) < (states.input_number.lux_setpoint.state | int))
-                     and (((states.sensor.kitchen_lux_stats_mean.attributes["mean"] | int) < (states.input_number.lux_setpoint.state | int))
-                            or (as_timestamp(now()) |int) - (as_timestamp(states.sensor.kitchen_multisensor_lux.last_changed) | int) > 3600)-%}
-                  True
-                {%- else -%}
-                  False
-                {%- endif -%}
-              {%- elif is_state("binary_sensor.indoor_lights_needed","on") -%}
-                {%- if ((states.sensor.living_room_lux_stats_mean.attributes["mean"] | int) > (states.input_number.lux_setpoint.state | int))
-                     and (((states.sensor.kitchen_lux_stats_mean.attributes["mean"] | int) > (states.input_number.lux_setpoint.state | int))
-                            or (as_timestamp(now()) |int) - (as_timestamp(states.sensor.kitchen_multisensor_lux.last_changed) | int) > 3600)-%}
-                  False
-                {%- else -%}
-                  True
-                {%- endif -%}
+              {%- elif (states.sensor.kitchen_lux_stats.attributes["mean"] | int) < (states.input_number.lux_setpoint.state | int) -%}
+                True
+              {%- else -%}
+                False
               {%- endif -%}
             {%- else -%}
               {%- if is_state("binary_sensor.indoor_lights_needed","off") -%}False{%- else -%}True{%- endif -%}
@@ -320,7 +310,6 @@ binary_sensor:
             False
           {%- endif -%}
           
-
 
   - platform: template
     sensors:
@@ -335,14 +324,7 @@ binary_sensor:
             False 
           {%- endif -%}
 
-  - platform: mqtt
-    state_topic: 'smartthings/Basement Motion Sensor/motion'
-    name: 'stairs_motion'
-    payload_on: 'active'
-    payload_off: 'inactive'
-    #retain: true
-    #
-  # Creates binary sensors according cameras defined in the platform
+# Creates binary sensors according cameras defined in the platform
   - platform: blueiris
 
 
@@ -356,9 +338,6 @@ cover:
   - platform: mqtt
     state_topic: "esp8266/garageIO/switch1"
     command_topic: "esp8266/garageIO/switch1/set"
-    #availability_topic: "rpi/garage/status"
-    #payload_available: "running"
-    #payload_not_available: "stopped"
     name: "garage right"
     qos: 0 #Must be zero to work correctly
     payload_open: "open"
@@ -370,9 +349,6 @@ cover:
   - platform: mqtt
     state_topic: "esp8266/garageIO/switch2"
     command_topic: "esp8266/garageIO/switch2/set"
-    #availability_topic: "rpi/garage/status"
-    #payload_available: "running"
-    #payload_not_available: "stopped"
     name: "garage left"
     qos: 0 #must be zero to work correctly.
     payload_open: "open"
@@ -381,47 +357,11 @@ cover:
     state_closed: "closed"
     optimistic: false
 
-
 ###################
 #                 #
 # Fan             #
 #                 #
 ###################
-
-fan:
-  - platform: mqtt
-    name: "Living Room Fan"
-    state_topic: "smartthings/Living Room Fan/switch"
-    command_topic: "smartthings/Living Room Fan/switch"
-    speed_state_topic: "smartthings/Living Room Fan/level"
-    speed_command_topic: "smartthings/Living Room Fan/level"
-    qos: 0
-    payload_on: "on"
-    payload_off: "off"
-    payload_low_speed: "30"
-    payload_medium_speed: "60"
-    payload_high_speed: "90"
-    speeds:
-      - low
-      - medium
-      - high
-  - platform: mqtt
-    name: "Master Bedroom Fan"
-    state_topic: "smartthings/Master Bedroom Fan/switch"
-    command_topic: "smartthings/Master Bedroom Fan/switch"
-    speed_state_topic: "smartthings/Master Bedroom Fan/level"
-    speed_command_topic: "smartthings/Master Bedroom Fan/level"
-    qos: 0
-    payload_on: "on"
-    payload_off: "off"
-    payload_low_speed: "30"
-    payload_medium_speed: "60"
-    payload_high_speed: "90"
-    speeds:
-      - low
-      - medium
-      - high
-
 
 ###################
 #                 #
@@ -436,9 +376,9 @@ group:
       - light.ge_living_room_3
   room_kitchen:
     entities:
-      - light.kitchen_cabinet_lights
+      - switch.kitchen_cabinet_lights
       - light.kitchen_island_lights
-      - sensor.kitchen_multisensor_lux
+      - sensor.multisensor_6_kitchen_illuminance
 
   room_master_bathroom:
     entities:
@@ -464,169 +404,6 @@ group:
 #                 #
 ###################
 
-light:
-- platform: mqtt
-  name: "ge_living_room_1"
-  state_topic: "smartthings/GE Living Room 1/switch"
-  command_topic: "smartthings/GE Living Room 1/switch"
-  brightness_state_topic: "smartthings/GE Living Room 1/level"
-  brightness_command_topic: "smartthings/GE Living Room 1/level"
-  brightness_scale: 99
-  brightness_value_template: '{{ value }}'
-  qos: 1
-  payload_on: "on"
-  payload_off: "off"
-  optimistic: false
-  #retain: true
-- platform: mqtt
-  name: "ge_living_room_2"
-  state_topic: "smartthings/GE Living Room 2/switch"
-  command_topic: "smartthings/GE Living Room 2/switch"
-  brightness_state_topic: "smartthings/GE Living Room 2/level"
-  brightness_command_topic: "smartthings/GE Living Room 2/level"
-  brightness_scale: 99
-  brightness_value_template: '{{ value }}'
-  qos: 1
-  payload_on: "on"
-  payload_off: "off"
-  optimistic: false
-  #retain: true
-- platform: mqtt
-  name: "ge_living_room_3"
-  state_topic: "smartthings/GE Living Room 3/switch"
-  command_topic: "smartthings/GE Living Room 3/switch"
-  brightness_state_topic: "smartthings/GE Living Room 3/level"
-  brightness_command_topic: "smartthings/GE Living Room 3/level"
-  brightness_scale: 99
-  brightness_value_template: '{{ value }}'
-  qos: 1
-  payload_on: "on"
-  payload_off: "off"
-  optimistic: false
-  #retain: true
-- platform: mqtt
-  name: "Guest Bathroom Lights"
-  state_topic: "smartthings/Guest Bathroom Lights/switch"
-  command_topic: "smartthings/Guest Bathroom Lights/switch"
-  brightness_state_topic: "smartthings/Guest Bathroom Lights/level"
-  brightness_command_topic: "smartthings/Guest Bathroom Lights/level"
-  brightness_scale: 99
-  brightness_value_template: '{{ value }}'
-  qos: 1
-  payload_on: "on"
-  payload_off: "off"
-  optimistic: false
-  #retain: true
-- platform: mqtt
-  name: "Entry_Walkway_Dimmer_Switch"
-  state_topic: "smartthings/Entry Walkway Dimmer Switch/switch"
-  command_topic: "smartthings/Entry Walkway Dimmer Switch/switch"
-  brightness_state_topic: "smartthings/Entry Walkway Dimmer Switch/level"
-  brightness_command_topic: "smartthings/Entry Walkway Dimmer Switch/level"
-  brightness_scale: 99
-  brightness_value_template: '{{ value }}'
-  qos: 1
-  payload_on: "on"
-  payload_off: "off"
-  optimistic: false
-  #retain: true
-- platform: mqtt
-  name: "Garage_Outside_Lights"
-  state_topic: "smartthings/Garage Outside Lights/switch"
-  command_topic: "smartthings/Garage Outside Lights/switch"
-  brightness_state_topic: "smartthings/Garage Outside Lights/level"
-  brightness_command_topic: "smartthings/Garage Outside Lights/level"
-  brightness_scale: 99
-  brightness_value_template: '{{ value }}'
-  qos: 1
-  payload_on: "on"
-  payload_off: "off"
-  optimistic: false
-  #retain: true
-- platform: mqtt
-  name: "Master_Bathroom_Dimmer"
-  state_topic: "smartthings/Master bathroom dimmer/switch"
-  command_topic: "smartthings/Master bathroom dimmer/switch"
-  brightness_state_topic: "smartthings/Master bathroom dimmer/level"
-  brightness_command_topic: "smartthings/master bathroom dimmer/level"
-  brightness_scale: 99
-  brightness_value_template: '{{ value }}'
-  qos: 1
-  payload_on: "on"
-  payload_off: "off"
-  optimistic: false
-  #retain: true
-- platform: mqtt
-  name: "Master_Bathroom_Shower"
-  state_topic: "smartthings/Master bathroom shower/switch"
-  command_topic: "smartthings/Master bathroom shower/switch"
-  qos: 1
-  payload_on: "on"
-  payload_off: "off"
-  optimistic: false
-  #retain: true
-- platform: mqtt
-  name: "Upstairs_Hall_Scone"
-  state_topic: "smartthings/Upstairs Hall Scone/switch"
-  command_topic: "smartthings/Upstairs Hall Scone/switch"
-  brightness_state_topic: "smartthings/Upstairs Hall Scone/level"
-  brightness_command_topic: "smartthings/Upstairs Hall Scone/level"
-  brightness_scale: 99
-  brightness_value_template: '{{ value }}'
-  qos: 1
-  payload_on: "on"
-  payload_off: "off"
-  optimistic: false
-  #retain: true
-- platform: mqtt
-  name: "Kitchen_Cabinet_Lights"
-  state_topic: "smartthings/Kitchen Cabinet Lights/switch"
-  command_topic: "smartthings/Kitchen Cabinet Lights/switch"
-  payload_on: "on"
-  payload_off: "off"
-  optimistic: false
-  #retain: true
-- platform: mqtt
-  name: "Kitchen_island_Lights"
-  state_topic: "smartthings/Kitchen Island Lights/switch"
-  command_topic: "smartthings/Kitchen Island Lights/switch"
-  brightness_state_topic: "smartthings/Kitchen Island Lights/level"
-  brightness_command_topic: "smartthings/Kitchen Island Lights/level"
-  brightness_scale: 99
-  brightness_value_template: '{{ value }}'
-  qos: 1
-  payload_on: "on"
-  payload_off: "off"
-  optimistic: false
-  #retain: true
-- platform: mqtt
-  name: "Master_bathroom_chandelier"
-  state_topic: "smartthings/Master bathroom chandelier/switch"
-  command_topic: "smartthings/Master bathroom chandelier/switch"
-  brightness_state_topic: "smartthings/Master bathroom chandelier/level"
-  brightness_command_topic: "smartthings/Master bathroom chandelier/level"
-  brightness_scale: 99
-  brightness_value_template: '{{ value }}'
-  qos: 1
-  payload_on: "on"
-  payload_off: "off"
-  optimistic: false
-  #retain: true
-- platform: mqtt
-  name: "Master_bedroom_hall"
-  state_topic: "smartthings/Master Bedroom Hall/switch"
-  command_topic: "smartthings/Master Bedroom Hall/switch"
-  brightness_state_topic: "smartthings/Master Bedroom Hall/level"
-  brightness_command_topic: "smartthings/Master Bedroom Hall/level"
-  brightness_scale: 99
-  brightness_value_template: '{{ value }}'
-  qos: 1
-  payload_on: "on"
-  payload_off: "off"
-  optimistic: false
-  #retain: true
-
-
 ###################
 #                 #
 # Sensor          #
@@ -636,7 +413,8 @@ light:
 sensor:
 - platform: darksky
   api_key: !secret dark_sky_api
-  scan_interval: 240
+  scan_interval:
+    minutes: 4
   monitored_conditions:
     - temperature
     - cloud_cover
@@ -658,63 +436,6 @@ sensor:
   name: 'living_room_av_humidity'
   unit_of_measurement: '%'
   value_template: '{{ value_json | float }}'
-
-- platform: mqtt
-  state_topic: "smartthings/Aeon Multisensor 6/illuminance"
-  name: "living_room_lux"
-  unit_of_measurement: "Lux"
-  value_template: '{{ value_json | float }}'
-
-- platform: mqtt
-  state_topic: "smartthings/Aeon Multisensor 6/temperature"
-  name: "living_room_temperature"
-  unit_of_measurement: "°F"
-  value_template: '{{ value_json | float }}'
-
-- platform: mqtt
-  state_topic: "smartthings/Aeon Multisensor 6/humidity"
-  name: "living_room_humidity"
-  unit_of_measurement: "%"
-  value_template: '{{ value_json | float }}'
-
-- platform: mqtt
-  state_topic: "smartthings/Aeon Multisensor 6/illuminance"
-  name: "living_room_lux"
-  unit_of_measurement: "lux"
-  value_template: '{{ value_json | float }}'
-
-- platform: mqtt
-  state_topic: 'smartthings/MultiSensor 6 Kitchen/tamper'
-  name: 'kitchen_multisensor_tamper'
-
-- platform: mqtt
-  state_topic: 'smartthings/MultiSensor 6 Kitchen/temperature'
-  name: 'kitchen_multisensor_temperature'
-  unit_of_measurement: "°F"
-  value_template: '{{ value_json | float }}'
-
-- platform: mqtt
-  state_topic: 'smartthings/MultiSensor 6 Kitchen/motion'
-  name: 'kitchen_multisensor_motion'
-
-- platform: mqtt
-  state_topic: 'smartthings/MultiSensor 6 Kitchen/humidity'
-  name: 'kitchen_multisensor_humidity'
-  unit_of_measurement: "%"
-  value_template: '{{ value_json | float }}'
-
-- platform: mqtt
-  state_topic: 'smartthings/MultiSensor 6 Kitchen/illuminance'
-  name: 'kitchen_multisensor_lux'
-  unit_of_measurement: "lux"
-  value_template: '{{ value_json | float }}'
-
-- platform: mqtt
-  state_topic: 'smartthings/MultiSensor 6 Kitchen/battery'
-  name: 'kitchen_multisensor_battery'
-  unit_of_measurement: "%"
-  value_template: '{{ value_json | float }}'
-
 
 #####################
 #                   #
@@ -775,31 +496,20 @@ sensor:
         {%- else -%}
           off
         {%- endif -%}
-    living_room_lux_stats_mean_attribute:
-      friendly_name: 'Living Room Lux Mean Attribute'
-      unit_of_measurement: lux
-      value_template: >-
-        {{states.sensor.living_room_lux_stats_mean.state}}
     kitchen_lux_stats_mean_attribute:
       friendly_name: 'Kitchen Lux Mean Attribute'
       unit_of_measurement: lux
       value_template: >-
-        {{states.sensor.kitchen_lux_stats_mean.state}}
+        {{states.sensor.kitchen_lux_stats.state}}
     dark_sky_cloud_coverage_stats_mean_attribute:
       friendly_name: 'Dark Sky Cloud Coverage Mean Attribute'
       unit_of_measurement: '%'
       value_template: >-
-        {{states.sensor.dark_sky_cloud_coverage.state}}
-
-- platform: statistics
-  name: living_room_lux_stats
-  entity_id: sensor.living_room_lux
-  max_age:
-    minutes: 30
+        {{states.sensor.dark_sky_cloud_coverage_stats.state}}
 
 - platform: statistics
   name: kitchen_lux_stats
-  entity_id: sensor.kitchen_multisensor_lux
+  entity_id: sensor.multisensor_6_kitchen_illuminance
   max_age:
     minutes: 30
 
@@ -837,27 +547,6 @@ switch:
   payload_on: "ON"
   payload_off: "OFF"
 
-- platform: mqtt
-  name: "Guest Bathroom Fan"
-  state_topic: "smartthings/Guest Bathroom Fan/switch"
-  command_topic: "smartthings/Guest Bathroom Fan/switch"
-  qos: 0
-  #retain: true
-  payload_on: "on"
-  payload_off: "off"
-  optimistic: false
-
-- platform: mqtt
-  name: "Master Bathroom Fan"
-  state_topic: "smartthings/Master bathroom fan/switch"
-  command_topic: "smartthings/Master bathroom fan/switch"
-  qos: 0
-  #retain: true
-  payload_on: "on"
-  payload_off: "off"
-  optimistic: false
-
-
 ###################
 #                 #
 # Input Boolean   #
@@ -865,13 +554,6 @@ switch:
 ###################
 
 input_boolean:
-# Combined Sensor Precense
-  device_tracker_phil_home:
-    name: device_tracker_phil_home
-    initial: on
-  device_tracker_nikki_home:
-    name: device_tracker_nikki_home
-    initial: on
 # Used for homekit integration
   set_mode_sleeping:
     name: set_mode_sleeping
@@ -991,6 +673,10 @@ timer:
     duration: '00:45:00'
   stairs:
     duration: '00:15:00'
+  kitchen_motion:
+    duration: '00:30:00'
+  basement_motion:
+    duration: '00:30:00'
 
 script: !include scripts.yaml
 

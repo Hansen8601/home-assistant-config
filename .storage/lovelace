@@ -16,6 +16,31 @@
                 {
                     "cards": [
                         {
+                            "card": {
+                                "entity": "light.aeotec_siren_6",
+                                "hold_action": {
+                                    "action": "none"
+                                },
+                                "icon": "mdi:alarm-light",
+                                "name": "ALARM ON! PRESS TO TURN OFF",
+                                "tap_action": {
+                                    "action": "call-service",
+                                    "service": "light.turn_off",
+                                    "service_data": {
+                                        "entity_id": "light.aeotec_siren_6"
+                                    }
+                                },
+                                "type": "entity-button"
+                            },
+                            "conditions": [
+                                {
+                                    "entity": "light.aeotec_siren_6",
+                                    "state": "on"
+                                }
+                            ],
+                            "type": "conditional"
+                        },
+                        {
                             "cards": [
                                 {
                                     "card": {
@@ -236,21 +261,6 @@
                             "type": "glance"
                         },
                         {
-                            "entities": [
-                                {
-                                    "entity": "input_number.denon_volume",
-                                    "name": "Living Room"
-                                },
-                                {
-                                    "entity": "input_number.denon_deck_volume",
-                                    "name": "Deck"
-                                }
-                            ],
-                            "show_header_toggle": true,
-                            "title": "Volume",
-                            "type": "entities"
-                        },
-                        {
                             "cards": [
                                 {
                                     "card": null,
@@ -266,6 +276,21 @@
                                 }
                             ],
                             "type": "vertical-stack"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "input_number.denon_volume",
+                                    "name": "Living Room"
+                                },
+                                {
+                                    "entity": "input_number.denon_deck_volume",
+                                    "name": "Deck"
+                                }
+                            ],
+                            "show_header_toggle": false,
+                            "title": "Volume",
+                            "type": "entities"
                         }
                     ],
                     "icon": "mdi:home",
@@ -310,7 +335,7 @@
                                     "type": "state-icon"
                                 },
                                 {
-                                    "entity": "light.kitchen_cabinet_lights",
+                                    "entity": "switch.kitchen_cabinet_lights",
                                     "style": {
                                         "left": "39%",
                                         "top": "28%"
@@ -354,7 +379,7 @@
                                     "type": "state-icon"
                                 },
                                 {
-                                    "entity": "fan.living_room_fan",
+                                    "entity": "light.living_room_fan",
                                     "style": {
                                         "left": "50%",
                                         "top": "16%"
@@ -387,7 +412,7 @@
                                     "type": "state-icon"
                                 },
                                 {
-                                    "entity": "fan.master_bedroom_fan",
+                                    "entity": "light.master_bedroom_fan",
                                     "style": {
                                         "left": "70%",
                                         "top": "16%"
@@ -420,7 +445,7 @@
                                     "type": "state-icon"
                                 },
                                 {
-                                    "entity": "light.master_bathroom_shower",
+                                    "entity": "switch.master_bathroom_shower",
                                     "style": {
                                         "left": "86%",
                                         "top": "17%"
@@ -1485,9 +1510,15 @@
                     "cards": [
                         {
                             "entities": [
-                                "light.kitchen_cabinet_lights",
-                                "light.kitchen_island_lights",
-                                "sensor.kitchen_multisensor_lux"
+                                {
+                                    "entity": "switch.kitchen_cabinet_lights"
+                                },
+                                {
+                                    "entity": "light.kitchen_island_lights"
+                                },
+                                {
+                                    "entity": "sensor.multisensor_6_kitchen_illuminance"
+                                }
                             ],
                             "show_header_toggle": true,
                             "title": "Kitchen",
@@ -1505,13 +1536,13 @@
                                     "entity": "light.ge_living_room_3"
                                 },
                                 {
-                                    "entity": "fan.living_room_fan"
+                                    "entity": "light.living_room_fan"
                                 },
                                 {
                                     "entity": "sensor.living_room_fan_desired_mode"
                                 },
                                 {
-                                    "entity": "sensor.living_room_lux"
+                                    "entity": "sensor.multisensor_6_living_room_illuminance"
                                 },
                                 {
                                     "entity": "switch.fireplace"
@@ -1527,7 +1558,7 @@
                                     "entity": "light.master_bedroom_hall"
                                 },
                                 {
-                                    "entity": "fan.master_bedroom_fan"
+                                    "entity": "light.master_bedroom_fan"
                                 },
                                 {
                                     "entity": "sensor.bedroom_fan_desired_mode"
@@ -1541,7 +1572,7 @@
                             "entities": [
                                 "light.master_bathroom_chandelier",
                                 "light.master_bathroom_dimmer",
-                                "light.master_bathroom_shower",
+                                "switch.master_bathroom_shower",
                                 "switch.master_bathroom_fan"
                             ],
                             "show_header_toggle": true,
@@ -1593,7 +1624,7 @@
                                     "entity": "light.basement_exercise_area_main_lights"
                                 },
                                 {
-                                    "entity": "binary_sensor.stairs_motion"
+                                    "entity": "binary_sensor.basement_motion_sensor_motion"
                                 }
                             ],
                             "show_header_toggle": true,
@@ -1690,7 +1721,8 @@
                                         "binary_sensor.basement_occupancy",
                                         "binary_sensor.main_floor_occupancy",
                                         "binary_sensor.dehumidifier",
-                                        "binary_sensor.ac"
+                                        "sensor.bedroom_fan_desired_mode",
+                                        "sensor.living_room_fan_desired_mode"
                                     ],
                                     "show_header_toggle": false,
                                     "title": "Climate Sensors",
@@ -1730,19 +1762,11 @@
                                             "name": "Kitchen Lux Avg"
                                         },
                                         {
-                                            "entity": "sensor.living_room_lux_stats_mean_attribute",
-                                            "name": "Living Room Lux Avg"
-                                        },
-                                        {
-                                            "entity": "sensor.kitchen_multisensor_lux",
+                                            "entity": "sensor.multisensor_6_kitchen_illuminance",
                                             "name": "Kitchen Lux"
-                                        },
-                                        {
-                                            "entity": "sensor.living_room_lux",
-                                            "name": "Living Room Lux"
                                         }
                                     ],
-                                    "title": "Lux Levels",
+                                    "title": "Kitchen Lux Levels",
                                     "type": "history-graph"
                                 },
                                 {
@@ -1772,11 +1796,6 @@
                                 {
                                     "entities": [
                                         {
-                                            "entity": "input_boolean.device_tracker_phil_home",
-                                            "name": "Combined Device Trackers for Phil",
-                                            "secondary_info": "last-changed"
-                                        },
-                                        {
                                             "entity": "device_tracker.phils_7",
                                             "secondary_info": "last-changed"
                                         },
@@ -1799,11 +1818,6 @@
                                 },
                                 {
                                     "entities": [
-                                        {
-                                            "entity": "input_boolean.device_tracker_nikki_home",
-                                            "name": "Combined Device Tracker - Nikki",
-                                            "secondary_info": "last-changed"
-                                        },
                                         {
                                             "entity": "device_tracker.nikkis_iphone",
                                             "secondary_info": "last-changed"
@@ -1838,6 +1852,31 @@
                         {
                             "entities": [
                                 {
+                                    "entity": "binary_sensor.multisensor_6_basement_motion"
+                                },
+                                {
+                                    "entity": "binary_sensor.multisensor_6_basement_tamper"
+                                },
+                                {
+                                    "entity": "sensor.multisensor_6_basement_battery"
+                                },
+                                {
+                                    "entity": "sensor.multisensor_6_basement_illuminance"
+                                },
+                                {
+                                    "entity": "sensor.multisensor_6_basement_relative_humidity_measurement"
+                                },
+                                {
+                                    "entity": "sensor.multisensor_6_basement_temperature_measurement"
+                                }
+                            ],
+                            "show_header_toggle": false,
+                            "title": "Multisensor 6 basement",
+                            "type": "entities"
+                        },
+                        {
+                            "entities": [
+                                {
                                     "entity": "input_select.automation_mode"
                                 },
                                 {
@@ -1857,12 +1896,6 @@
                                 },
                                 {
                                     "entity": "input_number.fireplace_high_setpoint"
-                                },
-                                {
-                                    "entity": "script.log_lux_levels"
-                                },
-                                {
-                                    "entity": "binary_sensor.indoor_lights_needed"
                                 }
                             ],
                             "show_header_toggle": false,
@@ -1882,29 +1915,51 @@
                         {
                             "entities": [
                                 {
-                                    "entity": "sensor.kitchen_multisensor_lux"
-                                },
-                                {
-                                    "entity": "sensor.kitchen_lux_stats_mean"
-                                },
-                                {
-                                    "entity": "sensor.living_room_lux"
-                                },
-                                {
-                                    "entity": "sensor.living_room_lux_stats_mean"
-                                },
-                                {
-                                    "entity": "sensor.dark_sky_cloud_coverage"
-                                },
-                                {
-                                    "entity": "sensor.dark_sky_cloud_coverage_stats_mean"
-                                },
-                                {
                                     "entity": "sun.sun"
+                                },
+                                {
+                                    "entity": "sensor.dark_sky_cloud_coverage_stats",
+                                    "name": "dark sky cloud stats"
+                                },
+                                {
+                                    "entity": "sensor.kitchen_lux_stats",
+                                    "name": "kitchen lux status"
+                                },
+                                {
+                                    "entity": "binary_sensor.indoor_lights_needed"
+                                },
+                                {
+                                    "entity": "script.log_lux_levels",
+                                    "name": "log lux levels script"
                                 }
                             ],
                             "show_header_toggle": false,
                             "title": "Lights Auto Debug",
+                            "type": "entities"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "binary_sensor.multisensor_6_kitchen_motion"
+                                },
+                                {
+                                    "entity": "binary_sensor.multisensor_6_kitchen_tamper"
+                                },
+                                {
+                                    "entity": "sensor.multisensor_6_kitchen_battery"
+                                },
+                                {
+                                    "entity": "sensor.multisensor_6_kitchen_illuminance"
+                                },
+                                {
+                                    "entity": "sensor.multisensor_6_kitchen_relative_humidity_measurement"
+                                },
+                                {
+                                    "entity": "sensor.multisensor_6_kitchen_temperature_measurement"
+                                }
+                            ],
+                            "show_header_toggle": false,
+                            "title": "Multisensor 6 Kitchen",
                             "type": "entities"
                         },
                         {
@@ -1931,13 +1986,41 @@
                         {
                             "entities": [
                                 {
-                                    "entity": "binary_sensor.cam1_motion"
-                                },
-                                {
-                                    "entity": "binary_sensor.cam1_audio"
+                                    "entity": "binary_sensor.main_ac_3"
                                 }
                             ],
-                            "title": "Blue Iris Test",
+                            "type": "entities"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "light.aeotec_siren_6"
+                                },
+                                {
+                                    "entity": "sensor.aeotec_siren_6_alarm"
+                                },
+                                {
+                                    "entity": "binary_sensor.aeotec_siren_6_tamper"
+                                }
+                            ],
+                            "show_header_toggle": false,
+                            "title": "Aeotec Siren",
+                            "type": "entities"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "timer.kitchen_motion"
+                                },
+                                {
+                                    "entity": "timer.guest_bathroom_fan_timer1"
+                                },
+                                {
+                                    "entity": "timer.guest_bathroom_fan_timer1"
+                                }
+                            ],
+                            "show_header_toggle": false,
+                            "title": "Timers",
                             "type": "entities"
                         }
                     ],
@@ -1957,7 +2040,7 @@
                 {
                     "cards": [
                         {
-                            "content": "## Home Assistant Docker\nhttps://hub.docker.com/r/homeassistant/home-assistant/tags\n## Material Design Icons\nhttps://materialdesignicons.com/   \n## Lovelace Docs\nhttps://www.home-assistant.io/lovelace/ \n## Awesome-HA\nhttps://www.awesome-ha.com/\n## Amazon Alexa Developer Console\nhttps://developer.amazon.com/alexa/console\n\n## Blue Iris Integration\nhttps://github.com/elad-bar/ha-blueiris/tree/a2c04c6c62ac2519be5e1b6223805e91a44a0feb\n\nUser Interface: http://192.168.1.10:81/\n\n## hass-cli\nTo activate from an SSH session, enter hass-cli-activate\n\n## Things to do\n+ Add automation_mode to included log entities\n+ Add blue Iris switches and complete setup\n+ Add history sensor for dehumidifier",
+                            "content": "## Home Assistant Docker\nhttps://hub.docker.com/r/homeassistant/home-assistant/tags\n## Material Design Icons\nhttps://materialdesignicons.com/   \n## Lovelace Docs\nhttps://www.home-assistant.io/lovelace/ \n## Awesome-HA\nhttps://www.awesome-ha.com/\n## Amazon Alexa Developer Console\nhttps://developer.amazon.com/alexa/console\n\n## Blue Iris Integration\nhttps://github.com/elad-bar/ha-blueiris/tree/a2c04c6c62ac2519be5e1b6223805e91a44a0feb\n\nUser Interface: http://192.168.1.10:81/\n\n## hass-cli\nTo activate from an SSH session, enter hass-cli-activate\n\n## Things to do\n+ Fix harmony mode sensor - not updating to activity\n+ Add automation_mode to included log entities\n+ Add history sensor for dehumidifier",
                             "type": "markdown"
                         }
                     ],
