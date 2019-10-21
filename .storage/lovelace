@@ -223,13 +223,13 @@
                                     }
                                 },
                                 {
-                                    "entity": "scene.movie_lighting",
-                                    "name": "Movie",
+                                    "entity": "scene.lamps_only",
+                                    "name": "Low",
                                     "tap_action": {
                                         "action": "call-service",
                                         "service": "scene.turn_on",
                                         "service_data": {
-                                            "entity_id": "scene.movie_lighting"
+                                            "entity_id": "scene.lamps_only"
                                         }
                                     }
                                 },
@@ -1067,6 +1067,18 @@
                                                 "entity_id": "remote.living_room"
                                             },
                                             "type": "call-service"
+                                        },
+                                        {
+                                            "entity": "automation.denon_play_wisn_when_automation_mode_from_sleep_to_home_weekdays",
+                                            "icon": "mdi:radio",
+                                            "name": "Play WISN stream",
+                                            "tap_action": {
+                                                "action": "call-service",
+                                                "service": "automation.trigger",
+                                                "service_data": {
+                                                    "entity_id": "automation.denon_play_wisn_when_automation_mode_from_sleep_to_home_weekdays"
+                                                }
+                                            }
                                         }
                                     ],
                                     "type": "entities"
@@ -1360,16 +1372,6 @@
                                 }
                             ],
                             "type": "vertical-stack"
-                        },
-                        {
-                            "entities": [
-                                {
-                                    "entity": "sensor.plex"
-                                }
-                            ],
-                            "show_header_toggle": false,
-                            "title": "Plex",
-                            "type": "entities"
                         }
                     ],
                     "icon": "mdi:audio-video",
@@ -1379,34 +1381,41 @@
                     "badges": [],
                     "cards": [
                         {
+                            "content": " http://bi.hansen3.dyndns.org",
+                            "title": "Blue Iris",
+                            "type": "markdown"
+                        },
+                        {
                             "cards": [
                                 {
                                     "cards": [
                                         {
-                                            "cards": [
-                                                {
-                                                    "entity": "camera.all",
-                                                    "name": "All",
-                                                    "show_state": false,
-                                                    "type": "picture-entity"
-                                                }
-                                            ],
-                                            "type": "vertical-stack"
-                                        },
-                                        {
-                                            "cards": [
-                                                {
-                                                    "entity": "camera.cycle",
-                                                    "name": "Cycle",
-                                                    "show_state": false,
-                                                    "type": "picture-entity"
-                                                }
-                                            ],
-                                            "type": "vertical-stack"
+                                            "camera_view": "live",
+                                            "entity": "camera.all",
+                                            "name": "All",
+                                            "show_state": false,
+                                            "type": "picture-entity"
                                         }
                                     ],
-                                    "type": "horizontal-stack"
+                                    "type": "vertical-stack"
                                 },
+                                {
+                                    "cards": [
+                                        {
+                                            "camera_view": "live",
+                                            "entity": "camera.cycle",
+                                            "name": "Cycle",
+                                            "show_state": false,
+                                            "type": "picture-entity"
+                                        }
+                                    ],
+                                    "type": "vertical-stack"
+                                }
+                            ],
+                            "type": "vertical-stack"
+                        },
+                        {
+                            "cards": [
                                 {
                                     "entity": "camera.cam1",
                                     "name": "front door",
@@ -1540,9 +1549,6 @@
                                 },
                                 {
                                     "entity": "sensor.living_room_fan_desired_mode"
-                                },
-                                {
-                                    "entity": "sensor.multisensor_6_living_room_illuminance"
                                 },
                                 {
                                     "entity": "switch.fireplace"
@@ -1796,7 +1802,7 @@
                                 {
                                     "entities": [
                                         {
-                                            "entity": "device_tracker.phils_7",
+                                            "entity": "device_tracker.iphonephil",
                                             "secondary_info": "last-changed"
                                         },
                                         {
@@ -1804,11 +1810,11 @@
                                             "secondary_info": "last-changed"
                                         },
                                         {
-                                            "entity": "sensor.iphone_battery_level",
+                                            "entity": "sensor.phils_iphone_11_battery_level",
                                             "secondary_info": "last-changed"
                                         },
                                         {
-                                            "entity": "sensor.iphone_battery_state",
+                                            "entity": "sensor.phils_iphone_11_battery_state",
                                             "secondary_info": "last-changed"
                                         }
                                     ],
@@ -1819,7 +1825,7 @@
                                 {
                                     "entities": [
                                         {
-                                            "entity": "device_tracker.nikkis_iphone",
+                                            "entity": "device_tracker.iphonenikki",
                                             "secondary_info": "last-changed"
                                         },
                                         {
@@ -1831,7 +1837,8 @@
                                             "secondary_info": "last-changed"
                                         },
                                         {
-                                            "entity": "sensor.nikkis_iphone_battery_state"
+                                            "entity": "sensor.nikkis_iphone_battery_state",
+                                            "secondary_info": "last-changed"
                                         }
                                     ],
                                     "show_header_toggle": false,
@@ -1840,8 +1847,8 @@
                                 },
                                 {
                                     "entities": [
-                                        "device_tracker.nikkis_iphone",
-                                        "device_tracker.phils_7",
+                                        "device_tracker.iphonenikki",
+                                        "device_tracker.iphonephil",
                                         "zone.home"
                                     ],
                                     "type": "map"
@@ -1905,16 +1912,6 @@
                         {
                             "entities": [
                                 {
-                                    "entity": "automation.basement_stairs_motion_test"
-                                }
-                            ],
-                            "show_header_toggle": false,
-                            "title": "Scripts and Automation Debug",
-                            "type": "entities"
-                        },
-                        {
-                            "entities": [
-                                {
                                     "entity": "sun.sun"
                                 },
                                 {
@@ -1935,6 +1932,16 @@
                             ],
                             "show_header_toggle": false,
                             "title": "Lights Auto Debug",
+                            "type": "entities"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "automation.basement_stairs_motion_test"
+                                }
+                            ],
+                            "show_header_toggle": false,
+                            "title": "Scripts and Automation Debug",
                             "type": "entities"
                         },
                         {
@@ -1987,6 +1994,9 @@
                             "entities": [
                                 {
                                     "entity": "binary_sensor.main_ac_3"
+                                },
+                                {
+                                    "entity": "binary_sensor.dehumidifier"
                                 }
                             ],
                             "type": "entities"
@@ -2013,6 +2023,9 @@
                                     "entity": "timer.kitchen_motion"
                                 },
                                 {
+                                    "entity": "timer.basement_motion"
+                                },
+                                {
                                     "entity": "timer.guest_bathroom_fan_timer1"
                                 },
                                 {
@@ -2021,6 +2034,22 @@
                             ],
                             "show_header_toggle": false,
                             "title": "Timers",
+                            "type": "entities"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "binary_sensor.basement_motion_sensor_motion"
+                                },
+                                {
+                                    "entity": "sensor.basement_motion_sensor_battery"
+                                },
+                                {
+                                    "entity": "sensor.basement_motion_sensor_temperature_measurement"
+                                }
+                            ],
+                            "show_header_toggle": false,
+                            "title": "Basement Stairs Motion Sensor",
                             "type": "entities"
                         }
                     ],
@@ -2040,7 +2069,7 @@
                 {
                     "cards": [
                         {
-                            "content": "## Home Assistant Docker\nhttps://hub.docker.com/r/homeassistant/home-assistant/tags\n## Material Design Icons\nhttps://materialdesignicons.com/   \n## Lovelace Docs\nhttps://www.home-assistant.io/lovelace/ \n## Awesome-HA\nhttps://www.awesome-ha.com/\n## Amazon Alexa Developer Console\nhttps://developer.amazon.com/alexa/console\n\n## Blue Iris Integration\nhttps://github.com/elad-bar/ha-blueiris/tree/a2c04c6c62ac2519be5e1b6223805e91a44a0feb\n\nUser Interface: http://192.168.1.10:81/\n\n## hass-cli\nTo activate from an SSH session, enter hass-cli-activate\n\n## Things to do\n+ Fix harmony mode sensor - not updating to activity\n+ Add automation_mode to included log entities\n+ Add history sensor for dehumidifier",
+                            "content": "## Home Assistant Docker\nhttps://hub.docker.com/r/homeassistant/home-assistant/tags\n## Material Design Icons\nhttps://materialdesignicons.com/   \n## Lovelace Docs\nhttps://www.home-assistant.io/lovelace/ \n## Awesome-HA\nhttps://www.awesome-ha.com/\n## Amazon Alexa Developer Console\nhttps://developer.amazon.com/alexa/console\n\n## Blue Iris Integration\nhttps://github.com/elad-bar/ha-blueiris/tree/a2c04c6c62ac2519be5e1b6223805e91a44a0feb\n\nUser Interface: http://192.168.1.10:81 or                         https://bi.hansen3.dyndns.org\n\n## hass-cli\nTo activate from an SSH session, enter hass-cli-activate\n\n## Things to do\n+ Fix harmony mode sensor - not updating to activity\n+ Add automation_mode to included log entities\n+ Add history sensor for dehumidifier",
                             "type": "markdown"
                         }
                     ],

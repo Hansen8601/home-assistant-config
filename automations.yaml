@@ -41,7 +41,26 @@
   - data:
       message: Service Door Open
       title: Alert
-    service: notify.ios_phils_7
+    service: notify.ios_iphonephil
+  - data_template:
+      brightness: '255'
+      entity_id: light.master_bedroom_hall
+    service: light.turn_on
+  - delay: 00:00:05
+  - data_template:
+      brightness: '10'
+      entity_id: light.master_bedroom_hall
+    service: light.turn_on
+  - delay: 00:00:05
+  - data_template:
+      brightness: '255'
+      entity_id: light.master_bedroom_hall
+    service: light.turn_on
+  - delay: 00:00:05
+  - data:
+      brightness: '10'
+      entity_id: light.master_bedroom_hall
+    service: light.turn_on
 - id: doors_open_status
   alias: Alert for doors opening when sleeping or away
   trigger:
@@ -67,7 +86,7 @@
   - data:
       message: Door opened while mode was sleeping or away
       title: Alert
-    service: notify.ios_phils_7
+    service: notify.ios_iphonephil
 - id: automation_mode_sleeping_from_harmony
   alias: Automation Mode set to sleeping from activity with Harmony Remote
   trigger:
@@ -84,7 +103,7 @@
     service: input_select.select_option
   initial_state: 'on'
 - id: automation_mode_home_from_homekit
-  alias: Automation Mode set to home from Apple Homekit
+  alias: Automation Mode set to home from Apple Homekit (siri)
   trigger:
   - entity_id: input_boolean.set_mode_home
     from: 'off'
@@ -101,7 +120,7 @@
       entity_id: input_boolean.set_mode_home
     service: input_boolean.turn_off
 - id: automation_mode_sleeping_from_homekit
-  alias: Automation Mode set to sleeping from Apple Homekit
+  alias: Automation Mode set to sleeping from Apple Homekit (siri)
   trigger:
   - entity_id: input_boolean.set_mode_sleeping
     platform: state
@@ -135,7 +154,7 @@
   - condition: state
     entity_id: input_select.automation_mode
     state: Sleeping
-  - after: 06:00:00
+  - after: 06:05:00
     before: '18:00:00'
     condition: time
   action:
@@ -269,7 +288,7 @@
       preset_mode: sleep
     service: climate.set_preset_mode
 - id: ecobee_basement_exercise_hold_off
-  alias: Ecobee thermostat hold mode to home from Exercise Room Lights off
+  alias: Ecobee thermostat resume program from Exercise Room Lights off
   trigger:
   - entity_id: light.basement_exercise_area_main_lights
     from: 'on'
@@ -279,6 +298,8 @@
   - condition: state
     entity_id: input_boolean.automation_heat_control_on
     state: 'on'
+  - condition: template
+    value_template: '{{states.climate.basement.attributes.climate_mode == ''Sleep''}}'
   action:
   - data:
       entity_id: climate.basement
@@ -612,19 +633,19 @@
   - data:
       entity_id: timer.stairs
     service: timer.start
-- id: basement_stairs_lights_off_from_timer
-  alias: Basement Stairs Motion Timer Finished
+- id: basement_motion_timer_finished
+  alias: Basement Motion Timer finished
   trigger:
   - event_data:
-      entity_id: timer.stairs
+      entity_id: timer.basement_motion
     event_type: timer.finished
     platform: event
   condition:
   - condition: state
-    entity_id: light.stairs_main_lights
+    entity_id: light.basement_sitting_area_table_lamp
     state: 'on'
   - condition: state
-    entity_id: binary_sensor.basement_occupancy
+    entity_id: binary_sensor.samsung_tv
     state: 'off'
   - condition: state
     entity_id: light.basement_exercise_area_main_lights
@@ -656,7 +677,7 @@
   - data: {}
     service: script.1546906415963
 - id: '1546271721605'
-  alias: Basement Lights to Entertaining Scene from Stairs Motion
+  alias: Basement Lights to Entertaining Scene from Stairs Motion (After 9:00)
   trigger:
   - entity_id: binary_sensor.basement_motion_sensor_motion
     from: 'off'
@@ -666,6 +687,8 @@
   - condition: state
     entity_id: light.basement_sitting_area_table_lamp
     state: 'off'
+  - condition: time
+    after: 09:00
   - condition: template
     value_template: '{{as_timestamp(states.light.basement_sitting_area_table_lamp.last_changed)|float
       > 300}}'
@@ -673,50 +696,14 @@
   - data:
       entity_id: scene.entertaining
     service: scene.turn_on
-- id: '1546695407320'
-  alias: device tracker set from phil home
-  trigger:
-  - entity_id: device_tracker.phils_7
-    event: enter
-    platform: zone
-    zone: zone.home
-  - entity_id: input_boolean.phil_homekit_present
-    platform: state
-    to: 'on'
-  condition:
-  - condition: state
-    entity_id: input_boolean.device_tracker_phil_home
-    state: 'off'
-  action:
-  - data:
-      entity_id: input_boolean.device_tracker_phil_home
-    service: input_boolean.turn_on
-- id: '1546695633187'
-  alias: device tracker set from nikki home
-  trigger:
-  - entity_id: device_tracker.nikkis_iphone
-    event: enter
-    platform: zone
-    zone: zone.home
-  - entity_id: input_boolean.nikki_homekit_present
-    platform: state
-    to: 'on'
-  condition:
-  - condition: state
-    entity_id: input_boolean.device_tracker_nikki_home
-    state: 'off'
-  action:
-  - data:
-      entity_id: input_boolean.device_tracker_nikki_home
-    service: input_boolean.turn_on
 - id: '1546696475350'
   alias: Automation Mode set to home from device trackers
   trigger:
-  - entity_id: device_tracker.phils_7
+  - entity_id: device_tracker.iphonephil
     event: enter
     platform: zone
     zone: zone.home
-  - entity_id: device_tracker.nikkis_iphone
+  - entity_id: device_tracker.iphonenikki
     event: enter
     platform: zone
     zone: zone.home
@@ -732,20 +719,20 @@
 - id: '1546696585128'
   alias: Automation Mode set to away from device trackers
   trigger:
-  - entity_id: device_tracker.phils_7
+  - entity_id: device_tracker.iphonephil
     event: leave
     platform: zone
     zone: zone.home
-  - entity_id: device_tracker.nikkis_iphone
+  - entity_id: device_tracker.iphonenikki
     event: leave
     platform: zone
     zone: zone.home
   condition:
   - condition: state
-    entity_id: device_tracker.phils_7
+    entity_id: device_tracker.iphonephil
     state: not_home
   - condition: state
-    entity_id: device_tracker.nikkis_iphone
+    entity_id: device_tracker.iphonenikki
     state: not_home
   action:
   - data:
@@ -755,7 +742,7 @@
 - id: '1547473411825'
   alias: Phil Leaves for work - turn off stuff
   trigger:
-  - entity_id: device_tracker.phils_7
+  - entity_id: device_tracker.iphonephil
     event: leave
     platform: zone
     zone: zone.home
@@ -763,7 +750,7 @@
   - condition: state
     entity_id: light.kitchen_island_lights
     state: 'on'
-  - before: 07:00:00
+  - before: 07:30:00
     condition: time
   action:
   - data:
@@ -819,7 +806,7 @@
       option: Sleeping
     service: input_select.select_option
 - id: '1557451253030'
-  alias: Basement Lights to Off from lamps off
+  alias: Basement Stairs Lights slow to off from Lamp Off
   trigger:
   - entity_id: light.basement_sitting_area_table_lamp
     platform: state
@@ -925,6 +912,9 @@
   - condition: state
     entity_id: media_player.samsung_tv_remote
     state: 'off'
+  - condition: state
+    entity_id: light.basement_sitting_area_table_lamp
+    state: 'on'
   action:
   - alias: ''
     data:
@@ -980,9 +970,9 @@
   action:
   - data:
       message: Garage Service Door Open
-    service: notify.ios_phils_7
+    service: notify.ios_iphonephil
 - id: '1564867287951'
-  alias: Alert for Kitchen multisensor 6 battery level low
+  alias: Alert for Kitchen multisensor 6 battery low
   trigger:
   - below: '90'
     entity_id: sensor.multisensor_6_kitchen_battery
@@ -993,31 +983,19 @@
     data:
       message: Multisensor 6 Kitchen Battery Low
       title: Battery Low
-    service: notify.ios_phils_7
-- id: '1564867397740'
-  alias: New Automation
-  trigger:
-  - below: '10'
-    entity_id: sensor.basement_motion_sensor_battery
-    platform: numeric_state
-  condition: []
-  action:
-  - data:
-      message: Basement Motion sensor Battery Low
-      title: Battery Low
-    service: notify.ios_phils_7
+    service: notify.ios_iphonephil
 - id: '1564867590937'
-  alias: Alert for Basement Motion Sensor Battery Low
+  alias: Alert for Basement Motion Sensor battery Low
   trigger:
-  - below: '10'
+  - below: '60'
     entity_id: sensor.basement_motion_sensor_battery
     platform: numeric_state
   condition: []
   action:
   - data:
-      message: Multisensor 6 Kitchen Battery Low
+      message: Basement Stairs Motion Sensor Battery Low
       title: Battery Low
-    service: notify.ios_phils_7
+    service: notify.ios_iphonephil
 - id: '1564868593065'
   alias: Alert for motion when Away
   trigger:
@@ -1029,16 +1007,20 @@
     to: 'on'
   condition:
   - condition: state
-    entity_id: device_tracker.nikkis_iphone
+    entity_id: device_tracker.iphonenikki
     state: not_home
   - condition: state
-    entity_id: device_tracker.phils_7
+    entity_id: device_tracker.iphonephil
     state: not_home
   action:
   - data:
       message: Motion while away
       title: Alert
-    service: notify.ios_phils_7
+    service: notify.ios_iphonephil
+  - device_id: 50b7bc30bbe846f5864f04e204689d0c
+    domain: light
+    entity_id: light.aeotec_siren_6
+    type: turn_on
 - id: '1565832944340'
   alias: Kitchen motion timer start
   trigger:
@@ -1057,7 +1039,7 @@
       entity_id: timer.kitchen_motion
     service: timer.start
 - id: '1566864718079'
-  alias: Denon play WISN when automation mode from sleep to home
+  alias: Denon play WISN when automation mode from sleep to home weekdays
   trigger:
   - entity_id: input_select.automation_mode
     from: Sleeping
@@ -1065,12 +1047,18 @@
     to: Home
   condition:
   - after: 05:00
-    before: 07:00
+    before: 07:30
     condition: time
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
   action:
   - data: {}
     service: script.harmony_apple_tv
-  - delay: 00:00:05
+  - delay: 00:00:10
   - data:
       entity_id: media_player.apple_tv
       media_content_id: https://c13icy.prod.playlists.ihrhls.com/4245_icy
@@ -1116,3 +1104,87 @@
       brightness: '125'
       entity_id: light.kitchen_island_lights
     service: light.turn_on
+- id: '1567462746784'
+  alias: Basement Motion Timer start
+  trigger:
+  - entity_id: binary_sensor.basement_motion_sensor_motion
+    platform: state
+    to: 'on'
+  - entity_id: binary_sensor.multisensor_6_basement_motion
+    platform: state
+    to: 'on'
+  - entity_id: binary_sensor.basement_occupancy
+    platform: state
+    to: 'off'
+  - entity_id: binary_sensor.samsung_tv
+    platform: state
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: input_select.automation_mode
+    state: Home
+  - condition: state
+    entity_id: binary_sensor.samsung_tv
+    state: 'off'
+  - condition: state
+    entity_id: light.basement_sitting_area_table_lamp
+    state: 'on'
+  action:
+  - data:
+      entity_id: timer.basement_motion
+    service: timer.start
+- id: '1567945643822'
+  alias: Basement Motion Timer cancel
+  trigger:
+  - entity_id: binary_sensor.samsung_tv
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - data:
+      entity_id: timer.basement_motion
+    service: timer.cancel
+- id: '1568078155202'
+  alias: Basement Lights to Lamp Scene from Stairs Motion (Before 9:00)
+  trigger:
+  - entity_id: binary_sensor.basement_motion_sensor_motion
+    platform: state
+    to: 'on'
+  condition:
+  - before: 09:01
+    condition: time
+  - condition: template
+    value_template: '{{as_timestamp(states.light.basement_sitting_area_table_lamp.last_changed)|float
+      > 300}}'
+  - condition: state
+    entity_id: light.basement_sitting_area_table_lamp
+    state: 'off'
+  action:
+  - data:
+      entity_id: scene.lamps_only
+    service: scene.turn_on
+- id: '1569677946313'
+  alias: Apple TV in exercise room on from light switch
+  trigger:
+  - entity_id: light.basement_exercise_area_main_lights
+    platform: state
+    to: 'on'
+  condition:
+  - before: 07:00
+    condition: time
+  action:
+  - data:
+      entity_id: remote.apple_tv_workout_room
+    service: remote.turn_on
+- id: '1570153750850'
+  alias: Alert for Basement MultiSensor 6 battery low
+  trigger:
+  - below: '90'
+    entity_id: sensor.multisensor_6_basement_battery
+    platform: numeric_state
+  condition: []
+  action:
+  - data:
+      message: Multisensor 6 Basement Battery Low
+      title: Battery Low
+    service: notify.ios_iphonephil

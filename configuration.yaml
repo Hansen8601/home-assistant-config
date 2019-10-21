@@ -56,9 +56,16 @@ logbook:
       - media_player
       - camera
       - device_tracker
+  exclude:
+    entities:
+      - automation.basement_motion_timer_start
+      - automation.kitchen_motion_timer_start
+      - automation.basement_motion_timer_cancel
 
 logger:
   default: info
+  #  logs:
+  #    homeassistant.components.smartthings: debug
 
 recorder:
   purge_interval: 1
@@ -210,10 +217,10 @@ media_player:
     zones:
       zone: Zone2
       name: Denon AVRX3000 Deck
-    #- platform: plex
   - platform: samsungtv
     host: 192.168.1.40
     port: 8001
+    mac: FC:03:9F:31:BE:E5
 
 apple_tv:
   - host: 192.168.1.126
@@ -676,7 +683,7 @@ timer:
   kitchen_motion:
     duration: '00:30:00'
   basement_motion:
-    duration: '00:30:00'
+    duration: '00:45:00'
 
 script: !include scripts.yaml
 
