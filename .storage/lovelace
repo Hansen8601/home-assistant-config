@@ -152,6 +152,18 @@
                         {
                             "entities": [
                                 {
+                                    "entity": "device_tracker.iphonephil"
+                                },
+                                {
+                                    "entity": "device_tracker.iphonenikki"
+                                }
+                            ],
+                            "show_icon": true,
+                            "type": "glance"
+                        },
+                        {
+                            "entities": [
+                                {
                                     "entity": "cover.garage_right"
                                 },
                                 {
@@ -177,6 +189,9 @@
                                 {
                                     "entity": "light.kitchen_island_lights",
                                     "name": "Kitchen Island Light"
+                                },
+                                {
+                                    "entity": "light.basement_exercise_area_main_lights"
                                 }
                             ],
                             "show_header_toggle": true,
@@ -286,6 +301,9 @@
                                 {
                                     "entity": "input_number.denon_deck_volume",
                                     "name": "Deck"
+                                },
+                                {
+                                    "entity": "automation.denon_play_wisn_when_automation_mode_from_sleep_to_home_weekdays"
                                 }
                             ],
                             "show_header_toggle": false,
@@ -878,7 +896,7 @@
                                             "entity": "input_select.living_room_remote"
                                         }
                                     ],
-                                    "show_header_toggle": true,
+                                    "show_header_toggle": false,
                                     "title": "Volume / Activity",
                                     "type": "entities"
                                 },
@@ -1087,241 +1105,6 @@
                             "type": "vertical-stack"
                         },
                         {
-                            "cards": [
-                                {
-                                    "elements": [
-                                        {
-                                            "service": "remote.send_command",
-                                            "service_data": {
-                                                "command": "0",
-                                                "device": 35717540,
-                                                "entity_id": "remote.living_room"
-                                            },
-                                            "style": {
-                                                "left": "16%",
-                                                "top": "25%"
-                                            },
-                                            "title": "",
-                                            "type": "service-button"
-                                        },
-                                        {
-                                            "service": "remote.send_command",
-                                            "service_data": {
-                                                "command": "1",
-                                                "device": 35717540,
-                                                "entity_id": "remote.living_room"
-                                            },
-                                            "style": {
-                                                "left": "35%",
-                                                "top": "25%"
-                                            },
-                                            "title": "",
-                                            "type": "service-button"
-                                        },
-                                        {
-                                            "service": "remote.send_command",
-                                            "service_data": {
-                                                "command": "2",
-                                                "device": 35717540,
-                                                "entity_id": "remote.living_room"
-                                            },
-                                            "style": {
-                                                "left": "54%",
-                                                "top": "25%"
-                                            },
-                                            "title": "",
-                                            "type": "service-button"
-                                        },
-                                        {
-                                            "service": "remote.send_command",
-                                            "service_data": {
-                                                "command": "3",
-                                                "device": 35717540,
-                                                "entity_id": "remote.living_room"
-                                            },
-                                            "style": {
-                                                "left": "72%",
-                                                "top": "25%"
-                                            },
-                                            "title": "",
-                                            "type": "service-button"
-                                        },
-                                        {
-                                            "service": "remote.send_command",
-                                            "service_data": {
-                                                "command": "4",
-                                                "device": 35717540,
-                                                "entity_id": "remote.living_room"
-                                            },
-                                            "style": {
-                                                "left": "91%",
-                                                "top": "25%"
-                                            },
-                                            "title": "",
-                                            "type": "service-button"
-                                        },
-                                        {
-                                            "service": "remote.send_command",
-                                            "service_data": {
-                                                "command": "5",
-                                                "device": 35717540,
-                                                "entity_id": "remote.living_room"
-                                            },
-                                            "style": {
-                                                "left": "16%",
-                                                "top": "75%"
-                                            },
-                                            "title": "",
-                                            "type": "service-button"
-                                        },
-                                        {
-                                            "service": "remote.send_command",
-                                            "service_data": {
-                                                "command": "6",
-                                                "device": 35717540,
-                                                "entity_id": "remote.living_room"
-                                            },
-                                            "style": {
-                                                "left": "35%",
-                                                "top": "75%"
-                                            },
-                                            "title": "",
-                                            "type": "service-button"
-                                        },
-                                        {
-                                            "service": "remote.send_command",
-                                            "service_data": {
-                                                "command": "7",
-                                                "device": 35717540,
-                                                "entity_id": "remote.living_room"
-                                            },
-                                            "style": {
-                                                "left": "54%",
-                                                "top": "75%"
-                                            },
-                                            "title": "",
-                                            "type": "service-button"
-                                        },
-                                        {
-                                            "service": "remote.send_command",
-                                            "service_data": {
-                                                "command": "8",
-                                                "device": 35717540,
-                                                "entity_id": "remote.living_room"
-                                            },
-                                            "style": {
-                                                "left": "72%",
-                                                "top": "75%"
-                                            },
-                                            "title": "",
-                                            "type": "service-button"
-                                        },
-                                        {
-                                            "service": "remote.send_command",
-                                            "service_data": {
-                                                "command": "9",
-                                                "device": 35717540,
-                                                "entity_id": "remote.living_room"
-                                            },
-                                            "style": {
-                                                "left": "91%",
-                                                "top": "75%"
-                                            },
-                                            "title": "",
-                                            "type": "service-button"
-                                        }
-                                    ],
-                                    "image": "/local/remote-numbers.png",
-                                    "type": "picture-elements"
-                                },
-                                {
-                                    "elements": [
-                                        {
-                                            "service": "remote.send_command",
-                                            "service_data": {
-                                                "command": "up",
-                                                "entity_id": "remote.apple_tv"
-                                            },
-                                            "style": {
-                                                "left": "42%",
-                                                "top": "23%"
-                                            },
-                                            "title": "",
-                                            "type": "service-button"
-                                        },
-                                        {
-                                            "service": "remote.send_command",
-                                            "service_data": {
-                                                "command": "down",
-                                                "entity_id": "remote.apple_tv"
-                                            },
-                                            "style": {
-                                                "left": "42%",
-                                                "top": "80%"
-                                            },
-                                            "title": "",
-                                            "type": "service-button"
-                                        },
-                                        {
-                                            "service": "remote.send_command",
-                                            "service_data": {
-                                                "command": "left",
-                                                "entity_id": "remote.apple_tv"
-                                            },
-                                            "style": {
-                                                "left": "20%",
-                                                "top": "50%"
-                                            },
-                                            "title": "",
-                                            "type": "service-button"
-                                        },
-                                        {
-                                            "service": "remote.send_command",
-                                            "service_data": {
-                                                "command": "right",
-                                                "entity_id": "remote.apple_tv"
-                                            },
-                                            "style": {
-                                                "left": "65%",
-                                                "top": "50%"
-                                            },
-                                            "title": "",
-                                            "type": "service-button"
-                                        },
-                                        {
-                                            "service": "remote.send_command",
-                                            "service_data": {
-                                                "command": "menu",
-                                                "entity_id": "remote.apple_tv"
-                                            },
-                                            "style": {
-                                                "left": "90%",
-                                                "top": "85%"
-                                            },
-                                            "title": "",
-                                            "type": "service-button"
-                                        },
-                                        {
-                                            "service": "remote.send_command",
-                                            "service_data": {
-                                                "command": "select",
-                                                "entity_id": "remote.apple_tv"
-                                            },
-                                            "style": {
-                                                "left": "40%",
-                                                "top": "50%"
-                                            },
-                                            "title": "",
-                                            "type": "service-button"
-                                        }
-                                    ],
-                                    "image": "/local/apple-remote.png",
-                                    "type": "picture-elements"
-                                }
-                            ],
-                            "type": "vertical-stack"
-                        },
-                        {
                             "card": {
                                 "entities": [
                                     "script.denon_deck_volume_50",
@@ -1351,14 +1134,6 @@
                                     "type": "media-control"
                                 },
                                 {
-                                    "entity": "media_player.basement",
-                                    "type": "media-control"
-                                },
-                                {
-                                    "entity": "media_player.apple_tv_workout_room_3",
-                                    "type": "media-control"
-                                },
-                                {
                                     "entity": "media_player.samsung_tv_remote",
                                     "type": "media-control"
                                 },
@@ -1372,6 +1147,14 @@
                                 }
                             ],
                             "type": "vertical-stack"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "sensor.living_room_av_temperature"
+                                }
+                            ],
+                            "type": "entities"
                         }
                     ],
                     "icon": "mdi:audio-video",
@@ -2074,6 +1857,248 @@
                         }
                     ],
                     "title": "Notes"
+                },
+                {
+                    "badges": [],
+                    "cards": [
+                        {
+                            "cards": [
+                                {
+                                    "elements": [
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "0",
+                                                "device": 35717540,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "style": {
+                                                "left": "16%",
+                                                "top": "25%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "1",
+                                                "device": 35717540,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "style": {
+                                                "left": "35%",
+                                                "top": "25%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "2",
+                                                "device": 35717540,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "style": {
+                                                "left": "54%",
+                                                "top": "25%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "3",
+                                                "device": 35717540,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "style": {
+                                                "left": "72%",
+                                                "top": "25%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "4",
+                                                "device": 35717540,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "style": {
+                                                "left": "91%",
+                                                "top": "25%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "5",
+                                                "device": 35717540,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "style": {
+                                                "left": "16%",
+                                                "top": "75%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "6",
+                                                "device": 35717540,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "style": {
+                                                "left": "35%",
+                                                "top": "75%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "7",
+                                                "device": 35717540,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "style": {
+                                                "left": "54%",
+                                                "top": "75%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "8",
+                                                "device": 35717540,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "style": {
+                                                "left": "72%",
+                                                "top": "75%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "9",
+                                                "device": 35717540,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "style": {
+                                                "left": "91%",
+                                                "top": "75%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        }
+                                    ],
+                                    "image": "/local/remote-numbers.png",
+                                    "type": "picture-elements"
+                                },
+                                {
+                                    "elements": [
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "up",
+                                                "entity_id": "remote.apple_tv"
+                                            },
+                                            "style": {
+                                                "left": "42%",
+                                                "top": "23%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "down",
+                                                "entity_id": "remote.apple_tv"
+                                            },
+                                            "style": {
+                                                "left": "42%",
+                                                "top": "80%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "left",
+                                                "entity_id": "remote.apple_tv"
+                                            },
+                                            "style": {
+                                                "left": "20%",
+                                                "top": "50%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "right",
+                                                "entity_id": "remote.apple_tv"
+                                            },
+                                            "style": {
+                                                "left": "65%",
+                                                "top": "50%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "menu",
+                                                "entity_id": "remote.apple_tv"
+                                            },
+                                            "style": {
+                                                "left": "90%",
+                                                "top": "85%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        },
+                                        {
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": "select",
+                                                "entity_id": "remote.apple_tv"
+                                            },
+                                            "style": {
+                                                "left": "40%",
+                                                "top": "50%"
+                                            },
+                                            "title": "",
+                                            "type": "service-button"
+                                        }
+                                    ],
+                                    "image": "/local/apple-remote.png",
+                                    "type": "picture-elements"
+                                }
+                            ],
+                            "type": "vertical-stack"
+                        }
+                    ],
+                    "path": "extras",
+                    "title": "Extras"
                 }
             ]
         }

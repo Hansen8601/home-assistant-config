@@ -8,8 +8,8 @@ homeassistant:
 
   auth_providers:
     - type: homeassistant
-    - type: legacy_api_password
-      api_password: !secret api_password
+    #- type: legacy_api_password
+    #  api_password: !secret api_password
 
 alexa:
 auth:
@@ -46,6 +46,8 @@ logbook:
 #      - binary_sensor.cam2_motion
 #      - binary_sensor.cam3_motion
 #      - binary_sensor.cam4_motion
+      - cover.garage_left
+      - cover.garage_right
       - sensor.garage_service_door
       - binary_sensor.indoor_lights_needed
       - binary_sensor.shop_heater
@@ -223,19 +225,19 @@ media_player:
     mac: FC:03:9F:31:BE:E5
 
 apple_tv:
-  - host: 192.168.1.126
-    login_id: !secret apple_tv_login_id
-    name: "Apple TV Exercise"
-    start_off: true
+  #- host: 192.168.1.126
+  #  login_id: !secret apple_tv_login_id
+  #  name: "Apple TV Exercise"
+  #  start_off: true
   - host: 192.168.1.86
     login_id: !secret apple_tv_login_id
     credentials: !secret apple_tv_credentials
     name: "Apple TV Upstairs"
     start_off: true
-  - host: 192.168.1.109
-    login_id: !secret apple_tv_login_id
-    name: "Apple TV Basement"
-    start_off: true
+  #- host: 192.168.1.109
+  #  login_id: !secret apple_tv_login_id
+  #  name: "Apple TV Basement"
+  #  start_off: true
 
 remote:
   - platform: harmony
@@ -681,7 +683,7 @@ timer:
   stairs:
     duration: '00:15:00'
   kitchen_motion:
-    duration: '00:30:00'
+    duration: '00:45:00'
   basement_motion:
     duration: '00:45:00'
 

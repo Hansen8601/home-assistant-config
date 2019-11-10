@@ -19,6 +19,7 @@
     service: light.turn_on
 - id: doors_check_status
   alias: Alert for doors open when automation mode to sleep or away
+  description: Check if any doors are open when mode goes to away or sleep
   trigger:
   - entity_id: input_select.automation_mode
     platform: state
@@ -27,12 +28,17 @@
     platform: state
     to: Away
   condition:
-  - condition: state
-    entity_id: input_boolean.text_alerts
-    state: 'on'
-  - condition: state
-    entity_id: sensor.garage_service_door
-    state: open
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: binary_sensor.garage_door_shop
+      state: open
+    - condition: state
+      entity_id: cover.garage_left
+      state: open
+    - condition: state
+      entity_id: cover.garage_right
+      state: open
   action:
   - data:
       message: Sleep or Away mode set but doors still open!
@@ -42,20 +48,32 @@
       message: Service Door Open
       title: Alert
     service: notify.ios_iphonephil
-  - data_template:
-      brightness: '255'
-      entity_id: light.master_bedroom_hall
-    service: light.turn_on
-  - delay: 00:00:05
-  - data_template:
+  - data:
       brightness: '10'
       entity_id: light.master_bedroom_hall
-    service: light.turn_on
-  - delay: 00:00:05
-  - data_template:
+    data_template:
       brightness: '255'
       entity_id: light.master_bedroom_hall
     service: light.turn_on
+  - delay: 00:00:05
+  - data:
+      entity_id: light.master_bedroom_hall
+    data_template:
+      brightness: '10'
+      entity_id: light.master_bedroom_hall
+    service: light.turn_off
+  - delay: 00:00:05
+  - data:
+      brightness: '10'
+      entity_id: light.master_bedroom_hall
+    data_template:
+      brightness: '255'
+      entity_id: light.master_bedroom_hall
+    service: light.turn_on
+  - delay: 00:00:05
+  - data:
+      entity_id: light.master_bedroom_hall
+    service: light.turn_off
   - delay: 00:00:05
   - data:
       brightness: '10'
@@ -75,9 +93,12 @@
     platform: state
     to: open
   condition:
-  - condition: template
-    value_template: '{is_state("input_select.automation_mode", "sleeping") or is_state("input_select.automation_mode",
-      "away")}'
+  - condition: state
+    entity_id: input_select.automation_mode
+    state: Sleeping
+  - condition: state
+    entity_id: input_select.automation_mode
+    state: Away
   action:
   - data:
       message: Door opened while mode was sleeping or away
@@ -87,12 +108,24 @@
       message: Door opened while mode was sleeping or away
       title: Alert
     service: notify.ios_iphonephil
+  - device_id: 50b7bc30bbe846f5864f04e204689d0c
+    domain: light
+    entity_id: light.aeotec_siren_6
+    type: turn_on
+  - delay: 00:00:05
+  - device_id: 50b7bc30bbe846f5864f04e204689d0c
+    domain: light
+    entity_id: light.aeotec_siren_6
+    type: turn_off
 - id: automation_mode_sleeping_from_harmony
-  alias: Automation Mode set to sleeping from activity with Harmony Remote
+  alias: Automation Mode set to sleeping from activity after 8pm
   trigger:
   - entity_id: remote.living_room
     platform: state
     to: PowerOff
+  - entity_id: light.master_bedroom_hall
+    platform: state
+    to: 'off'
   condition:
   - after: '20:00:00'
     condition: time
@@ -246,10 +279,10 @@
   action:
   - data:
       entity_id: climate.main_floor
-    service: climate.ecobee_resume_program
+    service: ecobee.resume_program
   - data:
       entity_id: climate.basement
-    service: climate.ecobee_resume_program
+    service: ecobee.resume_program
 - id: ecobee_mode_sleep
   alias: Ecobee thermostat hold mode to sleep from Automation Mode
   trigger:
@@ -303,7 +336,7 @@
   action:
   - data:
       entity_id: climate.basement
-    service: climate.ecobee_resume_program
+    service: ecobee.resume_program
 - id: guest_bathroom_fan_timer_start
   alias: guest_bathroom_fan_timer_start
   trigger:
@@ -528,7 +561,7 @@
       entity_id: climate.main_floor
       fan_min_on_time: 0
 - id: lights_auto_on from binary sensor
-  alias: lights_auto_on from indoor_lights_binary_sensor
+  alias: lights (living area) on from indoor_lights_binary_sensor
   trigger:
   - entity_id: binary_sensor.indoor_lights_needed
     platform: state
@@ -543,7 +576,7 @@
       log_name: lights_auto_on
     service: script.log_lux_levels
 - id: lights_auto_off from binary sensor
-  alias: lights_auto_off from indoor_lights_binary_sensor
+  alias: lights (living area) off from indoor_lights_binary_sensor
   trigger:
   - entity_id: binary_sensor.indoor_lights_needed
     platform: state
@@ -655,7 +688,7 @@
       entity_id: scene.basement_lights_off
     service: scene.turn_on
 - id: lights_sun_off
-  alias: Lights off from Sun Elevation
+  alias: Lights (outside & ambiance) off from Sun Elevation
   trigger:
   - above: '-5'
     entity_id: sun.sun
@@ -666,6 +699,7 @@
       entity_id:
       - group.outside_lights
       - light.upstairs_hall_scone
+      - light.master_bathroom_chandelier
     service: light.turn_off
 - id: lights_sun_on
   alias: Lights outside on from sunset
@@ -790,21 +824,6 @@
       entity_id: light.living_room_fan
       brightness: 225
     service: light.turn_on
-- id: '1557070286068'
-  alias: Automation Mode set to sleeping from Master Bedroom Hall Light Off
-  trigger:
-  - entity_id: light.master_bedroom_hall
-    platform: state
-    to: 'off'
-  condition:
-  - after: '20:00:00'
-    condition: time
-  action:
-  - alias: ''
-    data:
-      entity_id: input_select.automation_mode
-      option: Sleeping
-    service: input_select.select_option
 - id: '1557451253030'
   alias: Basement Stairs Lights slow to off from Lamp Off
   trigger:
@@ -867,18 +886,6 @@
     entity_id: input_select.living_room_remote
     data_template:
       option: '{{ states.remote.living_room.attributes.current_activity }}'
-- id: '1559087060888'
-  alias: Ecobee thermostats fan on from automation mode Home
-  trigger:
-  - entity_id: input_select.automation_mode
-    platform: state
-    to: Home
-  condition: []
-  action:
-  - data:
-      entity_id: climate.basement,climate.main_floor
-      fan_min_on_time: 60
-    service: climate.ecobee_set_fan_min_on_time
 - id: '1559087805822'
   alias: Ecobee thermostats fan on from automation mode Sleeping
   trigger:
@@ -921,7 +928,8 @@
       entity_id: scene.basement_lights_off
     service: scene.turn_on
 - id: '1561904757421'
-  alias: Automation Mode set to away from Apple Homekit
+  alias: Automation Mode set to away from Apple Homekit (siri)
+  description: Allows saying goodbye to Siri.
   trigger:
   - entity_id: input_boolean.set_mode_away
     platform: state
@@ -972,7 +980,7 @@
       message: Garage Service Door Open
     service: notify.ios_iphonephil
 - id: '1564867287951'
-  alias: Alert for Kitchen multisensor 6 battery low
+  alias: Warning for Kitchen multisensor 6 battery low
   trigger:
   - below: '90'
     entity_id: sensor.multisensor_6_kitchen_battery
@@ -985,7 +993,7 @@
       title: Battery Low
     service: notify.ios_iphonephil
 - id: '1564867590937'
-  alias: Alert for Basement Motion Sensor battery Low
+  alias: Warning for Basement Motion Sensor battery Low
   trigger:
   - below: '60'
     entity_id: sensor.basement_motion_sensor_battery
@@ -1007,16 +1015,14 @@
     to: 'on'
   condition:
   - condition: state
-    entity_id: device_tracker.iphonenikki
-    state: not_home
-  - condition: state
-    entity_id: device_tracker.iphonephil
-    state: not_home
+    entity_id: input_select.automation_mode
+    state: Away
   action:
   - data:
       message: Motion while away
       title: Alert
     service: notify.ios_iphonephil
+  - delay: 00:01:00
   - device_id: 50b7bc30bbe846f5864f04e204689d0c
     domain: light
     entity_id: light.aeotec_siren_6
@@ -1065,7 +1071,7 @@
       media_content_type: music
     service: media_player.play_media
 - id: '1566865515702'
-  alias: Kitchen Island Lights Dim when no motion
+  alias: Lights (living area) dim when no motion in kitchen
   trigger:
   - event_data:
       entity_id: timer.kitchen_motion
@@ -1083,8 +1089,12 @@
       brightness: '50'
       entity_id: light.kitchen_island_lights
     service: light.turn_on
+  - data:
+      brightness: 100
+      entity_id: light.ge_living_room_1,light.ge_living_room_2,light.ge_living_room_3
+    service: light.turn_on
 - id: '1566865646095'
-  alias: Kitchen Island Light bright when motion
+  alias: Lights (living area) bright when motion in kitchen
   trigger:
   - entity_id: binary_sensor.multisensor_6_kitchen_motion
     platform: state
@@ -1103,6 +1113,10 @@
   - data:
       brightness: '125'
       entity_id: light.kitchen_island_lights
+    service: light.turn_on
+  - data:
+      brightness: '200'
+      entity_id: light.ge_living_room_1,light.ge_living_room_2,light.ge_living_room_3
     service: light.turn_on
 - id: '1567462746784'
   alias: Basement Motion Timer start
@@ -1163,21 +1177,8 @@
   - data:
       entity_id: scene.lamps_only
     service: scene.turn_on
-- id: '1569677946313'
-  alias: Apple TV in exercise room on from light switch
-  trigger:
-  - entity_id: light.basement_exercise_area_main_lights
-    platform: state
-    to: 'on'
-  condition:
-  - before: 07:00
-    condition: time
-  action:
-  - data:
-      entity_id: remote.apple_tv_workout_room
-    service: remote.turn_on
 - id: '1570153750850'
-  alias: Alert for Basement MultiSensor 6 battery low
+  alias: Warning for Basement MultiSensor 6 battery low
   trigger:
   - below: '90'
     entity_id: sensor.multisensor_6_basement_battery
@@ -1188,3 +1189,20 @@
       message: Multisensor 6 Basement Battery Low
       title: Battery Low
     service: notify.ios_iphonephil
+- id: '1573312663104'
+  alias: Home Assistant Restart
+  description: ''
+  trigger:
+  - event: start
+    platform: homeassistant
+  condition: []
+  action:
+  - delay: 00:01:00
+  - data:
+      dev_id: iphonenikki
+      location_name: home
+    service: device_tracker.see
+  - data:
+      dev_id: iphonephil
+      location_name: home
+    service: device_tracker.see
