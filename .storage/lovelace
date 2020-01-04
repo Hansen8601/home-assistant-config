@@ -303,7 +303,11 @@
                                     "name": "Deck"
                                 },
                                 {
-                                    "entity": "automation.denon_play_wisn_when_automation_mode_from_sleep_to_home_weekdays"
+                                    "action_name": "WISN",
+                                    "icon": "mdi:radio",
+                                    "name": "Play WISN",
+                                    "service": "script.1576245438300",
+                                    "type": "call-service"
                                 }
                             ],
                             "show_header_toggle": false,
@@ -1087,16 +1091,30 @@
                                             "type": "call-service"
                                         },
                                         {
-                                            "entity": "automation.denon_play_wisn_when_automation_mode_from_sleep_to_home_weekdays",
+                                            "action_name": "941",
+                                            "icon": "mdi:music",
+                                            "name": "Sound of the Seasons",
+                                            "service": "remote.send_command",
+                                            "service_data": {
+                                                "command": [
+                                                    "9",
+                                                    "4",
+                                                    "3"
+                                                ],
+                                                "device": 63818612,
+                                                "entity_id": "remote.living_room"
+                                            },
+                                            "type": "call-service"
+                                        },
+                                        {
+                                            "action_name": "WISN",
                                             "icon": "mdi:radio",
-                                            "name": "Play WISN stream",
-                                            "tap_action": {
-                                                "action": "call-service",
-                                                "service": "automation.trigger",
-                                                "service_data": {
-                                                    "entity_id": "automation.denon_play_wisn_when_automation_mode_from_sleep_to_home_weekdays"
-                                                }
-                                            }
+                                            "name": "Play WISN",
+                                            "service": "automation.trigger",
+                                            "service_data": {
+                                                "entity_id": "automation.denon_play_wisn_when_automation_mode_from_sleep_to_home_weekdays"
+                                            },
+                                            "type": "call-service"
                                         }
                                     ],
                                     "type": "entities"
@@ -1585,7 +1603,7 @@
                                 {
                                     "entities": [
                                         {
-                                            "entity": "device_tracker.iphonephil",
+                                            "entity": "device_tracker.phils_iphone_11",
                                             "secondary_info": "last-changed"
                                         },
                                         {
@@ -1593,12 +1611,21 @@
                                             "secondary_info": "last-changed"
                                         },
                                         {
-                                            "entity": "sensor.phils_iphone_11_battery_level",
+                                            "entity": "sensor.battery_state",
                                             "secondary_info": "last-changed"
                                         },
                                         {
-                                            "entity": "sensor.phils_iphone_11_battery_state",
+                                            "entity": "sensor.battery_level",
                                             "secondary_info": "last-changed"
+                                        },
+                                        {
+                                            "entity": "sensor.steps"
+                                        },
+                                        {
+                                            "entity": "sensor.last_update_trigger"
+                                        },
+                                        {
+                                            "entity": "sensor.ssid"
                                         }
                                     ],
                                     "show_header_toggle": false,
@@ -1608,7 +1635,7 @@
                                 {
                                     "entities": [
                                         {
-                                            "entity": "device_tracker.iphonenikki",
+                                            "entity": "device_tracker.nikkis_iphone",
                                             "secondary_info": "last-changed"
                                         },
                                         {
@@ -1616,12 +1643,21 @@
                                             "secondary_info": "last-changed"
                                         },
                                         {
-                                            "entity": "sensor.nikkis_iphone_battery_level",
+                                            "entity": "sensor.battery_state_2",
                                             "secondary_info": "last-changed"
                                         },
                                         {
-                                            "entity": "sensor.nikkis_iphone_battery_state",
+                                            "entity": "sensor.battery_level_2",
                                             "secondary_info": "last-changed"
+                                        },
+                                        {
+                                            "entity": "sensor.steps_2"
+                                        },
+                                        {
+                                            "entity": "sensor.last_update_trigger"
+                                        },
+                                        {
+                                            "entity": "sensor.ssid_2"
                                         }
                                     ],
                                     "show_header_toggle": false,
@@ -1674,9 +1710,6 @@
                                 },
                                 {
                                     "entity": "input_boolean.automation_heat_control_on"
-                                },
-                                {
-                                    "entity": "input_boolean.text_alerts"
                                 },
                                 {
                                     "entity": "input_number.lux_setpoint"
@@ -1852,7 +1885,7 @@
                 {
                     "cards": [
                         {
-                            "content": "## Home Assistant Docker\nhttps://hub.docker.com/r/homeassistant/home-assistant/tags\n## Material Design Icons\nhttps://materialdesignicons.com/   \n## Lovelace Docs\nhttps://www.home-assistant.io/lovelace/ \n## Awesome-HA\nhttps://www.awesome-ha.com/\n## Amazon Alexa Developer Console\nhttps://developer.amazon.com/alexa/console\n\n## Blue Iris Integration\nhttps://github.com/elad-bar/ha-blueiris/tree/a2c04c6c62ac2519be5e1b6223805e91a44a0feb\n\nUser Interface: http://192.168.1.10:81 or                         https://bi.hansen3.dyndns.org\n\n## hass-cli\nTo activate from an SSH session, enter hass-cli-activate\n\n## Things to do\n+ Fix harmony mode sensor - not updating to activity\n+ Add automation_mode to included log entities\n+ Add history sensor for dehumidifier",
+                            "content": "## Home Assistant Docker\nhttps://hub.docker.com/r/homeassistant/home-assistant/tags\n## Material Design Icons\nhttps://materialdesignicons.com/   \n## Lovelace Docs\nhttps://www.home-assistant.io/lovelace/ \n## Awesome-HA\nhttps://www.awesome-ha.com/\n## Amazon Alexa Developer Console\nhttps://developer.amazon.com/alexa/console\n\n## Blue Iris Integration\nhttps://github.com/elad-bar/ha-blueiris/tree/a2c04c6c62ac2519be5e1b6223805e91a44a0feb\n\nUser Interface: http://192.168.1.10:81 or                         https://bi.hansen3.dyndns.org\n\n## hass-cli\nTo activate from an SSH session, enter hass-cli-activate\n\n## Things to do\n+ Nothing",
                             "type": "markdown"
                         }
                     ],

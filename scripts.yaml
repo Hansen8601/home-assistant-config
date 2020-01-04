@@ -1,17 +1,19 @@
 denon_set_volume_input_number:
-   alias: denon_set_volume_input_number
-   sequence:
-   - service: input_number.set_value
-     data_template:
-       entity_id: input_number.denon_volume
-       value: '{{states.media_player.denon_avrx3000.attributes.volume_level | float * 100 | int}}'
+  alias: denon_set_volume_input_number
+  sequence:
+  - service: input_number.set_value
+    data_template:
+      entity_id: input_number.denon_volume
+      value: '{{states.media_player.denon_avrx3000.attributes.volume_level | float
+        * 100 | int}}'
 denon_deck_set_volume_input_number:
-   alias: denon_deck_set_volume_input_number
-   sequence:
-   - service: input_number.set_value
-     data_template:
-       entity_id: input_number.denon_deck_volume
-       value: '{{states.media_player.denon_avrx3000_deck.attributes.volume_level | float * 100 | int}}'
+  alias: denon_deck_set_volume_input_number
+  sequence:
+  - service: input_number.set_value
+    data_template:
+      entity_id: input_number.denon_deck_volume
+      value: '{{states.media_player.denon_avrx3000_deck.attributes.volume_level |
+        float * 100 | int}}'
 ecobee_mode_sleep:
   alias: ecobee mode sleep
   sequence:
@@ -110,19 +112,24 @@ log_lux_levels:
   - service: logbook.log
     data_template:
       name: 'Automation Mode:'
-      message: '{{states.input_select.automation_mode.state}} (changed {{relative_time(states.input_select.automation_mode.last_changed)}} ago)'
+      message: '{{states.input_select.automation_mode.state}} (changed {{relative_time(states.input_select.automation_mode.last_changed)}}
+        ago)'
   - service: logbook.log
     data_template:
       name: 'Sun Elevation:'
-      message: '{{states.sun.sun.attributes.elevation | round(1)}} (changed {{relative_time(states.sun.sun.last_changed)}} ago)'
+      message: '{{states.sun.sun.attributes.elevation | round(1)}} (changed {{relative_time(states.sun.sun.last_changed)}}
+        ago)'
   - service: logbook.log
     data_template:
       name: 'Cloud Coverage Mean:'
-      message: '{{states.sensor.dark_sky_cloud_coverage_stats.state | round(0)}} (changed {{relative_time(states.sensor.dark_sky_cloud_coverage_stats.last_changed)}} ago)'
+      message: '{{states.sensor.dark_sky_cloud_coverage_stats.state | round(0)}} (changed
+        {{relative_time(states.sensor.dark_sky_cloud_coverage_stats.last_changed)}}
+        ago)'
   - service: logbook.log
     data_template:
       name: 'Kitchen Lux Min/Mean/Max/Count:'
-      message: '{{states.sensor.kitchen_lux_stats.attributes.min_value}}/{{states.sensor.kitchen_lux_stats.state}}/{{states.sensor.kitchen_lux_stats.attributes.max_value}}/{{states.sensor.kitchen_lux_stats.attributes.count}}  (changed {{relative_time(states.sensor.kitchen_lux_stats.last_changed)}} ago)'
+      message: '{{states.sensor.kitchen_lux_stats.attributes.min_value}}/{{states.sensor.kitchen_lux_stats.state}}/{{states.sensor.kitchen_lux_stats.attributes.max_value}}/{{states.sensor.kitchen_lux_stats.attributes.count}}  (changed
+        {{relative_time(states.sensor.kitchen_lux_stats.last_changed)}} ago)'
 '1546906415963':
   alias: lights outside on
   sequence:
@@ -134,3 +141,11 @@ log_lux_levels:
       brightness: 50
       entity_id: light.entry_walkway_dimmer_switch
     service: light.turn_on
+'1576245438300':
+  alias: Apple TV - Play WISN
+  sequence:
+  - data:
+      entity_id: media_player.apple_tv
+      media_content_id: https://c13icy.prod.playlists.ihrhls.com/4245_icy
+      media_content_type: music
+    service: media_player.play_media

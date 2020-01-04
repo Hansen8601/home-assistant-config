@@ -19,6 +19,8 @@ discovery:
 ecobee:
   api_key: !secret ecobee_api_key
 
+mobile_app:
+
 sense:
   email: !secret sense_email
   password: !secret sense_password
@@ -115,7 +117,8 @@ intent_script:
       type: plain  
       text: !include alexa_confirm.yaml
 
-ios:
+      #Old V1 IOS app
+      #ios:
 
 lutron_caseta:
   host: 192.168.1.85
@@ -225,19 +228,19 @@ media_player:
     mac: FC:03:9F:31:BE:E5
 
 apple_tv:
-  #- host: 192.168.1.126
-  #  login_id: !secret apple_tv_login_id
-  #  name: "Apple TV Exercise"
-  #  start_off: true
+  - host: 192.168.1.126
+    login_id: !secret apple_tv_login_id
+    name: "Apple TV Exercise"
+    start_off: true
   - host: 192.168.1.86
     login_id: !secret apple_tv_login_id
     credentials: !secret apple_tv_credentials
     name: "Apple TV Upstairs"
     start_off: true
-  #- host: 192.168.1.109
-  #  login_id: !secret apple_tv_login_id
-  #  name: "Apple TV Basement"
-  #  start_off: true
+  - host: 192.168.1.109
+    login_id: !secret apple_tv_login_id
+    name: "Apple TV Basement"
+    start_off: true
 
 remote:
   - platform: harmony
@@ -593,10 +596,6 @@ input_boolean:
     initial: on
   nikki_homekit_present:
     name: nikki homekit
-    initial: on
-# Text Alerts enabled
-  text_alerts:
-    name: text_alerts
     initial: on
 
 

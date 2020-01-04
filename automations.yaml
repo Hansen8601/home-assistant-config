@@ -45,9 +45,10 @@
       target: 6082352167
     service: notify.twilio_sms
   - data:
+      critical: 1
       message: Service Door Open
       title: Alert
-    service: notify.ios_iphonephil
+    service: notify.mobile_app_phils_iphone_11
   - data:
       brightness: '10'
       entity_id: light.master_bedroom_hall
@@ -105,14 +106,15 @@
       target: 6082352167
     service: notify.twilio_sms
   - data:
+      critical: 1
       message: Door opened while mode was sleeping or away
       title: Alert
-    service: notify.ios_iphonephil
+    service: notify.mobile_app_phils_iphone_11
   - device_id: 50b7bc30bbe846f5864f04e204689d0c
     domain: light
     entity_id: light.aeotec_siren_6
-    type: turn_on
-  - delay: 00:00:05
+    type: turn_off
+  - delay: 00:00:01
   - device_id: 50b7bc30bbe846f5864f04e204689d0c
     domain: light
     entity_id: light.aeotec_siren_6
@@ -733,11 +735,11 @@
 - id: '1546696475350'
   alias: Automation Mode set to home from device trackers
   trigger:
-  - entity_id: device_tracker.iphonephil
+  - entity_id: device_tracker.phils_iphone_11
     event: enter
     platform: zone
     zone: zone.home
-  - entity_id: device_tracker.iphonenikki
+  - entity_id: device_tracker.nikkis_iphone
     event: enter
     platform: zone
     zone: zone.home
@@ -753,20 +755,20 @@
 - id: '1546696585128'
   alias: Automation Mode set to away from device trackers
   trigger:
-  - entity_id: device_tracker.iphonephil
+  - entity_id: device_tracker.phils_iphone_11
     event: leave
     platform: zone
     zone: zone.home
-  - entity_id: device_tracker.iphonenikki
+  - entity_id: device_tracker.nikkis_iphone
     event: leave
     platform: zone
     zone: zone.home
   condition:
   - condition: state
-    entity_id: device_tracker.iphonephil
+    entity_id: device_tracker.phils_iphone_11
     state: not_home
   - condition: state
-    entity_id: device_tracker.iphonenikki
+    entity_id: device_tracker.nikkis_iphone
     state: not_home
   action:
   - data:
@@ -776,7 +778,7 @@
 - id: '1547473411825'
   alias: Phil Leaves for work - turn off stuff
   trigger:
-  - entity_id: device_tracker.iphonephil
+  - entity_id: device_tracker.phils_iphone_11
     event: leave
     platform: zone
     zone: zone.home
@@ -886,18 +888,6 @@
     entity_id: input_select.living_room_remote
     data_template:
       option: '{{ states.remote.living_room.attributes.current_activity }}'
-- id: '1559087805822'
-  alias: Ecobee thermostats fan on from automation mode Sleeping
-  trigger:
-  - entity_id: input_select.automation_mode
-    platform: state
-    to: Sleeping
-  condition: []
-  action:
-  - data:
-      entity_id: climate.basement,climate.main_floor
-      fan_min_on_time: 0
-    service: climate.ecobee_set_fan_min_on_time
 - id: '1559492618128'
   alias: Denon set volume from Denon_Volume change
   trigger:
@@ -968,17 +958,6 @@
       | int) > 10)}}'
   action:
   - service: script.denon_deck_set_volume_input_number
-- id: '1564271529756'
-  alias: Garage Service Door Open Alert
-  trigger:
-  - entity_id: sensor.garage_service_door
-    platform: state
-    to: open
-  condition: []
-  action:
-  - data:
-      message: Garage Service Door Open
-    service: notify.ios_iphonephil
 - id: '1564867287951'
   alias: Warning for Kitchen multisensor 6 battery low
   trigger:
@@ -991,7 +970,7 @@
     data:
       message: Multisensor 6 Kitchen Battery Low
       title: Battery Low
-    service: notify.ios_iphonephil
+    service: notify.mobile_app_phils_iphone_11
 - id: '1564867590937'
   alias: Warning for Basement Motion Sensor battery Low
   trigger:
@@ -1003,7 +982,7 @@
   - data:
       message: Basement Stairs Motion Sensor Battery Low
       title: Battery Low
-    service: notify.ios_iphonephil
+    service: notify.mobile_app_phils_iphone_11
 - id: '1564868593065'
   alias: Alert for motion when Away
   trigger:
@@ -1021,7 +1000,7 @@
   - data:
       message: Motion while away
       title: Alert
-    service: notify.ios_iphonephil
+    service: notify.mobile_app_phils_iphone_11
   - delay: 00:01:00
   - device_id: 50b7bc30bbe846f5864f04e204689d0c
     domain: light
@@ -1188,7 +1167,7 @@
   - data:
       message: Multisensor 6 Basement Battery Low
       title: Battery Low
-    service: notify.ios_iphonephil
+    service: notify.mobile_app_phils_iphone_11
 - id: '1573312663104'
   alias: Home Assistant Restart
   description: ''
@@ -1199,10 +1178,10 @@
   action:
   - delay: 00:01:00
   - data:
-      dev_id: iphonenikki
+      dev_id: nikkis_iphone
       location_name: home
     service: device_tracker.see
   - data:
-      dev_id: iphonephil
+      dev_id: phils_iphone_11
       location_name: home
     service: device_tracker.see
